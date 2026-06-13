@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Dear 銳銳 v30</title>
+  <title>Dear 銳銳 v31</title>
   <style>
 @import url('https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Ma+Shan+Zheng&family=Noto+Serif+TC:wght@400;700;900&family=Rampart+One&family=ZCOOL+KuaiLe&family=ZCOOL+QingKe+HuangYou&family=DotGothic16&family=Kaisei+Tokumin:wght@400;700&family=Kosugi+Maru&family=Yuji+Syuku&family=Zen+Kurenaido&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
 :root {
@@ -2358,6 +2358,172 @@ h3,
   font-family: "RuiruiCustomFont", "Noto Serif TC", "Microsoft JhengHei", serif !important;
 }
 
+
+/* v31 auto readable text by actual surface brightness */
+.app {
+  --drawer-text: var(--text);
+  --drawer-muted-readable: var(--muted);
+  --panel-text-auto: var(--text);
+  --bubble-bot-text-auto: var(--text);
+  --bubble-user-text-auto: #fff7fb;
+  --input-text-auto: var(--text);
+}
+
+/* Drawer / side menu should follow its own dark glass surface, not the theme background */
+.drawer,
+.drawer * {
+  color: var(--drawer-text) !important;
+}
+
+.drawer .drawer-action,
+.drawer .drawer-action *,
+.drawer .conversation-item,
+.drawer .conversation-item *,
+.drawer summary,
+.drawer summary *,
+.drawer .est {
+  color: var(--drawer-text) !important;
+}
+
+.drawer .est,
+.drawer .conversation-item {
+  opacity: .92;
+}
+
+/* Main cards and bubbles use auto variables set by JS */
+.message.bot,
+.message:not(.user) {
+  color: var(--bubble-bot-text-auto) !important;
+}
+
+.message.user {
+  color: var(--bubble-user-text-auto) !important;
+}
+
+.sticky-card,
+.daily-card,
+.photo-card,
+.music-card,
+.settings-card,
+.checkin-card,
+.level-card,
+.care-card,
+.sleep-card,
+.breath-card,
+.timeline-card,
+.mission-card,
+.search-card,
+.random-card,
+.album-upload-card,
+.letter-form,
+.wish-form,
+.dashboard-grid .dash-card,
+.album-card,
+.theme-shop-grid,
+.modal {
+  color: var(--panel-text-auto) !important;
+}
+
+.sticky-card *,
+.daily-card *,
+.photo-card *,
+.music-card *,
+.settings-card *,
+checkin-card *,
+.level-card *,
+.care-card *,
+.sleep-card *,
+.breath-card *,
+.timeline-card *,
+.mission-card *,
+.search-card *,
+.random-card *,
+.album-upload-card *,
+.letter-form *,
+.wish-form *,
+.dashboard-grid .dash-card *,
+.album-card *,
+.modal * {
+  color: inherit;
+}
+
+/* Inputs should be readable according to their own dark/bright surface */
+input,
+textarea,
+select {
+  color: var(--input-text-auto) !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: color-mix(in srgb, var(--input-text-auto), transparent 45%) !important;
+}
+
+/* For light Sakura theme, the actual drawer is still dark, so keep drawer readable light */
+.theme-sakura {
+  --drawer-text: #ffe6f1;
+  --drawer-muted-readable: rgba(255,230,241,.78);
+}
+
+/* Light panel surfaces in Sakura should use deep text, but dark drawer remains light */
+.theme-sakura .message.bot,
+.theme-sakura .sticky-card,
+.theme-sakura .daily-card,
+.theme-sakura .photo-card,
+.theme-sakura .music-card,
+.theme-sakura .settings-card,
+.theme-sakura .checkin-card,
+.theme-sakura .level-card,
+.theme-sakura .care-card,
+.theme-sakura .sleep-card,
+.theme-sakura .breath-card,
+.theme-sakura .timeline-card,
+.theme-sakura .mission-card,
+.theme-sakura .search-card,
+.theme-sakura .random-card,
+.theme-sakura .album-upload-card,
+.theme-sakura .letter-form,
+.theme-sakura .wish-form,
+.theme-sakura .dashboard-grid .dash-card,
+.theme-sakura .album-card,
+.theme-sakura .modal {
+  --panel-text-auto: #3d2330;
+  --bubble-bot-text-auto: #3d2330;
+}
+
+/* But if a light theme is used with dark glass UI, JS will set .read-dark-surface */
+.read-dark-surface {
+  --panel-text-auto: #fff3f7;
+  --bubble-bot-text-auto: #fff3f7;
+  --input-text-auto: #fff3f7;
+}
+
+.read-light-surface {
+  --panel-text-auto: #3d2330;
+  --bubble-bot-text-auto: #3d2330;
+  --input-text-auto: #3d2330;
+}
+
+/* User bubble readability depends on accent brightness */
+.user-bubble-dark-text {
+  --bubble-user-text-auto: #3d2330;
+}
+
+.user-bubble-light-text {
+  --bubble-user-text-auto: #fff7fb;
+}
+
+/* Make dark side menu text explicitly visible even when app is in a light theme */
+.drawer.read-drawer-dark,
+.drawer.read-drawer-dark * {
+  color: #ffe6f1 !important;
+}
+
+.drawer.read-drawer-light,
+.drawer.read-drawer-light * {
+  color: #3d2330 !important;
+}
+
 </style>
   <meta name="theme-color" content="#0e090c" />
   <link rel="manifest" href="./manifest.json" />
@@ -2438,6 +2604,172 @@ h3,
 .font-custom .sticky-card,
 .font-custom .drawer-action {
   font-family: "RuiruiCustomFont", "Noto Serif TC", "Microsoft JhengHei", serif !important;
+}
+
+
+/* v31 auto readable text by actual surface brightness */
+.app {
+  --drawer-text: var(--text);
+  --drawer-muted-readable: var(--muted);
+  --panel-text-auto: var(--text);
+  --bubble-bot-text-auto: var(--text);
+  --bubble-user-text-auto: #fff7fb;
+  --input-text-auto: var(--text);
+}
+
+/* Drawer / side menu should follow its own dark glass surface, not the theme background */
+.drawer,
+.drawer * {
+  color: var(--drawer-text) !important;
+}
+
+.drawer .drawer-action,
+.drawer .drawer-action *,
+.drawer .conversation-item,
+.drawer .conversation-item *,
+.drawer summary,
+.drawer summary *,
+.drawer .est {
+  color: var(--drawer-text) !important;
+}
+
+.drawer .est,
+.drawer .conversation-item {
+  opacity: .92;
+}
+
+/* Main cards and bubbles use auto variables set by JS */
+.message.bot,
+.message:not(.user) {
+  color: var(--bubble-bot-text-auto) !important;
+}
+
+.message.user {
+  color: var(--bubble-user-text-auto) !important;
+}
+
+.sticky-card,
+.daily-card,
+.photo-card,
+.music-card,
+.settings-card,
+.checkin-card,
+.level-card,
+.care-card,
+.sleep-card,
+.breath-card,
+.timeline-card,
+.mission-card,
+.search-card,
+.random-card,
+.album-upload-card,
+.letter-form,
+.wish-form,
+.dashboard-grid .dash-card,
+.album-card,
+.theme-shop-grid,
+.modal {
+  color: var(--panel-text-auto) !important;
+}
+
+.sticky-card *,
+.daily-card *,
+.photo-card *,
+.music-card *,
+.settings-card *,
+checkin-card *,
+.level-card *,
+.care-card *,
+.sleep-card *,
+.breath-card *,
+.timeline-card *,
+.mission-card *,
+.search-card *,
+.random-card *,
+.album-upload-card *,
+.letter-form *,
+.wish-form *,
+.dashboard-grid .dash-card *,
+.album-card *,
+.modal * {
+  color: inherit;
+}
+
+/* Inputs should be readable according to their own dark/bright surface */
+input,
+textarea,
+select {
+  color: var(--input-text-auto) !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: color-mix(in srgb, var(--input-text-auto), transparent 45%) !important;
+}
+
+/* For light Sakura theme, the actual drawer is still dark, so keep drawer readable light */
+.theme-sakura {
+  --drawer-text: #ffe6f1;
+  --drawer-muted-readable: rgba(255,230,241,.78);
+}
+
+/* Light panel surfaces in Sakura should use deep text, but dark drawer remains light */
+.theme-sakura .message.bot,
+.theme-sakura .sticky-card,
+.theme-sakura .daily-card,
+.theme-sakura .photo-card,
+.theme-sakura .music-card,
+.theme-sakura .settings-card,
+.theme-sakura .checkin-card,
+.theme-sakura .level-card,
+.theme-sakura .care-card,
+.theme-sakura .sleep-card,
+.theme-sakura .breath-card,
+.theme-sakura .timeline-card,
+.theme-sakura .mission-card,
+.theme-sakura .search-card,
+.theme-sakura .random-card,
+.theme-sakura .album-upload-card,
+.theme-sakura .letter-form,
+.theme-sakura .wish-form,
+.theme-sakura .dashboard-grid .dash-card,
+.theme-sakura .album-card,
+.theme-sakura .modal {
+  --panel-text-auto: #3d2330;
+  --bubble-bot-text-auto: #3d2330;
+}
+
+/* But if a light theme is used with dark glass UI, JS will set .read-dark-surface */
+.read-dark-surface {
+  --panel-text-auto: #fff3f7;
+  --bubble-bot-text-auto: #fff3f7;
+  --input-text-auto: #fff3f7;
+}
+
+.read-light-surface {
+  --panel-text-auto: #3d2330;
+  --bubble-bot-text-auto: #3d2330;
+  --input-text-auto: #3d2330;
+}
+
+/* User bubble readability depends on accent brightness */
+.user-bubble-dark-text {
+  --bubble-user-text-auto: #3d2330;
+}
+
+.user-bubble-light-text {
+  --bubble-user-text-auto: #fff7fb;
+}
+
+/* Make dark side menu text explicitly visible even when app is in a light theme */
+.drawer.read-drawer-dark,
+.drawer.read-drawer-dark * {
+  color: #ffe6f1 !important;
+}
+
+.drawer.read-drawer-light,
+.drawer.read-drawer-light * {
+  color: #3d2330 !important;
 }
 
 </style>
@@ -4092,26 +4424,99 @@ function luminance(hex) {
   return 0.2126 * srgb[0] + 0.7152 * srgb[1] + 0.0722 * srgb[2];
 }
 
-function applyAutoReadableText() {
-  const theme = state.settings.theme || "theme-rose";
-  const custom = state.settings.customTheme || defaults.customTheme;
-  const bgLum = luminance(custom.bg || "#0e090c");
-  const accentLum = luminance(custom.accent || "#f2a8c2");
 
-  // For very light custom backgrounds, make panels/bubbles use a deep text color automatically.
-  const darkText = "#3d2330";
-  const lightText = custom.text || "#fff3f7";
-  const userText = accentLum > 0.55 ? "#3d2330" : "#fff7fb";
-
-  if (theme === "theme-custom" && bgLum > 0.62) {
-    $("app").style.setProperty("--auto-bot-text", darkText);
-    $("app").style.setProperty("--auto-panel-text", darkText);
-    $("app").style.setProperty("--auto-user-text", userText);
-  } else {
-    $("app").style.setProperty("--auto-bot-text", lightText);
-    $("app").style.setProperty("--auto-panel-text", lightText);
-    $("app").style.setProperty("--auto-user-text", "#fff7fb");
+function parseCssColorToRgb(color) {
+  const c = String(color || "").trim();
+  if (!c) return null;
+  if (c.startsWith("#")) return hexToRgb(c);
+  const rgb = c.match(/rgba?\(([^)]+)\)/);
+  if (rgb) {
+    const parts = rgb[1].split(",").map((x) => parseFloat(x.trim()));
+    return { r: parts[0] || 0, g: parts[1] || 0, b: parts[2] || 0 };
   }
+  return null;
+}
+
+function rgbLuminance(rgb) {
+  if (!rgb) return 0;
+  const srgb = [rgb.r, rgb.g, rgb.b].map((v) => {
+    const x = v / 255;
+    return x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4);
+  });
+  return 0.2126 * srgb[0] + 0.7152 * srgb[1] + 0.0722 * srgb[2];
+}
+
+function readableTextForColor(color, light = "#fff3f7", dark = "#3d2330") {
+  const rgb = parseCssColorToRgb(color);
+  const lum = rgbLuminance(rgb);
+  return lum > 0.52 ? dark : light;
+}
+
+function setSurfaceReadabilityClasses() {
+  const app = $("app");
+  if (!app) return;
+
+  app.classList.remove("read-dark-surface", "read-light-surface", "user-bubble-dark-text", "user-bubble-light-text");
+
+  // Detect the actual bubble/card background by creating a temporary bot bubble in the current theme.
+  const probe = document.createElement("div");
+  probe.className = "message bot";
+  probe.style.position = "fixed";
+  probe.style.left = "-9999px";
+  probe.style.top = "-9999px";
+  probe.style.visibility = "hidden";
+  app.appendChild(probe);
+
+  const style = getComputedStyle(probe);
+  const bgColor = style.backgroundColor;
+  const bgLum = rgbLuminance(parseCssColorToRgb(bgColor));
+
+  probe.remove();
+
+  // If browser reports transparent / very dark glass, use light text. If it is bright, use dark text.
+  if (bgLum > 0.50) {
+    app.classList.add("read-light-surface");
+  } else {
+    app.classList.add("read-dark-surface");
+  }
+
+  // User bubble is closer to accent color.
+  const accent = getComputedStyle(app).getPropertyValue("--accent").trim() || "#f2a8c2";
+  const accentLum = luminance(accent);
+  app.classList.add(accentLum > 0.58 ? "user-bubble-dark-text" : "user-bubble-light-text");
+
+  // Drawer uses its own surface; detect it separately.
+  const drawer = $("drawer");
+  if (drawer) {
+    drawer.classList.remove("read-drawer-dark", "read-drawer-light");
+    const drawerBg = getComputedStyle(drawer).backgroundColor;
+    const drawerLum = rgbLuminance(parseCssColorToRgb(drawerBg));
+    drawer.classList.add(drawerLum > 0.50 ? "read-drawer-light" : "read-drawer-dark");
+  }
+}
+
+function applyAutoReadableText() {
+  const app = $("app");
+  if (!app) return;
+
+  const custom = state.settings.customTheme || defaults.customTheme;
+  const theme = state.settings.theme || "theme-rose";
+
+  // Set baseline auto variables first.
+  app.style.setProperty("--auto-bot-text", custom.text || "#fff3f7");
+  app.style.setProperty("--auto-panel-text", custom.text || "#fff3f7");
+
+  // For custom theme, use selected background brightness as a first-pass guess.
+  if (theme === "theme-custom") {
+    const bgLum = luminance(custom.bg || "#0e090c");
+    const accentLum = luminance(custom.accent || "#f2a8c2");
+    app.style.setProperty("--auto-bot-text", bgLum > 0.52 ? "#3d2330" : (custom.text || "#fff3f7"));
+    app.style.setProperty("--auto-panel-text", bgLum > 0.52 ? "#3d2330" : (custom.text || "#fff3f7"));
+    app.style.setProperty("--auto-user-text", accentLum > 0.58 ? "#3d2330" : "#fff7fb");
+  }
+
+  // Then detect actual rendered surfaces, because glass UI can stay dark even in light theme.
+  setTimeout(setSurfaceReadabilityClasses, 0);
 }
 
 function setRuntimeFontFromDataUrl(dataUrl) {
@@ -4179,6 +4584,7 @@ function applySettings() {
   renderLoveStats();
   refreshPickerButtons();
   renderMusicPlayers();
+  setTimeout(setSurfaceReadabilityClasses, 50);
 }
 
 function renderMessages() {

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Dear 銳銳 v31</title>
+  <title>Dear 銳銳 v32</title>
   <style>
 @import url('https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Ma+Shan+Zheng&family=Noto+Serif+TC:wght@400;700;900&family=Rampart+One&family=ZCOOL+KuaiLe&family=ZCOOL+QingKe+HuangYou&family=DotGothic16&family=Kaisei+Tokumin:wght@400;700&family=Kosugi+Maru&family=Yuji+Syuku&family=Zen+Kurenaido&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
 :root {
@@ -2524,6 +2524,66 @@ textarea::placeholder {
   color: #3d2330 !important;
 }
 
+
+/* v32 welcome page readable title fix */
+.app {
+  --welcome-title-text: var(--text);
+  --welcome-subtitle-text: var(--muted);
+  --welcome-soft-text: var(--muted);
+}
+
+/* Welcome title/subtitle must follow actual welcome background brightness */
+#welcomeTitle,
+.welcome-title,
+.home-title,
+.hero-title {
+  color: var(--welcome-title-text) !important;
+  text-shadow: var(--welcome-title-shadow, 0 0 18px var(--shadow)) !important;
+}
+
+#welcomeSubtitle,
+.welcome-subtitle,
+.home-subtitle,
+.hero-subtitle,
+.welcome-page .subtitle {
+  color: var(--welcome-subtitle-text) !important;
+}
+
+.welcome-page .daily-label,
+.welcome-page .meta,
+.welcome-page .love-stats-card p,
+.welcome-page .anniversary-card,
+.welcome-page .anniversary-card *,
+.welcome-page .daily-card,
+.welcome-page .daily-card *,
+.welcome-page .love-stats-card,
+.welcome-page .love-stats-card * {
+  color: var(--welcome-soft-text) !important;
+}
+
+/* Sakura is a very light entrance screen, so title needs deep rose text */
+.theme-sakura {
+  --welcome-title-text: #7d3b58;
+  --welcome-subtitle-text: rgba(61,35,48,.78);
+  --welcome-soft-text: #3d2330;
+  --welcome-title-shadow: 0 0 10px rgba(232,145,183,.22);
+}
+
+/* Custom themes can be adjusted by JS depending on real background brightness */
+.welcome-light-bg {
+  --welcome-title-text: #7d3b58;
+  --welcome-subtitle-text: rgba(61,35,48,.78);
+  --welcome-soft-text: #3d2330;
+  --welcome-title-shadow: 0 0 10px rgba(232,145,183,.22);
+}
+
+.welcome-dark-bg {
+  --welcome-title-text: var(--text);
+  --welcome-subtitle-text: var(--muted);
+  --welcome-soft-text: var(--text);
+  --welcome-title-shadow: 0 0 18px var(--shadow);
+}
+
 </style>
   <meta name="theme-color" content="#0e090c" />
   <link rel="manifest" href="./manifest.json" />
@@ -2770,6 +2830,66 @@ textarea::placeholder {
 .drawer.read-drawer-light,
 .drawer.read-drawer-light * {
   color: #3d2330 !important;
+}
+
+
+/* v32 welcome page readable title fix */
+.app {
+  --welcome-title-text: var(--text);
+  --welcome-subtitle-text: var(--muted);
+  --welcome-soft-text: var(--muted);
+}
+
+/* Welcome title/subtitle must follow actual welcome background brightness */
+#welcomeTitle,
+.welcome-title,
+.home-title,
+.hero-title {
+  color: var(--welcome-title-text) !important;
+  text-shadow: var(--welcome-title-shadow, 0 0 18px var(--shadow)) !important;
+}
+
+#welcomeSubtitle,
+.welcome-subtitle,
+.home-subtitle,
+.hero-subtitle,
+.welcome-page .subtitle {
+  color: var(--welcome-subtitle-text) !important;
+}
+
+.welcome-page .daily-label,
+.welcome-page .meta,
+.welcome-page .love-stats-card p,
+.welcome-page .anniversary-card,
+.welcome-page .anniversary-card *,
+.welcome-page .daily-card,
+.welcome-page .daily-card *,
+.welcome-page .love-stats-card,
+.welcome-page .love-stats-card * {
+  color: var(--welcome-soft-text) !important;
+}
+
+/* Sakura is a very light entrance screen, so title needs deep rose text */
+.theme-sakura {
+  --welcome-title-text: #7d3b58;
+  --welcome-subtitle-text: rgba(61,35,48,.78);
+  --welcome-soft-text: #3d2330;
+  --welcome-title-shadow: 0 0 10px rgba(232,145,183,.22);
+}
+
+/* Custom themes can be adjusted by JS depending on real background brightness */
+.welcome-light-bg {
+  --welcome-title-text: #7d3b58;
+  --welcome-subtitle-text: rgba(61,35,48,.78);
+  --welcome-soft-text: #3d2330;
+  --welcome-title-shadow: 0 0 10px rgba(232,145,183,.22);
+}
+
+.welcome-dark-bg {
+  --welcome-title-text: var(--text);
+  --welcome-subtitle-text: var(--muted);
+  --welcome-soft-text: var(--text);
+  --welcome-title-shadow: 0 0 18px var(--shadow);
 }
 
 </style>
@@ -4452,6 +4572,38 @@ function readableTextForColor(color, light = "#fff3f7", dark = "#3d2330") {
   return lum > 0.52 ? dark : light;
 }
 
+
+function setWelcomeReadabilityClass() {
+  const app = $("app");
+  const welcome = $("welcomePage") || document.querySelector(".welcome-page") || document.querySelector("#homePage");
+  if (!app) return;
+
+  app.classList.remove("welcome-light-bg", "welcome-dark-bg");
+
+  // Preset Sakura always uses a light entrance background.
+  if ((state.settings.theme || "") === "theme-sakura") {
+    app.classList.add("welcome-light-bg");
+    return;
+  }
+
+  // For custom themes, judge by selected background color first.
+  if ((state.settings.theme || "") === "theme-custom") {
+    const custom = state.settings.customTheme || defaults.customTheme;
+    const bgLum = luminance(custom.bg || "#0e090c");
+    app.classList.add(bgLum > 0.58 ? "welcome-light-bg" : "welcome-dark-bg");
+    return;
+  }
+
+  // Fallback: inspect rendered welcome background if available.
+  if (welcome) {
+    const bg = getComputedStyle(welcome).backgroundColor;
+    const lum = rgbLuminance(parseCssColorToRgb(bg));
+    app.classList.add(lum > 0.58 ? "welcome-light-bg" : "welcome-dark-bg");
+  } else {
+    app.classList.add("welcome-dark-bg");
+  }
+}
+
 function setSurfaceReadabilityClasses() {
   const app = $("app");
   if (!app) return;
@@ -4516,7 +4668,10 @@ function applyAutoReadableText() {
   }
 
   // Then detect actual rendered surfaces, because glass UI can stay dark even in light theme.
-  setTimeout(setSurfaceReadabilityClasses, 0);
+  setTimeout(() => {
+    setSurfaceReadabilityClasses();
+    setWelcomeReadabilityClass();
+  }, 0);
 }
 
 function setRuntimeFontFromDataUrl(dataUrl) {
@@ -4584,7 +4739,10 @@ function applySettings() {
   renderLoveStats();
   refreshPickerButtons();
   renderMusicPlayers();
-  setTimeout(setSurfaceReadabilityClasses, 50);
+  setTimeout(() => {
+    setSurfaceReadabilityClasses();
+    setWelcomeReadabilityClass();
+  }, 50);
 }
 
 function renderMessages() {

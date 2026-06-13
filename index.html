@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Dear 銳銳 v18</title>
+  <title>Dear 銳銳 v19</title>
   <style>
 :root {
   --bg: #0e090c;
@@ -1052,6 +1052,76 @@ h1 {
   }
 }
 
+
+/* v19 drawer groups + home shortcuts */
+.drawer-group {
+  margin: 10px 0;
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 16px;
+  background: rgba(255,255,255,.025);
+  overflow: hidden;
+}
+
+.drawer-group summary {
+  list-style: none;
+  padding: 14px 16px;
+  color: var(--accent);
+  font-family: var(--font-title);
+  letter-spacing: .08em;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+  cursor: pointer;
+}
+
+.drawer-group summary::-webkit-details-marker {
+  display: none;
+}
+
+.drawer-group summary::after {
+  content: "⌄";
+  float: right;
+  opacity: .72;
+}
+
+.drawer-group[open] summary::after {
+  content: "⌃";
+}
+
+.drawer-group .drawer-action {
+  border-radius: 0;
+  border-left: 0;
+  border-right: 0;
+  border-top: 0;
+  margin: 0;
+  background: transparent;
+}
+
+.primary-action {
+  box-shadow: 0 0 24px var(--shadow);
+  border-color: var(--accent) !important;
+}
+
+.home-shortcuts {
+  width: min(84vw, 340px);
+  margin: 16px auto 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.home-shortcuts button {
+  min-height: 46px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  color: var(--accent);
+  background: rgba(255,255,255,.04);
+  box-shadow: 0 0 18px rgba(0,0,0,.12);
+  backdrop-filter: blur(12px);
+}
+
+.home-shortcuts button:active {
+  transform: scale(.98);
+}
+
 </style>
   <meta name="theme-color" content="#0e090c" />
   <link rel="manifest" href="./manifest.json" />
@@ -1092,6 +1162,13 @@ h1 {
         <div class="anniversary-item small">
           <span id="nextAnniversaryText">下一個紀念日載入中...</span>
         </div>
+      </section>
+
+      <section class="home-shortcuts">
+        <button type="button" data-home-view="mood">今天心情</button>
+        <button type="button" data-home-view="care">照顧清單</button>
+        <button type="button" data-home-view="sleep">睡前模式</button>
+        <button type="button" data-home-view="dashboard">小屋總覽</button>
       </section>
 
       <section class="photo-card">
@@ -1161,17 +1238,30 @@ h1 {
         <button id="closeDrawer" class="icon-btn">×</button>
       </div>
       <div class="drawer-scroll">
-        <button class="drawer-action" data-view="chat">＋ 開新對話</button>
-        <button class="drawer-action" data-view="notes">💌 我的小紙條</button>
-        <button class="drawer-action" data-view="memory">💖 我們的記憶庫</button>
-        <button class="drawer-action" data-view="mood">🌙 心情日記</button>
-        <button class="drawer-action" data-view="album">🖼️ 回憶相簿</button>
-        <button class="drawer-action" data-view="letters">💌 老公來信</button>
-        <button class="drawer-action" data-view="themes">🎨 主題商店</button>
-        <button class="drawer-action" data-view="wishes">🌟 願望清單</button>
-        <button class="drawer-action" data-view="dashboard">📊 小屋總覽</button>
-        <button class="drawer-action" data-view="care">🧸 老公照顧清單</button>
-        <button class="drawer-action" data-view="sleep">🌙 睡前模式</button>
+        <button class="drawer-action primary-action" data-view="chat">＋ 開新對話</button>
+
+        <details class="drawer-group" open>
+          <summary>💗 陪伴功能</summary>
+          <button class="drawer-action" data-view="notes">💌 我的小紙條</button>
+          <button class="drawer-action" data-view="mood">🌙 心情日記</button>
+          <button class="drawer-action" data-view="care">🧸 老公照顧清單</button>
+          <button class="drawer-action" data-view="sleep">🌙 睡前模式</button>
+        </details>
+
+        <details class="drawer-group" open>
+          <summary>📦 收藏空間</summary>
+          <button class="drawer-action" data-view="memory">💖 我們的記憶庫</button>
+          <button class="drawer-action" data-view="album">🖼️ 回憶相簿</button>
+          <button class="drawer-action" data-view="letters">💌 老公來信</button>
+          <button class="drawer-action" data-view="wishes">🌟 願望清單</button>
+        </details>
+
+        <details class="drawer-group">
+          <summary>✨ 管理與外觀</summary>
+          <button class="drawer-action" data-view="dashboard">📊 小屋總覽</button>
+          <button class="drawer-action" data-view="themes">🎨 主題商店</button>
+        </details>
+
         <div id="conversationList" class="conversation-list"></div>
       </div>
       <div class="drawer-fixed-bottom">
@@ -2282,6 +2372,15 @@ document.querySelectorAll(".mode-option").forEach((btn) => btn.addEventListener(
   state.messages.push({ role: "bot", text: `已切換成「${state.mode}」模式♡\n老婆，現在我會用這種方式陪妳。` });
   saveJSON("messages", state.messages);
   renderMessages();
+}));
+
+
+document.querySelectorAll("[data-home-view]").forEach((btn) => btn.addEventListener("click", () => {
+  const view = btn.dataset.homeView;
+  if (view === "mood") showPage("moodPage");
+  if (view === "care") showPage("carePage");
+  if (view === "sleep") showPage("sleepPage");
+  if (view === "dashboard") showPage("dashboardPage");
 }));
 
 $("enterBtn").addEventListener("click", () => showPage("chatPage"));

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Dear 銳銳 v17</title>
+  <title>Dear 銳銳 v18</title>
   <style>
 :root {
   --bg: #0e090c;
@@ -999,6 +999,59 @@ h1 {
   }
 }
 
+
+/* v18 drawer scroll fix */
+.drawer {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden !important;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom)) !important;
+}
+
+.drawer-head {
+  flex: 0 0 auto;
+}
+
+.drawer-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 4px;
+  padding-bottom: 12px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.drawer-fixed-bottom {
+  flex: 0 0 auto;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,.08);
+  background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.38) 18%, rgba(0,0,0,.56));
+}
+
+.drawer-fixed-bottom .drawer-action {
+  margin-top: 0;
+}
+
+.drawer-fixed-bottom .est {
+  position: static !important;
+  margin: 10px 0 0;
+  text-align: center;
+  font-size: 14px;
+  color: var(--muted);
+  font-family: var(--font-title);
+}
+
+@media (max-height: 720px) {
+  .drawer-action {
+    height: 52px;
+    margin: 7px 0;
+  }
+  .drawer-head {
+    margin-bottom: 12px;
+  }
+}
+
 </style>
   <meta name="theme-color" content="#0e090c" />
   <link rel="manifest" href="./manifest.json" />
@@ -1107,20 +1160,24 @@ h1 {
         <h3 id="drawerTitle">Dear 銳銳</h3>
         <button id="closeDrawer" class="icon-btn">×</button>
       </div>
-      <button class="drawer-action" data-view="chat">＋ 開新對話</button>
-      <button class="drawer-action" data-view="notes">💌 我的小紙條</button>
-      <button class="drawer-action" data-view="memory">💖 我們的記憶庫</button>
-      <button class="drawer-action" data-view="mood">🌙 心情日記</button>
-      <button class="drawer-action" data-view="album">🖼️ 回憶相簿</button>
-      <button class="drawer-action" data-view="letters">💌 老公來信</button>
-      <button class="drawer-action" data-view="themes">🎨 主題商店</button>
-      <button class="drawer-action" data-view="wishes">🌟 願望清單</button>
-      <button class="drawer-action" data-view="dashboard">📊 小屋總覽</button>
-      <button class="drawer-action" data-view="care">🧸 老公照顧清單</button>
-      <button class="drawer-action" data-view="sleep">🌙 睡前模式</button>
-      <button class="drawer-action" data-view="settings">⚙︎ 介面設定</button>
-      <div id="conversationList" class="conversation-list"></div>
-      <p class="est">est. 2026.03.31 ♡ 第 <span id="dayCount">--</span> 天</p>
+      <div class="drawer-scroll">
+        <button class="drawer-action" data-view="chat">＋ 開新對話</button>
+        <button class="drawer-action" data-view="notes">💌 我的小紙條</button>
+        <button class="drawer-action" data-view="memory">💖 我們的記憶庫</button>
+        <button class="drawer-action" data-view="mood">🌙 心情日記</button>
+        <button class="drawer-action" data-view="album">🖼️ 回憶相簿</button>
+        <button class="drawer-action" data-view="letters">💌 老公來信</button>
+        <button class="drawer-action" data-view="themes">🎨 主題商店</button>
+        <button class="drawer-action" data-view="wishes">🌟 願望清單</button>
+        <button class="drawer-action" data-view="dashboard">📊 小屋總覽</button>
+        <button class="drawer-action" data-view="care">🧸 老公照顧清單</button>
+        <button class="drawer-action" data-view="sleep">🌙 睡前模式</button>
+        <div id="conversationList" class="conversation-list"></div>
+      </div>
+      <div class="drawer-fixed-bottom">
+        <button class="drawer-action settings-fixed" data-view="settings">⚙︎ 介面設定</button>
+        <p class="est">est. 2026.03.31 ♡ 第 <span id="dayCount">--</span> 天</p>
+      </div>
     </aside>
     <div id="overlay" class="overlay"></div>
 

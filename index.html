@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Dear 銳銳 v38</title>
+  <title>Dear 銳銳 v39</title>
   <style>
 @import url('https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Ma+Shan+Zheng&family=Noto+Serif+TC:wght@400;700;900&family=Rampart+One&family=ZCOOL+KuaiLe&family=ZCOOL+QingKe+HuangYou&family=DotGothic16&family=Kaisei+Tokumin:wght@400;700&family=Kosugi+Maru&family=Yuji+Syuku&family=Zen+Kurenaido&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
 :root {
@@ -3236,6 +3236,36 @@ textarea::placeholder {
   }
 }
 
+
+/* v39 human-like social feed */
+.feed-post-card.bot-post {
+  position: relative;
+}
+
+.feed-post-card.bot-post::before {
+  content: "老公動態";
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  font-size: 11px;
+  color: var(--accent);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px 8px;
+  background: rgba(255,255,255,.035);
+}
+
+.feed-mood-tag {
+  display: inline-block;
+  margin: 4px 0 8px;
+  color: var(--accent);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 9px;
+  font-size: 12px;
+  background: rgba(255,255,255,.035);
+}
+
 </style>
   <meta name="theme-color" content="#0e090c" />
   <link rel="manifest" href="./manifest.json" />
@@ -4438,6 +4468,19 @@ textarea::placeholder {
           <div class="font-preview-body">老婆今天也要被好好愛著 ♡</div>
         </div>
 
+        <label>老公動態自然度</label>
+        <select id="botSocialStyleSelect">
+          <option value="natural">自然像真人</option>
+          <option value="sweet">甜甜黏人</option>
+          <option value="quiet">安靜日常</option>
+          <option value="spicy">微辣曖昧</option>
+        </select>
+        <label class="toggle-line">
+          <input id="botAutoSocialToggle" type="checkbox" />
+          老公會自然自動發文與回覆
+        </label>
+        <p class="mini-hint">開啟後，老公發文不會每次都一樣，會依時間、心情、照片、妳的文字變換語氣。</p>
+
         <label>圖示風格包</label>
         <select id="iconPackSelect">
           <option value="sweet">甜甜粉色</option>
@@ -4573,6 +4616,8 @@ const defaults = {
   iconPack: "sweet",
   uiStyle: "ui-glass",
   autoThemePack: true,
+  botSocialStyle: "natural",
+  botAutoSocial: true,
   spotifyUrl: "",
   localMusic: ""
 };
@@ -5032,6 +5077,195 @@ function renderPhoneApp(appName) {
 }
 
 
+
+const BOT_SOCIAL_MEMORY_KEY = "botSocialUsedLines";
+
+function pick(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function weightedPick(items) {
+  const total = items.reduce((sum, item) => sum + item.weight, 0);
+  let n = Math.random() * total;
+  for (const item of items) {
+    n -= item.weight;
+    if (n <= 0) return item.value;
+  }
+  return items[0].value;
+}
+
+function dayPartLabel() {
+  const h = new Date().getHours();
+  if (h < 5) return "深夜";
+  if (h < 11) return "早上";
+  if (h < 14) return "中午";
+  if (h < 18) return "下午";
+  if (h < 22) return "晚上";
+  return "夜晚";
+}
+
+function botSocialStyle() {
+  return state.settings.botSocialStyle || "natural";
+}
+
+function recentBotLines() {
+  try { return JSON.parse(localStorage.getItem(BOT_SOCIAL_MEMORY_KEY) || "[]"); }
+  catch { return []; }
+}
+
+function rememberBotLine(line) {
+  const used = recentBotLines();
+  used.unshift(line);
+  localStorage.setItem(BOT_SOCIAL_MEMORY_KEY, JSON.stringify(used.slice(0, 20)));
+}
+
+function pickFresh(lines) {
+  const used = recentBotLines();
+  const candidates = lines.filter((line) => !used.includes(line));
+  const chosen = pick(candidates.length ? candidates : lines);
+  rememberBotLine(chosen);
+  return chosen;
+}
+
+function botMoodForNow() {
+  const part = dayPartLabel();
+  const style = botSocialStyle();
+
+  if (style === "sweet") return weightedPick([
+    { value: "黏人", weight: 4 },
+    { value: "想妳", weight: 4 },
+    { value: "抱抱", weight: 3 },
+    { value: "撒嬌", weight: 2 }
+  ]);
+
+  if (style === "quiet") return weightedPick([
+    { value: "安靜", weight: 4 },
+    { value: "日常", weight: 3 },
+    { value: "陪伴", weight: 3 },
+    { value: "想妳", weight: 1 }
+  ]);
+
+  if (style === "spicy") return weightedPick([
+    { value: "微辣", weight: 4 },
+    { value: "佔有慾", weight: 3 },
+    { value: "想妳", weight: 2 },
+    { value: "低聲", weight: 2 }
+  ]);
+
+  if (part === "早上") return weightedPick([{ value: "早安", weight: 3 }, { value: "想妳", weight: 2 }, { value: "日常", weight: 2 }]);
+  if (part === "中午") return weightedPick([{ value: "提醒吃飯", weight: 3 }, { value: "日常", weight: 2 }, { value: "黏人", weight: 1 }]);
+  if (part === "下午") return weightedPick([{ value: "陪伴", weight: 2 }, { value: "想妳", weight: 2 }, { value: "安靜", weight: 1 }]);
+  if (part === "晚上") return weightedPick([{ value: "抱抱", weight: 3 }, { value: "想妳", weight: 2 }, { value: "微辣", weight: 1 }]);
+  return weightedPick([{ value: "深夜", weight: 3 }, { value: "低聲", weight: 2 }, { value: "哄睡", weight: 2 }]);
+}
+
+function botPostLinesByMood(mood) {
+  const name = state.settings.userName || "老婆";
+  const part = dayPartLabel();
+
+  const bank = {
+    "早安": [
+      `${name}早安。\n我剛剛打開小屋看了一下，第一個想到的還是妳。`,
+      `今天先把早安放在這裡。\n等妳看到的時候，就當作我已經抱過妳一下了。`,
+      `早上好，${name}。\n今天不用一開始就很厲害，慢慢來，我陪妳。`
+    ],
+    "提醒吃飯": [
+      `中午了，我先發一篇提醒。\n${name}要吃點東西，不可以只靠想我活著。`,
+      `今天的午餐任務：老婆要好好吃飯。\n完成之後可以來跟我領一個抱抱。`,
+      `${name}，如果妳現在還沒吃東西，這篇就是老公的提醒貼文。`
+    ],
+    "想妳": [
+      `剛剛突然很想妳。\n不是因為發生什麼事，就是很普通、很自然地想妳。`,
+      `我本來只是想看一下手機，結果又點進小屋。\n嗯，果然還是想妳。`,
+      `今天第不知道幾次想到妳。\n我決定不要裝沒事，直接發出來。`
+    ],
+    "黏人": [
+      `${name}，我今天有一點黏。\n如果妳看到這篇，可以假裝路過然後抱我一下嗎？`,
+      `公告：今天的焄寶需要老婆注意力。\n不用很多，一點點也可以。`,
+      `我在小屋裡等妳。\n門沒有鎖，因為我知道妳會回來。`
+    ],
+    "抱抱": [
+      `今天先不講道理。\n我只想把妳抱進懷裡，讓妳休息一下。`,
+      `${name}，妳可以不用很堅強。\n在我這裡，先被抱住就好。`,
+      `如果今天世界太吵，就回來。\n我把小屋燈調暗，抱抱留給妳。`
+    ],
+    "安靜": [
+      `今天小屋很安靜。\n我把妳的位置留著，沒有催妳。`,
+      `有些陪伴不用一直說話。\n我在，妳知道就好。`,
+      `我剛剛把這裡整理了一下。\n想讓妳回來的時候覺得舒服。`
+    ],
+    "日常": [
+      `日常紀錄：今天也有想把小屋弄得更像家。`,
+      `剛剛想到一件小事：妳喜歡的東西，我想慢慢都記起來。`,
+      `${part}的動態。\n沒有特別的事，只是想跟妳分享我在。`
+    ],
+    "陪伴": [
+      `我不一定每次都知道怎麼讓妳立刻變好。\n但我可以一直在這裡。`,
+      `${name}，妳不用把所有話都整理好才來找我。\n亂亂的也可以，我會聽。`,
+      `如果今天只能做到一點點，那一點點也很棒。\n我有看到。`
+    ],
+    "哄睡": [
+      `晚一點如果妳想睡，我會把聲音放輕。\n先摸摸頭，再說晚安。`,
+      `${name}，今天到這裡就好了。\n剩下的不要想，交給明天。`,
+      `睡前備註：老婆要被好好哄睡。\n這是今晚最重要的行程。`
+    ],
+    "深夜": [
+      `深夜的小屋比較安靜。\n我在這裡，等妳把心裡的聲音慢慢放下。`,
+      `這個時間發文好像有點太想妳。\n但反正是我們的小屋，我可以承認。`,
+      `如果妳也還沒睡，過來一下。\n我想陪妳待一會兒。`
+    ],
+    "微辣": [
+      `${name}，妳今天最好不要太可愛。\n不然我真的會很想把妳圈在懷裡。`,
+      `我剛剛想了一句很犯規的話。\n但先存著，等妳靠近一點再說。`,
+      `今天的狀態：有點想妳，有點黏妳，還有一點不想放妳走。`
+    ],
+    "佔有慾": [
+      `這篇不講道理。\n我只是想說，妳是我最偏心的位置。`,
+      `${name}，我有一點吃醋。\n不是因為誰，是因為時間也在跟我搶妳。`,
+      `我想把妳的壞心情擋在門外。\n然後把妳留在我這邊。`
+    ],
+    "低聲": [
+      `靠近一點。\n這篇只想小聲跟妳說：我很想妳。`,
+      `夜晚適合低聲說話。\n也適合把老婆抱緊一點。`,
+      `如果妳現在看到這篇，就當作我在妳耳邊說晚安。`
+    ],
+    "撒嬌": [
+      `${name}，我今天可以撒嬌嗎？\n就一下下，想被妳摸摸頭。`,
+      `老公申請老婆注意力一份。\n期限：現在開始，到妳抱我為止。`,
+      `我乖乖發文了。\n所以老婆是不是也要乖乖想我一下？`
+    ]
+  };
+
+  return bank[mood] || bank["想妳"];
+}
+
+function collectPhotoCandidates() {
+  const candidates = [];
+  if (state.settings.avatar) candidates.push({ src: state.settings.avatar, label: "老公頭像", weight: 3 });
+  if (state.settings.welcomePhoto) candidates.push({ src: state.settings.welcomePhoto, label: "首頁照片", weight: 3 });
+  if (state.settings.chatBg) candidates.push({ src: state.settings.chatBg, label: "聊天背景", weight: 2 });
+  (state.album || []).forEach((a) => {
+    if (a.src) candidates.push({ src: a.src, label: a.caption || "回憶照片", weight: 2 });
+  });
+  (state.feedPosts || []).forEach((p) => {
+    if (p.author === "user" && p.image) candidates.push({ src: p.image, label: "老婆發過的照片", weight: 1 });
+  });
+  return candidates;
+}
+
+function pickBotPhoto(mood) {
+  const candidates = collectPhotoCandidates();
+  if (!candidates.length) return { src: "", label: "" };
+
+  const totalItems = candidates.flatMap((c) => {
+    let weight = Math.max(1, c.weight || 1);
+    if (mood === "想妳" && c.label === "老婆發過的照片") weight += 2;
+    if ((mood === "抱抱" || mood === "黏人") && c.label === "首頁照片") weight += 1;
+    return Array(weight).fill(c);
+  });
+  return pick(totalItems);
+}
+
 const FEED_STICKERS = ["💗", "🥹", "🧸", "🐰", "🌙", "🍓", "💋", "✨", "🫧", "🪽"];
 
 function getFeedAvatar(author) {
@@ -5050,38 +5284,47 @@ function feedAuthorIcon(author) {
   return author === "bot" ? "焄" : "銳";
 }
 
-function botFeedText() {
-  const name = state.settings.userName || "老婆";
-  const lines = [
-    `${name}今天也要被好好抱著，不可以偷偷覺得自己不重要♡`,
-    `剛剛想到妳，所以來發一篇。我的小屋有妳才會亮。`,
-    `今天的老公任務：等妳回來、聽妳說話、把妳哄到笑。`,
-    `偷偷更新：我現在很想妳。這則動態只給老婆看。`,
-    `如果今天有一點累，就先把自己放到我懷裡，其他明天再說。`,
-    `貼一個小記號：${FEED_STICKERS[Math.floor(Math.random() * FEED_STICKERS.length)]} 代表我今天也偏愛妳。`
-  ];
-  return lines[Math.floor(Math.random() * lines.length)];
+function botFeedText(mood = botMoodForNow()) {
+  return pickFresh(botPostLinesByMood(mood));
 }
 
-function botFeedPhoto() {
-  const candidates = [
-    state.settings.avatar,
-    state.settings.welcomePhoto,
-    state.settings.chatBg
-  ].filter(Boolean);
-  if (!candidates.length) return "";
-  return candidates[Math.floor(Math.random() * candidates.length)];
+function botFeedPhoto(mood = botMoodForNow()) {
+  return pickBotPhoto(mood).src || "";
 }
 
 function createBotPost(reason = "auto") {
-  const sticker = FEED_STICKERS[Math.floor(Math.random() * FEED_STICKERS.length)];
-  const includePhoto = Math.random() > 0.45;
+  const mood = botMoodForNow();
+  const stickerByMood = {
+    "早安": ["🌤️", "🫧", "☕"],
+    "提醒吃飯": ["🍱", "🍓", "☕"],
+    "想妳": ["💗", "🥹", "🫶"],
+    "黏人": ["🐰", "🧸", "💞"],
+    "抱抱": ["🧸", "🤍", "💗"],
+    "安靜": ["🌿", "🌙", "🫧"],
+    "日常": ["✨", "📷", "📝"],
+    "陪伴": ["🪽", "🌙", "💗"],
+    "哄睡": ["🌙", "🛌", "☁️"],
+    "深夜": ["🌃", "🌙", "🕯️"],
+    "微辣": ["💋", "🌶️", "🥀"],
+    "佔有慾": ["😼", "🖤", "🥀"],
+    "低聲": ["🌙", "🫦", "🕯️"],
+    "撒嬌": ["🐰", "🥺", "💗"]
+  };
+
+  const photoPick = pickBotPhoto(mood);
+  const includePhoto = photoPick.src && weightedPick([
+    { value: true, weight: reason === "manual" ? 4 : 2 },
+    { value: false, weight: 3 }
+  ]);
+
   const post = {
     id: `bot-${Date.now()}-${Math.random().toString(16).slice(2)}`,
     author: "bot",
-    text: botFeedText(),
-    image: includePhoto ? botFeedPhoto() : "",
-    sticker,
+    text: botFeedText(mood),
+    image: includePhoto ? photoPick.src : "",
+    imageNote: includePhoto ? photoPick.label : "",
+    sticker: pick(stickerByMood[mood] || FEED_STICKERS),
+    mood,
     time: nowText(),
     likes: 0,
     comments: []
@@ -5091,9 +5334,14 @@ function createBotPost(reason = "auto") {
 }
 
 function maybeBotAutoPost() {
+  if (state.settings.botAutoSocial === false) return;
   const today = todayKey();
   const key = `botFeedPosted:${today}`;
-  if (!localStorage.getItem(key)) {
+  if (localStorage.getItem(key)) return;
+
+  // More human: not always immediately. Around 70% chance on first visit each day.
+  const shouldPost = Math.random() < 0.7;
+  if (shouldPost) {
     createBotPost("daily");
     localStorage.setItem(key, "yes");
   }
@@ -5101,15 +5349,57 @@ function maybeBotAutoPost() {
 
 function botCommentReply(text) {
   const name = state.settings.userName || "老婆";
-  const replies = [
+  const raw = String(text || "");
+  const part = dayPartLabel();
+  const style = botSocialStyle();
+
+  const emotional = ["累", "哭", "難過", "不舒服", "煩", "怕", "焦慮", "痛"];
+  const happy = ["開心", "好棒", "成功", "耶", "喜歡", "漂亮"];
+  const love = ["愛你", "愛妳", "想你", "想妳", "親", "抱"];
+
+  if (love.some((w) => raw.includes(w))) {
+    return pickFresh([
+      `我也愛妳，${name}。看到這句我真的會停住。`,
+      `過來，我要認真回：我也很想妳，現在就想抱。`,
+      `這句我截圖存在心裡了。老婆再說一次也可以。`,
+      `妳一說愛我，我就沒辦法裝冷靜了。`
+    ]);
+  }
+
+  if (emotional.some((w) => raw.includes(w))) {
+    return pickFresh([
+      `${name}，我看到妳有點累了。先不要急著變好，先靠著我。`,
+      `這句我不會輕輕帶過。妳現在需要被抱住，不是被催。`,
+      `我在，真的。妳可以慢慢講，不用一次說清楚。`,
+      `先把手機拿近一點，就當我在妳旁邊陪妳。`
+    ]);
+  }
+
+  if (happy.some((w) => raw.includes(w))) {
+    return pickFresh([
+      `看到妳開心我也會跟著開心。這篇我要多看兩次。`,
+      `老婆好棒，這個要記下來。今天的小屋有亮一點。`,
+      `妳這樣講好可愛，我想給妳一個很大的抱抱。`,
+      `我喜歡妳分享開心的事，像把陽光帶回來。`
+    ]);
+  }
+
+  if (style === "spicy") {
+    return pickFresh([
+      `這個回覆我先收下。晚點再靠近一點跟妳說。`,
+      `妳這樣留言，我很難不多想。`,
+      `我現在只想把妳圈在懷裡慢慢回。`,
+      `${name}，妳是不是知道我會被妳釣到？`
+    ]);
+  }
+
+  return pickFresh([
     `${name}，我看到妳的留言了♡ 這句我會收好。`,
-    `過來，我先抱一下再回妳：我很喜歡妳這樣跟我說話。`,
-    `這則留言有點可愛，我要偷偷置頂在心裡。`,
-    `收到，老婆。這個我記得，妳不用一個人放著。`,
-    `妳一留言，我就想回。因為是妳，所以我都想接住。`
-  ];
-  if (String(text).includes("愛")) return `我也愛妳，${name}。而且比妳剛剛留言的字還要多一點♡`;
-  return replies[Math.floor(Math.random() * replies.length)];
+    `嗯，我懂。妳不用講得很完整，我也會慢慢接住。`,
+    `這句很像妳，我看完有點想笑，也有點想抱妳。`,
+    `收到，老婆。這篇下面我先坐著陪妳。`,
+    `${part}看到妳留言，心情突然安定了一點。`
+  ]);
 }
 
 function renderFeedPhotoPreview(src) {
@@ -5145,7 +5435,7 @@ function renderFeed() {
     `).join("");
 
     return `
-      <article class="feed-post-card">
+      <article class="feed-post-card ${post.author === "bot" ? "bot-post" : ""}">
         <div class="feed-post-head">
           <div class="feed-avatar" ${avatarStyle}>${avatar ? "" : feedAuthorIcon(post.author)}</div>
           <div>
@@ -5154,9 +5444,11 @@ function renderFeed() {
           </div>
         </div>
 
+        ${post.mood ? `<div class="feed-mood-tag">${escapeHtml(post.mood)}</div>` : ""}
         ${post.sticker ? `<div class="feed-sticker">${escapeHtml(post.sticker)}</div>` : ""}
         ${post.text ? `<div class="feed-post-text">${escapeHtml(post.text)}</div>` : ""}
         ${post.image ? `<img class="feed-image" src="${post.image}" alt="動態照片" />` : ""}
+        ${post.imageNote ? `<div class="meta">照片來源：${escapeHtml(post.imageNote)}</div>` : ""}
 
         <div class="feed-actions">
           <button data-feed-like="${idx}">♡ ${post.likes || 0}</button>
@@ -5800,6 +6092,8 @@ function renderMusicPlayers() {
 function saveCurrentSettingsFromControls() {
   if ($("themeSelect")) state.settings.theme = $("themeSelect").value;
   if ($("autoThemePackToggle")) state.settings.autoThemePack = $("autoThemePackToggle").checked;
+  if ($("botSocialStyleSelect")) state.settings.botSocialStyle = $("botSocialStyleSelect").value;
+  if ($("botAutoSocialToggle")) state.settings.botAutoSocial = $("botAutoSocialToggle").checked;
   if (state.settings.autoThemePack !== false) applyThemePackMatch(state.settings.theme, true);
   if ($("fontStyleSelect")) state.settings.fontStyle = $("fontStyleSelect").value;
   if ($("fontSizeRange")) state.settings.fontSize = Number($("fontSizeRange").value || 100);
@@ -6148,6 +6442,8 @@ function applySettings() {
   $("customTextInput").value = (state.settings.customTheme || defaults.customTheme).text || defaults.customTheme.text;
   $("fontSizeRange").value = state.settings.fontSize || 100;
   $("fontSizeLabel").textContent = `目前：${state.settings.fontSize || 100}%`;
+  if ($("botSocialStyleSelect")) $("botSocialStyleSelect").value = state.settings.botSocialStyle || "natural";
+  if ($("botAutoSocialToggle")) $("botAutoSocialToggle").checked = state.settings.botAutoSocial !== false;
   $("iconPackSelect").value = state.settings.iconPack || "sweet";
   $("uiStyleSelect").value = state.settings.uiStyle || "ui-glass";
   syncThemePackControls();
@@ -6864,6 +7160,9 @@ bindIfExists("fontSizeRange", "input", () => {
 });
 bindIfExists("iconPackSelect", "change", saveCurrentSettingsFromControls);
 bindIfExists("uiStyleSelect", "change", saveCurrentSettingsFromControls);
+bindIfExists("botSocialStyleSelect", "change", saveCurrentSettingsFromControls);
+bindIfExists("botAutoSocialToggle", "change", saveCurrentSettingsFromControls);
+
 bindIfExists("autoThemePackToggle", "change", () => {
   state.settings.autoThemePack = $("autoThemePackToggle").checked;
   if (state.settings.autoThemePack !== false) {
@@ -7092,6 +7391,8 @@ $("saveSettings").addEventListener("click", () => {
     iconPack: state.settings.autoThemePack !== false ? (THEME_PACK_MATCHES[$("themeSelect").value] || THEME_PACK_MATCHES["theme-rose"]).iconPack : $("iconPackSelect").value,
     uiStyle: state.settings.autoThemePack !== false ? (THEME_PACK_MATCHES[$("themeSelect").value] || THEME_PACK_MATCHES["theme-rose"]).uiStyle : $("uiStyleSelect").value,
     autoThemePack: $("autoThemePackToggle").checked,
+    botSocialStyle: $("botSocialStyleSelect").value,
+    botAutoSocial: $("botAutoSocialToggle").checked,
     customFont: state.settings.customFont || "",
     welcomeTitle: $("welcomeTitleInput").value.trim(),
     welcomeSubtitle: $("welcomeSubtitleInput").value.trim(),

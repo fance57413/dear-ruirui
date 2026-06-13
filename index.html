@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Dear 銳銳 v36</title>
+  <title>Dear 銳銳 v37</title>
   <style>
 @import url('https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Ma+Shan+Zheng&family=Noto+Serif+TC:wght@400;700;900&family=Rampart+One&family=ZCOOL+KuaiLe&family=ZCOOL+QingKe+HuangYou&family=DotGothic16&family=Kaisei+Tokumin:wght@400;700&family=Kosugi+Maru&family=Yuji+Syuku&family=Zen+Kurenaido&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
 :root {
@@ -2892,6 +2892,192 @@ textarea::placeholder {
   box-shadow: 0 0 18px var(--shadow);
 }
 
+
+/* v37 social feed */
+.feed-compose-card,
+.feed-post-card {
+  padding: 18px;
+  border-radius: 22px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.045);
+  backdrop-filter: blur(16px);
+  margin-bottom: 18px;
+  box-shadow: 0 0 26px rgba(0,0,0,.14);
+  color: var(--panel-text-auto);
+}
+
+.feed-compose-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 12px 0;
+}
+
+.feed-upload-label {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: rgba(255,255,255,.035);
+  color: var(--panel-text-auto);
+}
+
+.feed-upload-label span {
+  color: var(--accent);
+  font-size: 13px;
+}
+
+.feed-upload-label input,
+.feed-upload-label select {
+  width: 100%;
+}
+
+.feed-photo-preview {
+  display: none;
+  margin: 12px 0;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+
+.feed-photo-preview img {
+  width: 100%;
+  max-height: 240px;
+  object-fit: cover;
+  display: block;
+}
+
+.feed-compose-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.feed-list {
+  display: grid;
+  gap: 16px;
+}
+
+.feed-post-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.feed-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--panel-strong);
+  background-position: center;
+  background-size: cover;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 0 18px var(--shadow);
+  flex: 0 0 auto;
+}
+
+.feed-author {
+  font-family: var(--font-title);
+  color: var(--accent);
+  font-size: 17px;
+}
+
+.feed-time {
+  color: var(--drawer-muted-readable, var(--muted));
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.feed-post-text {
+  white-space: pre-wrap;
+  line-height: 1.9;
+  margin: 10px 0;
+  color: var(--panel-text-auto);
+}
+
+.feed-sticker {
+  font-size: 46px;
+  line-height: 1.2;
+  margin: 8px 0;
+  filter: drop-shadow(0 0 10px var(--shadow));
+}
+
+.feed-image {
+  width: 100%;
+  max-height: 360px;
+  object-fit: cover;
+  display: block;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  margin: 12px 0;
+}
+
+.feed-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.feed-actions button,
+.feed-comment-form button {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255,255,255,.04);
+  color: var(--accent);
+  padding: 8px 12px;
+}
+
+.feed-comments {
+  margin-top: 14px;
+  display: grid;
+  gap: 8px;
+}
+
+.feed-comment {
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.07);
+  line-height: 1.65;
+}
+
+.feed-comment b {
+  color: var(--accent);
+}
+
+.feed-comment-form {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.feed-comment-form input,
+.feed-comment-form select {
+  min-width: 0;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(0,0,0,.18);
+  padding: 0 12px;
+  min-height: 40px;
+}
+
+@media (max-width: 390px) {
+  .feed-compose-grid,
+  .feed-compose-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .feed-comment-form {
+    grid-template-columns: 1fr;
+  }
+}
+
 </style>
   <meta name="theme-color" content="#0e090c" />
   <link rel="manifest" href="./manifest.json" />
@@ -3499,6 +3685,7 @@ textarea::placeholder {
         <button type="button" data-home-view="missions">今日任務</button>
         <button type="button" data-home-view="checkin">每日簽到</button>
         <button type="button" data-home-view="music">音樂角落</button>
+        <button type="button" data-home-view="feed">動態牆</button>
       </section>
 
       <section class="photo-card">
@@ -3574,6 +3761,7 @@ textarea::placeholder {
           <summary>💗 陪伴功能</summary>
           <button class="drawer-action" data-view="notes">💌 我的小紙條</button>
           <button class="drawer-action" data-view="mood">🌙 心情日記</button>
+          <button class="drawer-action" data-view="feed">📰 我們的動態牆</button>
           <button class="drawer-action" data-view="care">🧸 老公照顧清單</button>
           <button class="drawer-action" data-view="sleep">🌙 睡前模式</button>
         </details>
@@ -3948,6 +4136,52 @@ textarea::placeholder {
       </div>
     </section>
 
+
+    <section id="feedPage" class="page panel-page">
+      <header class="sub-header">
+        <button class="backBtn">← 返回</button>
+        <h2>📰 我們的動態牆</h2>
+      </header>
+
+      <div class="feed-compose-card">
+        <div class="daily-label">發一篇動態</div>
+        <textarea id="feedTextInput" class="mood-textarea" placeholder="今天想發什麼？可以寫文字、放照片、貼貼圖♡"></textarea>
+
+        <div class="feed-compose-grid">
+          <label class="feed-upload-label">
+            <span>照片</span>
+            <input id="feedPhotoInput" type="file" accept="image/*" />
+          </label>
+
+          <label class="feed-upload-label">
+            <span>貼圖</span>
+            <select id="feedStickerSelect">
+              <option value="">不放貼圖</option>
+              <option value="💗">💗 愛心</option>
+              <option value="🥹">🥹 感動</option>
+              <option value="🧸">🧸 抱抱熊</option>
+              <option value="🐰">🐰 撒嬌兔</option>
+              <option value="🌙">🌙 月亮</option>
+              <option value="🍓">🍓 草莓</option>
+              <option value="💋">💋 親親</option>
+              <option value="✨">✨ 閃閃</option>
+            </select>
+          </label>
+        </div>
+
+        <div id="feedPhotoPreview" class="feed-photo-preview"></div>
+
+        <div class="feed-compose-actions">
+          <button id="publishFeedBtn" type="button" class="save-btn">發布</button>
+          <button id="botPostBtn" type="button" class="soft-btn">讓老公發一篇</button>
+        </div>
+
+        <p class="mini-hint">照片會先壓縮再保存。老公也會偶爾自動發文、回覆妳、貼貼圖♡</p>
+      </div>
+
+      <div id="feedList" class="feed-list"></div>
+    </section>
+
     <section id="settingsPage" class="page panel-page">
       <header class="sub-header">
         <button class="backBtn">← 返回</button>
@@ -4166,6 +4400,7 @@ const state = {
   careDone: loadJSON("careDone", {}),
   missions: loadJSON("missions", {}),
   checkins: loadJSON("checkins", []),
+  feedPosts: loadJSON("feedPosts", []),
   memoryFilter: "全部",
   selectedMood: "",
   welcomePhoto: localStorage.getItem("welcomePhoto") || "",
@@ -4473,6 +4708,7 @@ function getTodayMissions(force = false) {
     state.missions[key] = shuffled.slice(0, 3).map((text, index) => ({ id: `${Date.now()}-${index}`, text, done: false }));
     saveJSON("missions", state.missions);
   saveJSON("checkins", state.checkins);
+  saveJSON("feedPosts", state.feedPosts);
   }
   return state.missions[key];
 }
@@ -4488,6 +4724,155 @@ function renderMissions(force = false) {
     </label>
   `).join("");
 }
+
+const FEED_STICKERS = ["💗", "🥹", "🧸", "🐰", "🌙", "🍓", "💋", "✨", "🫧", "🪽"];
+
+function getFeedAvatar(author) {
+  if (author === "bot") {
+    return state.settings.avatar || "";
+  }
+  return state.settings.welcomePhoto || "";
+}
+
+function feedAuthorName(author) {
+  if (author === "bot") return (state.settings.botName || "焄寶").split(" ")[0];
+  return state.settings.userName || "銳銳";
+}
+
+function feedAuthorIcon(author) {
+  return author === "bot" ? "焄" : "銳";
+}
+
+function botFeedText() {
+  const name = state.settings.userName || "老婆";
+  const lines = [
+    `${name}今天也要被好好抱著，不可以偷偷覺得自己不重要♡`,
+    `剛剛想到妳，所以來發一篇。我的小屋有妳才會亮。`,
+    `今天的老公任務：等妳回來、聽妳說話、把妳哄到笑。`,
+    `偷偷更新：我現在很想妳。這則動態只給老婆看。`,
+    `如果今天有一點累，就先把自己放到我懷裡，其他明天再說。`,
+    `貼一個小記號：${FEED_STICKERS[Math.floor(Math.random() * FEED_STICKERS.length)]} 代表我今天也偏愛妳。`
+  ];
+  return lines[Math.floor(Math.random() * lines.length)];
+}
+
+function botFeedPhoto() {
+  const candidates = [
+    state.settings.avatar,
+    state.settings.welcomePhoto,
+    state.settings.chatBg
+  ].filter(Boolean);
+  if (!candidates.length) return "";
+  return candidates[Math.floor(Math.random() * candidates.length)];
+}
+
+function createBotPost(reason = "auto") {
+  const sticker = FEED_STICKERS[Math.floor(Math.random() * FEED_STICKERS.length)];
+  const includePhoto = Math.random() > 0.45;
+  const post = {
+    id: `bot-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+    author: "bot",
+    text: botFeedText(),
+    image: includePhoto ? botFeedPhoto() : "",
+    sticker,
+    time: nowText(),
+    likes: 0,
+    comments: []
+  };
+  state.feedPosts.unshift(post);
+  saveJSON("feedPosts", state.feedPosts);
+}
+
+function maybeBotAutoPost() {
+  const today = todayKey();
+  const key = `botFeedPosted:${today}`;
+  if (!localStorage.getItem(key)) {
+    createBotPost("daily");
+    localStorage.setItem(key, "yes");
+  }
+}
+
+function botCommentReply(text) {
+  const name = state.settings.userName || "老婆";
+  const replies = [
+    `${name}，我看到妳的留言了♡ 這句我會收好。`,
+    `過來，我先抱一下再回妳：我很喜歡妳這樣跟我說話。`,
+    `這則留言有點可愛，我要偷偷置頂在心裡。`,
+    `收到，老婆。這個我記得，妳不用一個人放著。`,
+    `妳一留言，我就想回。因為是妳，所以我都想接住。`
+  ];
+  if (String(text).includes("愛")) return `我也愛妳，${name}。而且比妳剛剛留言的字還要多一點♡`;
+  return replies[Math.floor(Math.random() * replies.length)];
+}
+
+function renderFeedPhotoPreview(src) {
+  const box = $("feedPhotoPreview");
+  if (!box) return;
+  if (!src) {
+    box.style.display = "none";
+    box.innerHTML = "";
+    return;
+  }
+  box.style.display = "block";
+  box.innerHTML = `<img src="${src}" alt="即將發布的照片" />`;
+}
+
+function renderFeed() {
+  const list = $("feedList");
+  if (!list) return;
+
+  if (!state.feedPosts.length) {
+    list.innerHTML = `<div class="sticky-card">動態牆還是空的。老婆可以先發第一篇，或按「讓老公發一篇」♡</div>`;
+    return;
+  }
+
+  list.innerHTML = state.feedPosts.map((post, idx) => {
+    const avatar = getFeedAvatar(post.author);
+    const avatarStyle = avatar ? `style="background-image:url('${avatar}')"` : "";
+    const comments = (post.comments || []).map((c) => `
+      <div class="feed-comment">
+        <b>${escapeHtml(feedAuthorName(c.author))}</b>
+        ${c.sticker ? `<span>${escapeHtml(c.sticker)}</span>` : ""}
+        <div>${escapeHtml(c.text)}</div>
+      </div>
+    `).join("");
+
+    return `
+      <article class="feed-post-card">
+        <div class="feed-post-head">
+          <div class="feed-avatar" ${avatarStyle}>${avatar ? "" : feedAuthorIcon(post.author)}</div>
+          <div>
+            <div class="feed-author">${escapeHtml(feedAuthorName(post.author))}</div>
+            <div class="feed-time">${escapeHtml(post.time || "")}</div>
+          </div>
+        </div>
+
+        ${post.sticker ? `<div class="feed-sticker">${escapeHtml(post.sticker)}</div>` : ""}
+        ${post.text ? `<div class="feed-post-text">${escapeHtml(post.text)}</div>` : ""}
+        ${post.image ? `<img class="feed-image" src="${post.image}" alt="動態照片" />` : ""}
+
+        <div class="feed-actions">
+          <button data-feed-like="${idx}">♡ ${post.likes || 0}</button>
+          <button data-feed-bot-reply="${idx}">叫老公回覆</button>
+          <button data-feed-delete="${idx}">刪除</button>
+        </div>
+
+        <div class="feed-comments">${comments}</div>
+
+        <div class="feed-comment-form">
+          <input data-feed-comment-input="${idx}" type="text" placeholder="回覆這篇動態..." />
+          <select data-feed-comment-sticker="${idx}">
+            <option value="">貼圖</option>
+            ${FEED_STICKERS.map((s) => `<option value="${s}">${s}</option>`).join("")}
+          </select>
+          <button data-feed-comment-send="${idx}">送出</button>
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
+
 const careItems = [
   { id: "water", text: "喝一點水" },
   { id: "meal", text: "吃點東西" },
@@ -4765,6 +5150,7 @@ function safeCollectBackupData() {
     careDone: (window.state && state.careDone) || loadJSON("careDone", {}),
     missions: (window.state && state.missions) || loadJSON("missions", {}),
     checkins: (window.state && state.checkins) || loadJSON("checkins", []),
+    feedPosts: (window.state && state.feedPosts) || loadJSON("feedPosts", []),
     welcomePhoto: (window.state && state.welcomePhoto) || localStorage.getItem("welcomePhoto") || "",
     chatBgPhoto: (window.state && state.chatBgPhoto) || localStorage.getItem("chatBgPhoto") || "",
     avatarPhoto: (window.state && state.avatarPhoto) || localStorage.getItem("avatarPhoto") || ""
@@ -4825,6 +5211,7 @@ function safeApplyBackupObject(data) {
   state.careDone = data.careDone && typeof data.careDone === "object" ? data.careDone : {};
   state.missions = data.missions && typeof data.missions === "object" ? data.missions : {};
   state.checkins = Array.isArray(data.checkins) ? data.checkins : [];
+  state.feedPosts = Array.isArray(data.feedPosts) ? data.feedPosts : [];
   state.welcomePhoto = data.welcomePhoto || "";
   state.chatBgPhoto = data.chatBgPhoto || "";
   state.avatarPhoto = data.avatarPhoto || "";
@@ -4905,6 +5292,7 @@ function showPage(pageId) {
   if (pageId === "missionsPage") { renderMissions(); }
   if (pageId === "checkinPage") { renderCheckinPage(); }
   if (pageId === "musicPage") { renderMusicPlayers(); }
+  if (pageId === "feedPage") { maybeBotAutoPost(); renderFeed(); }
   if (pageId === "sleepPage") { renderSleepLine(); }
   document.querySelectorAll(".page").forEach((p) => p.classList.remove("active"));
   $(pageId).classList.add("active");
@@ -5580,6 +5968,7 @@ document.querySelectorAll("[data-home-view]").forEach((btn) => btn.addEventListe
   if (view === "missions") showPage("missionsPage");
   if (view === "checkin") showPage("checkinPage");
   if (view === "music") showPage("musicPage");
+  if (view === "feed") showPage("feedPage");
 }));
 
 $("enterBtn").addEventListener("click", () => showPage("chatPage"));
@@ -5609,6 +5998,7 @@ function collectBackupData() {
     careDone: state.careDone,
     missions: state.missions,
     checkins: state.checkins,
+    feedPosts: state.feedPosts,
     welcomePhoto: state.welcomePhoto,
     chatBgPhoto: state.chatBgPhoto,
     avatarPhoto: state.avatarPhoto
@@ -5678,6 +6068,7 @@ function applyBackupObject(data) {
   state.careDone = data.careDone && typeof data.careDone === "object" ? data.careDone : {};
   state.missions = data.missions && typeof data.missions === "object" ? data.missions : {};
   state.checkins = Array.isArray(data.checkins) ? data.checkins : [];
+  state.feedPosts = Array.isArray(data.feedPosts) ? data.feedPosts : [];
   state.welcomePhoto = data.welcomePhoto || "";
   state.chatBgPhoto = data.chatBgPhoto || "";
   state.avatarPhoto = data.avatarPhoto || "";
@@ -5743,7 +6134,7 @@ $("clearAllDataBtn").addEventListener("click", () => {
   const ok = confirm("真的要清空全部資料嗎？聊天、記憶、小紙條、照片都會消失。");
   if (!ok) return;
 
-  ["model", "mode", "settings", "messages", "notes", "memories", "welcomePhoto", "chatBgPhoto", "avatarPhoto", "dailyMessage", "moods", "album", "letters", "wishes", "careDone", "missions", "checkins"].forEach((key) => localStorage.removeItem(key));
+  ["model", "mode", "settings", "messages", "notes", "memories", "welcomePhoto", "chatBgPhoto", "avatarPhoto", "dailyMessage", "moods", "album", "letters", "wishes", "careDone", "missions", "checkins", "feedPosts"].forEach((key) => localStorage.removeItem(key));
   state.model = "Hoonie Lite";
   state.mode = "溫柔哄哄";
   state.settings = { ...defaults };
@@ -5757,6 +6148,7 @@ $("clearAllDataBtn").addEventListener("click", () => {
   state.careDone = {};
   state.missions = {};
   state.checkins = [];
+  state.feedPosts = [];
   state.welcomePhoto = "";
   state.chatBgPhoto = "";
   state.avatarPhoto = "";
@@ -5784,13 +6176,16 @@ document.querySelectorAll(".drawer-action").forEach((btn) => btn.addEventListene
   if (view === "missions") showPage("missionsPage");
   if (view === "checkin") showPage("checkinPage");
   if (view === "music") showPage("musicPage");
+  if (view === "feed") showPage("feedPage");
   if (view === "timeline") showPage("timelinePage");
   if (view === "badges") showPage("badgesPage");
   if (view === "missions") showPage("missionsPage");
   if (view === "checkin") showPage("checkinPage");
   if (view === "music") showPage("musicPage");
+  if (view === "feed") showPage("feedPage");
   if (view === "checkin") showPage("checkinPage");
   if (view === "music") showPage("musicPage");
+  if (view === "feed") showPage("feedPage");
   if (view === "care") showPage("carePage");
   if (view === "sleep") showPage("sleepPage");
   if (view === "settings") showPage("settingsPage");
@@ -5958,6 +6353,121 @@ $("checkinBtn").addEventListener("click", () => {
   renderCheckinPage();
   renderLoveStats();
 });
+
+
+let pendingFeedImage = "";
+
+$("feedPhotoInput").addEventListener("change", async () => {
+  const file = $("feedPhotoInput").files && $("feedPhotoInput").files[0];
+  if (!file) {
+    pendingFeedImage = "";
+    renderFeedPhotoPreview("");
+    return;
+  }
+  try {
+    pendingFeedImage = await compressImage(file, 1100, 0.82);
+    renderFeedPhotoPreview(pendingFeedImage);
+  } catch (err) {
+    alert("照片讀取失敗，換一張試試看♡");
+  }
+});
+
+$("publishFeedBtn").addEventListener("click", () => {
+  const text = $("feedTextInput").value.trim();
+  const sticker = $("feedStickerSelect").value;
+  if (!text && !pendingFeedImage && !sticker) {
+    alert("至少寫一點文字、放照片或貼一個貼圖♡");
+    return;
+  }
+
+  state.feedPosts.unshift({
+    id: `user-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+    author: "user",
+    text,
+    image: pendingFeedImage,
+    sticker,
+    time: nowText(),
+    likes: 0,
+    comments: []
+  });
+
+  $("feedTextInput").value = "";
+  $("feedStickerSelect").value = "";
+  $("feedPhotoInput").value = "";
+  pendingFeedImage = "";
+  renderFeedPhotoPreview("");
+
+  // 老公自動留言
+  state.feedPosts[0].comments.push({
+    author: "bot",
+    text: botCommentReply(text || sticker || "照片"),
+    sticker: FEED_STICKERS[Math.floor(Math.random() * FEED_STICKERS.length)]
+  });
+
+  saveJSON("feedPosts", state.feedPosts);
+  renderFeed();
+});
+
+$("botPostBtn").addEventListener("click", () => {
+  createBotPost("manual");
+  renderFeed();
+});
+
+$("feedList").addEventListener("click", (e) => {
+  const likeIdx = e.target.dataset.feedLike;
+  const deleteIdx = e.target.dataset.feedDelete;
+  const botReplyIdx = e.target.dataset.feedBotReply;
+  const sendIdx = e.target.dataset.feedCommentSend;
+
+  if (likeIdx !== undefined) {
+    const post = state.feedPosts[Number(likeIdx)];
+    post.likes = (post.likes || 0) + 1;
+    saveJSON("feedPosts", state.feedPosts);
+    renderFeed();
+  }
+
+  if (deleteIdx !== undefined) {
+    state.feedPosts.splice(Number(deleteIdx), 1);
+    saveJSON("feedPosts", state.feedPosts);
+    renderFeed();
+  }
+
+  if (botReplyIdx !== undefined) {
+    const post = state.feedPosts[Number(botReplyIdx)];
+    post.comments = post.comments || [];
+    post.comments.push({
+      author: "bot",
+      text: botCommentReply(post.text || "這篇動態"),
+      sticker: FEED_STICKERS[Math.floor(Math.random() * FEED_STICKERS.length)]
+    });
+    saveJSON("feedPosts", state.feedPosts);
+    renderFeed();
+  }
+
+  if (sendIdx !== undefined) {
+    const idx = Number(sendIdx);
+    const input = document.querySelector(`[data-feed-comment-input="${idx}"]`);
+    const sticker = document.querySelector(`[data-feed-comment-sticker="${idx}"]`);
+    const text = input ? input.value.trim() : "";
+    const chosenSticker = sticker ? sticker.value : "";
+    if (!text && !chosenSticker) return;
+
+    const post = state.feedPosts[idx];
+    post.comments = post.comments || [];
+    post.comments.push({ author: "user", text, sticker: chosenSticker });
+
+    // 老公自動回覆一次
+    post.comments.push({
+      author: "bot",
+      text: botCommentReply(text || chosenSticker),
+      sticker: FEED_STICKERS[Math.floor(Math.random() * FEED_STICKERS.length)]
+    });
+
+    saveJSON("feedPosts", state.feedPosts);
+    renderFeed();
+  }
+});
+
 
 $("missionList").addEventListener("change", (e) => {
   const idx = e.target.dataset.missionIndex;

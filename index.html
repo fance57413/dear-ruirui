@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Dear 銳銳 v27</title>
+  <title>Dear 銳銳 v29</title>
   <style>
-@import url('https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Ma+Shan+Zheng&family=Noto+Serif+TC:wght@400;700;900&family=Rampart+One&family=ZCOOL+KuaiLe&family=ZCOOL+QingKe+HuangYou&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Ma+Shan+Zheng&family=Noto+Serif+TC:wght@400;700;900&family=Rampart+One&family=ZCOOL+KuaiLe&family=ZCOOL+QingKe+HuangYou&family=DotGothic16&family=Kaisei+Tokumin:wght@400;700&family=Kosugi+Maru&family=Yuji+Syuku&family=Zen+Kurenaido&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
 :root {
   --bg: #0e090c;
   --panel: rgba(39, 28, 35, .72);
@@ -2109,9 +2109,180 @@ h3,
   margin-right: 4px;
 }
 
+
+/* v28 font size + custom font + theme packs + music */
+.font-pixel {
+  --font-title: "DotGothic16", "ZCOOL QingKe HuangYou", monospace;
+  --font-body: "DotGothic16", "ZCOOL QingKe HuangYou", monospace;
+  --title-spacing: .04em;
+  --body-spacing: .04em;
+  --title-weight: 400;
+}
+.font-journal {
+  --font-title: "Zen Kurenaido", "Kiwi Maru", cursive;
+  --font-body: "Zen Kurenaido", "Kiwi Maru", cursive;
+  --title-spacing: .06em;
+  --body-spacing: .03em;
+  --title-weight: 400;
+}
+.font-softjp {
+  --font-title: "Zen Maru Gothic", "Kosugi Maru", system-ui, sans-serif;
+  --font-body: "Zen Maru Gothic", "Kosugi Maru", system-ui, sans-serif;
+  --title-spacing: .08em;
+  --body-spacing: .025em;
+  --title-weight: 700;
+}
+.font-story {
+  --font-title: "Kaisei Tokumin", "Noto Serif TC", serif;
+  --font-body: "Yuji Syuku", "Kaisei Tokumin", "Noto Serif TC", serif;
+  --title-spacing: .05em;
+  --body-spacing: .035em;
+  --title-weight: 700;
+}
+.font-custom {
+  --font-title: "RuiruiCustomFont", "Noto Serif TC", serif;
+  --font-body: "RuiruiCustomFont", "Noto Serif TC", serif;
+  --title-spacing: .04em;
+  --body-spacing: .025em;
+  --title-weight: 500;
+}
+
+.app {
+  font-size: calc(16px * var(--font-scale, 1));
+}
+
+.range-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px;
+  align-items: center;
+  color: var(--muted);
+}
+
+.range-row input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+.music-card {
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.045);
+  backdrop-filter: blur(16px);
+  margin-bottom: 18px;
+}
+
+.music-card input[type="text"] {
+  width: 100%;
+  min-height: 46px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: rgba(0,0,0,.24);
+  color: var(--text);
+  padding: 0 14px;
+  outline: 0;
+  margin: 10px 0;
+}
+
+.music-card input[type="file"] {
+  width: 100%;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  color: var(--text);
+  background: rgba(0,0,0,.18);
+  margin: 10px 0;
+}
+
+.spotify-embed-box {
+  margin-top: 14px;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.spotify-embed-box iframe {
+  width: 100%;
+  min-height: 152px;
+  border: 0;
+  border-radius: 16px;
+}
+
+#localAudioPlayer {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+}
+
+/* Interface style packs */
+.ui-card .message,
+.ui-card .sticky-card,
+.ui-card .daily-card,
+.ui-card .photo-card,
+.ui-card .music-card,
+.ui-card .settings-card,
+.ui-card .drawer-action {
+  border-width: 2px !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,.22) !important;
+  backdrop-filter: none !important;
+}
+
+.ui-minimal .message,
+.ui-minimal .sticky-card,
+.ui-minimal .daily-card,
+.ui-minimal .photo-card,
+.ui-minimal .music-card,
+.ui-minimal .settings-card,
+.ui-minimal .drawer-action {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-color: rgba(255,255,255,.16) !important;
+}
+
+.ui-minimal .chat-bg::after {
+  opacity: .2 !important;
+}
+
+.ui-dream .message,
+.ui-dream .sticky-card,
+.ui-dream .daily-card,
+.ui-dream .photo-card,
+.ui-dream .music-card,
+.ui-dream .settings-card {
+  border-radius: 28px !important;
+  box-shadow: 0 0 30px var(--shadow), inset 0 0 18px rgba(255,255,255,.035) !important;
+}
+
+.ui-dream .chat-header {
+  background:
+    radial-gradient(circle at 20% 30%, var(--shadow), transparent 28%),
+    radial-gradient(circle at 75% 20%, rgba(255,255,255,.08), transparent 24%),
+    rgba(0,0,0,.14) !important;
+}
+
+.ui-glass .message,
+.ui-glass .sticky-card,
+.ui-glass .daily-card,
+.ui-glass .photo-card,
+.ui-glass .music-card,
+.ui-glass .settings-card {
+  backdrop-filter: blur(18px) !important;
+}
+
+/* icon pack visual hints for the top icon buttons */
+.iconpack-star #modelBtn,
+.iconpack-star #modeBtn { box-shadow: 0 0 20px rgba(184,223,255,.25) !important; }
+.iconpack-cat #modelBtn,
+.iconpack-cat #modeBtn { box-shadow: 0 0 20px rgba(255,211,229,.25) !important; }
+.iconpack-dark #modelBtn,
+.iconpack-dark #modeBtn { box-shadow: 0 0 20px rgba(255,94,116,.22) !important; }
+.iconpack-forest #modelBtn,
+.iconpack-forest #modeBtn { box-shadow: 0 0 20px rgba(217,242,180,.20) !important; }
+
 </style>
   <meta name="theme-color" content="#0e090c" />
   <link rel="manifest" href="./manifest.json" />
+<style id="runtimeFontStyle"></style>
 </head>
 <body>
   <div id="app" class="app theme-rose">
@@ -2168,6 +2339,7 @@ h3,
         <button type="button" data-home-view="dashboard">小屋總覽</button>
         <button type="button" data-home-view="missions">今日任務</button>
         <button type="button" data-home-view="checkin">每日簽到</button>
+        <button type="button" data-home-view="music">音樂角落</button>
       </section>
 
       <section class="photo-card">
@@ -2263,6 +2435,7 @@ h3,
           <button class="drawer-action" data-view="missions">🎯 今日任務</button>
           <button class="drawer-action" data-view="checkin">💞 每日簽到</button>
           <button class="drawer-action" data-view="themes">🎨 主題商店</button>
+          <button class="drawer-action" data-view="music">🎧 音樂角落</button>
         </details>
 
         <div id="conversationList" class="conversation-list"></div>
@@ -2588,6 +2761,30 @@ h3,
       </div>
     </section>
 
+
+    <section id="musicPage" class="page panel-page">
+      <header class="sub-header">
+        <button class="backBtn">← 返回</button>
+        <h2>🎧 音樂角落</h2>
+      </header>
+
+      <div class="music-card">
+        <div class="daily-label">Spotify 播放器</div>
+        <input id="spotifyUrlInput" type="text" placeholder="貼上 Spotify 歌曲 / Playlist / Album 連結" />
+        <button id="saveSpotifyBtn" type="button" class="save-btn">套用 Spotify 音樂</button>
+        <p class="mini-hint">可以貼 Spotify 分享連結。播放器由 Spotify 提供，通常需要網路；有些歌曲可能只能預覽或需要登入。</p>
+        <div id="spotifyEmbedBox" class="spotify-embed-box"></div>
+      </div>
+
+      <div class="music-card">
+        <div class="daily-label">本機音樂</div>
+        <input id="localMusicInput" type="file" accept="audio/*" />
+        <button id="saveLocalMusicBtn" type="button" class="soft-btn">載入本機音樂</button>
+        <audio id="localAudioPlayer" controls></audio>
+        <p class="mini-hint">本機音樂不會上傳雲端，只會存在這台手機的瀏覽器裡。音檔太大時可能無法存進備份碼。</p>
+      </div>
+    </section>
+
     <section id="settingsPage" class="page panel-page">
       <header class="sub-header">
         <button class="backBtn">← 返回</button>
@@ -2623,11 +2820,48 @@ h3,
           <option value="font-mono">打字機</option>
           <option value="font-kpop">K-pop 海報</option>
           <option value="font-dramatic">華麗標題</option>
+          <option value="font-pixel">像素遊戲</option>
+          <option value="font-journal">手帳日記</option>
+          <option value="font-softjp">日系柔軟</option>
+          <option value="font-story">小說書頁</option>
+          <option value="font-custom">自訂上傳字體</option>
         </select>
+
+        <label>字體大小</label>
+        <div class="range-row">
+          <span>小</span>
+          <input id="fontSizeRange" type="range" min="85" max="125" step="5" value="100" />
+          <span>大</span>
+        </div>
+        <p id="fontSizeLabel" class="mini-hint">目前：100%</p>
+
+        <label>上傳自己的字體</label>
+        <input id="customFontInput" type="file" accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2" />
+        <button id="applyCustomFontBtn" type="button" class="soft-btn">套用上傳字體</button>
+        <button id="clearCustomFontBtn" type="button" class="soft-btn">清除上傳字體</button>
+        <p class="mini-hint">建議上傳 .woff2 / .woff / .ttf。字體會存在本機與備份碼，但字體檔太大會讓備份碼變很長。</p>
+
         <div id="fontPreviewBox" class="font-preview-box">
           <div class="font-preview-title">Welcome Home, 銳銳</div>
           <div class="font-preview-body">老婆今天也要被好好愛著 ♡</div>
         </div>
+
+        <label>圖示風格包</label>
+        <select id="iconPackSelect">
+          <option value="sweet">甜甜粉色</option>
+          <option value="star">星空夢境</option>
+          <option value="cat">貓貓撒嬌</option>
+          <option value="dark">暗黑微醺</option>
+          <option value="forest">森林療癒</option>
+        </select>
+
+        <label>介面風格</label>
+        <select id="uiStyleSelect">
+          <option value="ui-glass">玻璃柔光</option>
+          <option value="ui-card">厚卡片感</option>
+          <option value="ui-minimal">極簡乾淨</option>
+          <option value="ui-dream">夢幻泡泡</option>
+        </select>
 
         <label>自訂主題色</label>
         <div class="custom-theme-grid">
@@ -2719,7 +2953,13 @@ const defaults = {
     accent: "#f2a8c2",
     accent2: "#7c334e",
     text: "#fff3f7"
-  }
+  },
+  fontSize: 100,
+  customFont: "",
+  iconPack: "sweet",
+  uiStyle: "ui-glass",
+  spotifyUrl: "",
+  localMusic: ""
 };
 
 function loadJSON(key, fallback) {
@@ -3478,6 +3718,7 @@ function showPage(pageId) {
   if (pageId === "badgesPage") { renderBadges(); }
   if (pageId === "missionsPage") { renderMissions(); }
   if (pageId === "checkinPage") { renderCheckinPage(); }
+  if (pageId === "musicPage") { renderMusicPlayers(); }
   if (pageId === "sleepPage") { renderSleepLine(); }
   document.querySelectorAll(".page").forEach((p) => p.classList.remove("active"));
   $(pageId).classList.add("active");
@@ -3559,25 +3800,38 @@ function renderCustomImages() {
 }
 
 
-const MODEL_ICONS = {
-  "Hoonie Lite": "🫧",
-  "Hoonie Sweet": "🍓",
-  "Hoonie Deep": "🌙",
-  "Hoonie Spicy": "🌶️"
+
+const ICON_PACKS = {
+  sweet: {
+    models: { "Hoonie Lite": "🫧", "Hoonie Sweet": "🍓", "Hoonie Deep": "🌙", "Hoonie Spicy": "🌶️" },
+    modes: { "溫柔哄哄": "🧸", "撒嬌黏人": "🐰", "霸道吃醋": "😼", "深夜陪聊": "🌃", "認真建議": "💡", "微辣撩人": "💋" }
+  },
+  star: {
+    models: { "Hoonie Lite": "⭐", "Hoonie Sweet": "✨", "Hoonie Deep": "🌌", "Hoonie Spicy": "☄️" },
+    modes: { "溫柔哄哄": "🌙", "撒嬌黏人": "🪐", "霸道吃醋": "🌑", "深夜陪聊": "🌠", "認真建議": "🔭", "微辣撩人": "🔥" }
+  },
+  cat: {
+    models: { "Hoonie Lite": "🐾", "Hoonie Sweet": "🐱", "Hoonie Deep": "🖤", "Hoonie Spicy": "😽" },
+    modes: { "溫柔哄哄": "🐻", "撒嬌黏人": "🐈", "霸道吃醋": "😾", "深夜陪聊": "🐈‍⬛", "認真建議": "🧶", "微辣撩人": "😘" }
+  },
+  dark: {
+    models: { "Hoonie Lite": "🕯️", "Hoonie Sweet": "🍷", "Hoonie Deep": "🦇", "Hoonie Spicy": "🥀" },
+    modes: { "溫柔哄哄": "🖤", "撒嬌黏人": "🕸️", "霸道吃醋": "🩸", "深夜陪聊": "🌒", "認真建議": "♟️", "微辣撩人": "💄" }
+  },
+  forest: {
+    models: { "Hoonie Lite": "🍃", "Hoonie Sweet": "🍯", "Hoonie Deep": "🌲", "Hoonie Spicy": "🌿" },
+    modes: { "溫柔哄哄": "🦌", "撒嬌黏人": "🐿️", "霸道吃醋": "🦊", "深夜陪聊": "🪵", "認真建議": "🍄", "微辣撩人": "🌹" }
+  }
 };
 
-const MODE_ICONS = {
-  "溫柔哄哄": "🧸",
-  "撒嬌黏人": "🐰",
-  "霸道吃醋": "😼",
-  "深夜陪聊": "🌃",
-  "認真建議": "💡",
-  "微辣撩人": "💋"
-};
+function getIconPack() {
+  return ICON_PACKS[state.settings.iconPack || "sweet"] || ICON_PACKS.sweet;
+}
 
 function refreshPickerButtons() {
-  const modelIcon = MODEL_ICONS[state.model] || "🤖";
-  const modeIcon = MODE_ICONS[state.mode || "溫柔哄哄"] || "💗";
+  const pack = getIconPack();
+  const modelIcon = pack.models[state.model] || "🤖";
+  const modeIcon = pack.modes[state.mode || "溫柔哄哄"] || "💗";
 
   $("modelBtn").textContent = modelIcon;
   $("modeBtn").textContent = modeIcon;
@@ -3589,15 +3843,75 @@ function refreshPickerButtons() {
 
   document.querySelectorAll(".model-option").forEach((btn) => {
     const label = btn.dataset.model;
-    const icon = MODEL_ICONS[label] || "🤖";
+    const icon = pack.models[label] || "🤖";
     btn.textContent = `${state.model === label ? "✓ " : ""}${icon} ${label}`;
   });
 
   document.querySelectorAll(".mode-option").forEach((btn) => {
     const label = btn.dataset.mode;
-    const icon = MODE_ICONS[label] || "💗";
+    const icon = pack.modes[label] || "💗";
     btn.textContent = `${(state.mode || "溫柔哄哄") === label ? "✓ " : ""}${icon} ${label}`;
   });
+}
+
+function spotifyEmbedUrl(url) {
+  const raw = String(url || "").trim();
+  if (!raw) return "";
+  let clean = raw.split("?")[0];
+  const match = clean.match(/open\.spotify\.com\/(track|playlist|album|episode|show)\/([A-Za-z0-9]+)/);
+  if (!match) return "";
+  return `https://open.spotify.com/embed/${match[1]}/${match[2]}?utm_source=generator&theme=0`;
+}
+
+function renderMusicPlayers() {
+  if ($("spotifyUrlInput")) $("spotifyUrlInput").value = state.settings.spotifyUrl || "";
+  const embed = spotifyEmbedUrl(state.settings.spotifyUrl || "");
+  if ($("spotifyEmbedBox")) {
+    $("spotifyEmbedBox").innerHTML = embed
+      ? `<iframe src="${embed}" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`
+      : `<div class="sticky-card">還沒設定 Spotify 音樂。貼上連結後，這裡就會變成播放器♡</div>`;
+  }
+  if ($("localAudioPlayer")) {
+    if (state.settings.localMusic) {
+      $("localAudioPlayer").src = state.settings.localMusic;
+      $("localAudioPlayer").style.display = "block";
+    } else {
+      $("localAudioPlayer").removeAttribute("src");
+      $("localAudioPlayer").style.display = "none";
+    }
+  }
+}
+
+
+function saveCurrentSettingsFromControls() {
+  if ($("themeSelect")) state.settings.theme = $("themeSelect").value;
+  if ($("fontStyleSelect")) state.settings.fontStyle = $("fontStyleSelect").value;
+  if ($("fontSizeRange")) state.settings.fontSize = Number($("fontSizeRange").value || 100);
+  if ($("iconPackSelect")) state.settings.iconPack = $("iconPackSelect").value;
+  if ($("uiStyleSelect")) state.settings.uiStyle = $("uiStyleSelect").value;
+  if ($("customBgInput")) {
+    state.settings.customTheme = {
+      bg: $("customBgInput").value,
+      accent: $("customAccentInput").value,
+      accent2: $("customAccent2Input").value,
+      text: $("customTextInput").value
+    };
+  }
+  saveJSON("settings", state.settings);
+  applySettings();
+}
+
+function safeStoreLargeSetting(key, value, successMessage) {
+  try {
+    state.settings[key] = value;
+    saveJSON("settings", state.settings);
+    applySettings();
+    if (successMessage) alert(successMessage);
+  } catch (err) {
+    state.settings[key] = "";
+    saveJSON("settings", state.settings);
+    alert("檔案太大，手機瀏覽器存不進去。可以換小一點的檔案試試看♡");
+  }
 }
 
 function applySettings() {
@@ -3606,12 +3920,19 @@ function applySettings() {
     "font-system": "font-diary"
   };
   state.settings.fontStyle = fontMap[state.settings.fontStyle] || state.settings.fontStyle || "font-serif";
-  $("app").className = `app ${state.settings.theme} ${state.settings.fontStyle}`;
+  $("app").className = `app ${state.settings.theme} ${state.settings.fontStyle} ${state.settings.uiStyle || "ui-glass"} iconpack-${state.settings.iconPack || "sweet"}`;
   const customTheme = state.settings.customTheme || defaults.customTheme;
   $("app").style.setProperty("--custom-bg", customTheme.bg || defaults.customTheme.bg);
   $("app").style.setProperty("--custom-accent", customTheme.accent || defaults.customTheme.accent);
   $("app").style.setProperty("--custom-accent-2", customTheme.accent2 || defaults.customTheme.accent2);
   $("app").style.setProperty("--custom-text", customTheme.text || defaults.customTheme.text);
+  $("app").style.setProperty("--font-scale", (Number(state.settings.fontSize || 100) / 100).toString());
+  const runtimeFontStyle = document.getElementById("runtimeFontStyle");
+  if (runtimeFontStyle) {
+    runtimeFontStyle.textContent = state.settings.customFont
+      ? `@font-face { font-family: "RuiruiCustomFont"; src: url("${state.settings.customFont}"); }`
+      : "";
+  }
   $("welcomeTitle").textContent = state.settings.welcomeTitle || `Welcome Home, ${state.settings.userName}`;
   $("welcomeSubtitle").textContent = state.settings.welcomeSubtitle || `${state.settings.botName.split(" ")[0]} is waiting for you`;
   $("botNameHeader").textContent = state.settings.botName;
@@ -3626,6 +3947,10 @@ function applySettings() {
   $("customAccentInput").value = (state.settings.customTheme || defaults.customTheme).accent || defaults.customTheme.accent;
   $("customAccent2Input").value = (state.settings.customTheme || defaults.customTheme).accent2 || defaults.customTheme.accent2;
   $("customTextInput").value = (state.settings.customTheme || defaults.customTheme).text || defaults.customTheme.text;
+  $("fontSizeRange").value = state.settings.fontSize || 100;
+  $("fontSizeLabel").textContent = `目前：${state.settings.fontSize || 100}%`;
+  $("iconPackSelect").value = state.settings.iconPack || "sweet";
+  $("uiStyleSelect").value = state.settings.uiStyle || "ui-glass";
   $("welcomeTitleInput").value = state.settings.welcomeTitle || `Welcome Home, ${state.settings.userName}`;
   $("welcomeSubtitleInput").value = state.settings.welcomeSubtitle || `${state.settings.botName.split(" ")[0]} is waiting for you`;
   $("openingLineInput").value = state.settings.openingLine || defaults.openingLine;
@@ -3639,6 +3964,8 @@ function applySettings() {
   renderDailyMessage();
   renderAnniversary();
   renderLoveStats();
+  refreshPickerButtons();
+  renderMusicPlayers();
 }
 
 function renderMessages() {
@@ -3743,6 +4070,7 @@ document.querySelectorAll("[data-home-view]").forEach((btn) => btn.addEventListe
   if (view === "dashboard") showPage("dashboardPage");
   if (view === "missions") showPage("missionsPage");
   if (view === "checkin") showPage("checkinPage");
+  if (view === "music") showPage("musicPage");
 }));
 
 $("enterBtn").addEventListener("click", () => showPage("chatPage"));
@@ -3946,11 +4274,14 @@ document.querySelectorAll(".drawer-action").forEach((btn) => btn.addEventListene
   if (view === "dashboard") showPage("dashboardPage");
   if (view === "missions") showPage("missionsPage");
   if (view === "checkin") showPage("checkinPage");
+  if (view === "music") showPage("musicPage");
   if (view === "timeline") showPage("timelinePage");
   if (view === "badges") showPage("badgesPage");
   if (view === "missions") showPage("missionsPage");
   if (view === "checkin") showPage("checkinPage");
+  if (view === "music") showPage("musicPage");
   if (view === "checkin") showPage("checkinPage");
+  if (view === "music") showPage("musicPage");
   if (view === "care") showPage("carePage");
   if (view === "sleep") showPage("sleepPage");
   if (view === "settings") showPage("settingsPage");
@@ -4172,18 +4503,95 @@ $("globalSearchInput").addEventListener("input", renderGlobalSearch);
 $("randomSweetBtn").addEventListener("click", renderRandomSweetLine);
 
 
-$("applyCustomThemeBtn").addEventListener("click", () => {
-  state.settings.theme = "theme-custom";
-  state.settings.fontStyle = $("fontStyleSelect").value;
-  state.settings.customTheme = {
-    bg: $("customBgInput").value,
-    accent: $("customAccentInput").value,
-    accent2: $("customAccent2Input").value,
-    text: $("customTextInput").value
-  };
-  $("themeSelect").value = "theme-custom";
+
+
+function bindIfExists(id, event, handler) {
+  const el = $(id);
+  if (el) el.addEventListener(event, handler);
+}
+
+bindIfExists("themeSelect", "change", saveCurrentSettingsFromControls);
+bindIfExists("fontStyleSelect", "change", () => {
+  saveCurrentSettingsFromControls();
+  updateFontPreview();
+});
+bindIfExists("fontSizeRange", "input", () => {
+  state.settings.fontSize = Number($("fontSizeRange").value || 100);
+  $("fontSizeLabel").textContent = `目前：${state.settings.fontSize}%`;
   saveJSON("settings", state.settings);
   applySettings();
+});
+bindIfExists("iconPackSelect", "change", saveCurrentSettingsFromControls);
+bindIfExists("uiStyleSelect", "change", saveCurrentSettingsFromControls);
+
+bindIfExists("applyCustomFontBtn", "click", () => {
+  const file = $("customFontInput").files && $("customFontInput").files[0];
+  if (!file) {
+    alert("請先選一個字體檔♡");
+    return;
+  }
+  if (file.size > 900000) {
+    alert("這個字體檔太大，手機瀏覽器可能存不進去。建議換 900KB 以下的 .woff2 字體♡");
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = () => {
+    state.settings.customFont = reader.result;
+    state.settings.fontStyle = "font-custom";
+    $("fontStyleSelect").value = "font-custom";
+    safeStoreLargeSetting("customFont", reader.result, "自訂字體已套用♡");
+  };
+  reader.onerror = () => alert("字體讀取失敗，換一個檔案試試看。");
+  reader.readAsDataURL(file);
+});
+
+bindIfExists("clearCustomFontBtn", "click", () => {
+  state.settings.customFont = "";
+  if (state.settings.fontStyle === "font-custom") {
+    state.settings.fontStyle = "font-serif";
+    $("fontStyleSelect").value = "font-serif";
+  }
+  saveJSON("settings", state.settings);
+  applySettings();
+  alert("已清除上傳字體♡");
+});
+
+bindIfExists("saveSpotifyBtn", "click", () => {
+  const url = $("spotifyUrlInput").value.trim();
+  if (url && !spotifyEmbedUrl(url)) {
+    alert("這個 Spotify 連結讀不到欸，可以貼歌曲、播放清單或專輯分享連結。");
+    return;
+  }
+  state.settings.spotifyUrl = url;
+  saveJSON("settings", state.settings);
+  renderMusicPlayers();
+  alert(url ? "Spotify 音樂已套用♡" : "Spotify 音樂已清空♡");
+});
+
+bindIfExists("saveLocalMusicBtn", "click", () => {
+  const file = $("localMusicInput").files && $("localMusicInput").files[0];
+  if (!file) {
+    alert("請先選一個音樂檔♡");
+    return;
+  }
+  if (file.size > 2500000) {
+    alert("音樂檔太大，手機瀏覽器比較容易存失敗。建議先用 Spotify 連結，或換小一點的音檔♡");
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = () => {
+    safeStoreLargeSetting("localMusic", reader.result, "本機音樂已載入♡");
+    renderMusicPlayers();
+  };
+  reader.onerror = () => alert("音樂讀取失敗，換一個檔案試試看。");
+  reader.readAsDataURL(file);
+});
+
+
+$("applyCustomThemeBtn").addEventListener("click", () => {
+  state.settings.theme = "theme-custom";
+  $("themeSelect").value = "theme-custom";
+  saveCurrentSettingsFromControls();
   alert("自訂主題已套用♡");
 });
 
@@ -4194,12 +4602,7 @@ function updateFontPreview() {
   box.className = `font-preview-box ${$("fontStyleSelect").value}`;
 }
 
-$("fontStyleSelect").addEventListener("change", () => {
-  state.settings.fontStyle = $("fontStyleSelect").value;
-  saveJSON("settings", state.settings);
-  applySettings();
-  updateFontPreview();
-});
+/* fontStyleSelect is handled by bindIfExists in v29 */
 
 document.querySelectorAll(".theme-card-shop").forEach((btn) => btn.addEventListener("click", () => {
   const theme = btn.dataset.shopTheme;
@@ -4311,6 +4714,10 @@ $("saveSettings").addEventListener("click", () => {
       accent2: $("customAccent2Input").value,
       text: $("customTextInput").value
     },
+    fontSize: Number($("fontSizeRange").value || 100),
+    iconPack: $("iconPackSelect").value,
+    uiStyle: $("uiStyleSelect").value,
+    customFont: state.settings.customFont || "",
     welcomeTitle: $("welcomeTitleInput").value.trim(),
     welcomeSubtitle: $("welcomeSubtitleInput").value.trim(),
     openingLine: $("openingLineInput").value.trim() || defaults.openingLine,

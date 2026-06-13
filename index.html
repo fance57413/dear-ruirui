@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Dear 銳銳 v29</title>
+  <title>Dear 銳銳 v30</title>
   <style>
 @import url('https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Ma+Shan+Zheng&family=Noto+Serif+TC:wght@400;700;900&family=Rampart+One&family=ZCOOL+KuaiLe&family=ZCOOL+QingKe+HuangYou&family=DotGothic16&family=Kaisei+Tokumin:wght@400;700&family=Kosugi+Maru&family=Yuji+Syuku&family=Zen+Kurenaido&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
 :root {
@@ -2279,10 +2279,168 @@ h3,
 .iconpack-forest #modelBtn,
 .iconpack-forest #modeBtn { box-shadow: 0 0 20px rgba(217,242,180,.20) !important; }
 
+
+/* v30 TTF font + light theme readable text fix */
+
+/* Use theme-specific bubble text variables instead of assuming all themes are dark */
+.app {
+  --bot-bubble-text: var(--text);
+  --user-bubble-text: #fff7fb;
+  --panel-readable-text: var(--text);
+}
+
+/* Apply readable vars to common text surfaces */
+.message.bot,
+.message:not(.user) {
+  color: var(--bot-bubble-text) !important;
+}
+
+.message.user {
+  color: var(--user-bubble-text) !important;
+}
+
+.sticky-card,
+.daily-card,
+.photo-card,
+.music-card,
+.settings-card,
+.checkin-card,
+.level-card,
+.care-card,
+.sleep-card,
+.breath-card,
+.timeline-card,
+.mission-card,
+.search-card,
+.random-card,
+.album-upload-card,
+.letter-form,
+.wish-form {
+  color: var(--panel-readable-text) !important;
+}
+
+/* Light preset: Sakura should use dark readable text */
+.theme-sakura {
+  --bot-bubble-text: #3d2330;
+  --user-bubble-text: #fff7fb;
+  --panel-readable-text: #3d2330;
+}
+
+/* Also improve inputs in light theme */
+.theme-sakura input,
+.theme-sakura textarea,
+.theme-sakura select {
+  color: #3d2330 !important;
+  background: rgba(255,255,255,.55) !important;
+}
+
+.theme-sakura input::placeholder,
+.theme-sakura textarea::placeholder {
+  color: rgba(61,35,48,.55) !important;
+}
+
+/* Custom light themes get dark readable text via JS variables */
+.theme-custom {
+  --bot-bubble-text: var(--auto-bot-text, var(--text));
+  --panel-readable-text: var(--auto-panel-text, var(--text));
+  --user-bubble-text: var(--auto-user-text, #fff7fb);
+}
+
+/* Make uploaded-font option visibly applied */
+.font-custom body,
+.font-custom button,
+.font-custom input,
+.font-custom select,
+.font-custom textarea,
+.font-custom .message,
+.font-custom .sticky-card,
+.font-custom .drawer-action {
+  font-family: "RuiruiCustomFont", "Noto Serif TC", "Microsoft JhengHei", serif !important;
+}
+
 </style>
   <meta name="theme-color" content="#0e090c" />
   <link rel="manifest" href="./manifest.json" />
-<style id="runtimeFontStyle"></style>
+<style id="runtimeFontStyle">
+/* v30 TTF font + light theme readable text fix */
+
+/* Use theme-specific bubble text variables instead of assuming all themes are dark */
+.app {
+  --bot-bubble-text: var(--text);
+  --user-bubble-text: #fff7fb;
+  --panel-readable-text: var(--text);
+}
+
+/* Apply readable vars to common text surfaces */
+.message.bot,
+.message:not(.user) {
+  color: var(--bot-bubble-text) !important;
+}
+
+.message.user {
+  color: var(--user-bubble-text) !important;
+}
+
+.sticky-card,
+.daily-card,
+.photo-card,
+.music-card,
+.settings-card,
+.checkin-card,
+.level-card,
+.care-card,
+.sleep-card,
+.breath-card,
+.timeline-card,
+.mission-card,
+.search-card,
+.random-card,
+.album-upload-card,
+.letter-form,
+.wish-form {
+  color: var(--panel-readable-text) !important;
+}
+
+/* Light preset: Sakura should use dark readable text */
+.theme-sakura {
+  --bot-bubble-text: #3d2330;
+  --user-bubble-text: #fff7fb;
+  --panel-readable-text: #3d2330;
+}
+
+/* Also improve inputs in light theme */
+.theme-sakura input,
+.theme-sakura textarea,
+.theme-sakura select {
+  color: #3d2330 !important;
+  background: rgba(255,255,255,.55) !important;
+}
+
+.theme-sakura input::placeholder,
+.theme-sakura textarea::placeholder {
+  color: rgba(61,35,48,.55) !important;
+}
+
+/* Custom light themes get dark readable text via JS variables */
+.theme-custom {
+  --bot-bubble-text: var(--auto-bot-text, var(--text));
+  --panel-readable-text: var(--auto-panel-text, var(--text));
+  --user-bubble-text: var(--auto-user-text, #fff7fb);
+}
+
+/* Make uploaded-font option visibly applied */
+.font-custom body,
+.font-custom button,
+.font-custom input,
+.font-custom select,
+.font-custom textarea,
+.font-custom .message,
+.font-custom .sticky-card,
+.font-custom .drawer-action {
+  font-family: "RuiruiCustomFont", "Noto Serif TC", "Microsoft JhengHei", serif !important;
+}
+
+</style>
 </head>
 <body>
   <div id="app" class="app theme-rose">
@@ -2839,7 +2997,7 @@ h3,
         <input id="customFontInput" type="file" accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2" />
         <button id="applyCustomFontBtn" type="button" class="soft-btn">套用上傳字體</button>
         <button id="clearCustomFontBtn" type="button" class="soft-btn">清除上傳字體</button>
-        <p class="mini-hint">建議上傳 .woff2 / .woff / .ttf。字體會存在本機與備份碼，但字體檔太大會讓備份碼變很長。</p>
+        <p class="mini-hint">支援 .ttf / .otf / .woff / .woff2。TTF 可以套用；如果檔案太大，會先套用目前頁面，但不一定能永久保存。</p>
 
         <div id="fontPreviewBox" class="font-preview-box">
           <div class="font-preview-title">Welcome Home, 銳銳</div>
@@ -3914,6 +4072,65 @@ function safeStoreLargeSetting(key, value, successMessage) {
   }
 }
 
+
+function hexToRgb(hex) {
+  const clean = String(hex || "").replace("#", "").trim();
+  if (clean.length !== 6) return { r: 14, g: 9, b: 12 };
+  return {
+    r: parseInt(clean.slice(0, 2), 16),
+    g: parseInt(clean.slice(2, 4), 16),
+    b: parseInt(clean.slice(4, 6), 16)
+  };
+}
+
+function luminance(hex) {
+  const { r, g, b } = hexToRgb(hex);
+  const srgb = [r, g, b].map((v) => {
+    const x = v / 255;
+    return x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4);
+  });
+  return 0.2126 * srgb[0] + 0.7152 * srgb[1] + 0.0722 * srgb[2];
+}
+
+function applyAutoReadableText() {
+  const theme = state.settings.theme || "theme-rose";
+  const custom = state.settings.customTheme || defaults.customTheme;
+  const bgLum = luminance(custom.bg || "#0e090c");
+  const accentLum = luminance(custom.accent || "#f2a8c2");
+
+  // For very light custom backgrounds, make panels/bubbles use a deep text color automatically.
+  const darkText = "#3d2330";
+  const lightText = custom.text || "#fff3f7";
+  const userText = accentLum > 0.55 ? "#3d2330" : "#fff7fb";
+
+  if (theme === "theme-custom" && bgLum > 0.62) {
+    $("app").style.setProperty("--auto-bot-text", darkText);
+    $("app").style.setProperty("--auto-panel-text", darkText);
+    $("app").style.setProperty("--auto-user-text", userText);
+  } else {
+    $("app").style.setProperty("--auto-bot-text", lightText);
+    $("app").style.setProperty("--auto-panel-text", lightText);
+    $("app").style.setProperty("--auto-user-text", "#fff7fb");
+  }
+}
+
+function setRuntimeFontFromDataUrl(dataUrl) {
+  const runtimeFontStyle = document.getElementById("runtimeFontStyle");
+  if (!runtimeFontStyle) return;
+  if (!dataUrl) {
+    runtimeFontStyle.textContent = "";
+    return;
+  }
+  // Works with ttf / otf / woff / woff2 data URLs.
+  runtimeFontStyle.textContent = `
+    @font-face {
+      font-family: "RuiruiCustomFont";
+      src: url("${dataUrl}") format("truetype");
+      font-display: swap;
+    }
+  `;
+}
+
 function applySettings() {
   const fontMap = {
     "font-rounded": "font-cute",
@@ -3926,13 +4143,9 @@ function applySettings() {
   $("app").style.setProperty("--custom-accent", customTheme.accent || defaults.customTheme.accent);
   $("app").style.setProperty("--custom-accent-2", customTheme.accent2 || defaults.customTheme.accent2);
   $("app").style.setProperty("--custom-text", customTheme.text || defaults.customTheme.text);
+  applyAutoReadableText();
   $("app").style.setProperty("--font-scale", (Number(state.settings.fontSize || 100) / 100).toString());
-  const runtimeFontStyle = document.getElementById("runtimeFontStyle");
-  if (runtimeFontStyle) {
-    runtimeFontStyle.textContent = state.settings.customFont
-      ? `@font-face { font-family: "RuiruiCustomFont"; src: url("${state.settings.customFont}"); }`
-      : "";
-  }
+  setRuntimeFontFromDataUrl(state.settings.customFont || "");
   $("welcomeTitle").textContent = state.settings.welcomeTitle || `Welcome Home, ${state.settings.userName}`;
   $("welcomeSubtitle").textContent = state.settings.welcomeSubtitle || `${state.settings.botName.split(" ")[0]} is waiting for you`;
   $("botNameHeader").textContent = state.settings.botName;
@@ -4530,16 +4743,36 @@ bindIfExists("applyCustomFontBtn", "click", () => {
     alert("請先選一個字體檔♡");
     return;
   }
-  if (file.size > 900000) {
-    alert("這個字體檔太大，手機瀏覽器可能存不進去。建議換 900KB 以下的 .woff2 字體♡");
+
+  const name = (file.name || "").toLowerCase();
+  const isFont = name.endsWith(".ttf") || name.endsWith(".otf") || name.endsWith(".woff") || name.endsWith(".woff2");
+  if (!isFont) {
+    alert("請上傳 .ttf / .otf / .woff / .woff2 字體檔♡");
     return;
   }
+
   const reader = new FileReader();
   reader.onload = () => {
-    state.settings.customFont = reader.result;
     state.settings.fontStyle = "font-custom";
     $("fontStyleSelect").value = "font-custom";
-    safeStoreLargeSetting("customFont", reader.result, "自訂字體已套用♡");
+
+    // First try to save into localStorage, so reload/backup can keep it.
+    try {
+      state.settings.customFont = reader.result;
+      saveJSON("settings", state.settings);
+      setRuntimeFontFromDataUrl(reader.result);
+      applySettings();
+      alert("TTF / 字體已套用♡");
+    } catch (err) {
+      // If the font is too large for localStorage, apply it for this session using object URL.
+      state.settings.customFont = "";
+      saveJSON("settings", state.settings);
+      const objectUrl = URL.createObjectURL(file);
+      setRuntimeFontFromDataUrl(objectUrl);
+      state.settings.fontStyle = "font-custom";
+      $("app").className = `app ${state.settings.theme} font-custom ${state.settings.uiStyle || "ui-glass"} iconpack-${state.settings.iconPack || "sweet"}`;
+      alert("字體太大，已先套用在目前頁面♡ 但重新整理後會消失。想永久保存請換小一點的 .ttf 或 .woff2。");
+    }
   };
   reader.onerror = () => alert("字體讀取失敗，換一個檔案試試看。");
   reader.readAsDataURL(file);
@@ -4547,6 +4780,7 @@ bindIfExists("applyCustomFontBtn", "click", () => {
 
 bindIfExists("clearCustomFontBtn", "click", () => {
   state.settings.customFont = "";
+  setRuntimeFontFromDataUrl("");
   if (state.settings.fontStyle === "font-custom") {
     state.settings.fontStyle = "font-serif";
     $("fontStyleSelect").value = "font-serif";
@@ -4592,7 +4826,8 @@ $("applyCustomThemeBtn").addEventListener("click", () => {
   state.settings.theme = "theme-custom";
   $("themeSelect").value = "theme-custom";
   saveCurrentSettingsFromControls();
-  alert("自訂主題已套用♡");
+  applyAutoReadableText();
+  alert("自訂主題已套用，文字也會自動調成看得清楚的顏色♡");
 });
 
 

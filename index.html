@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Dear 銳銳 v42</title>
+  <title>Dear 銳銳 v43</title>
   <style>
 @import url('https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Ma+Shan+Zheng&family=Noto+Serif+TC:wght@400;700;900&family=Rampart+One&family=ZCOOL+KuaiLe&family=ZCOOL+QingKe+HuangYou&family=DotGothic16&family=Kaisei+Tokumin:wght@400;700&family=Kosugi+Maru&family=Yuji+Syuku&family=Zen+Kurenaido&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
 :root {
@@ -4720,17 +4720,17 @@ textarea::placeholder {
 
         <label>AI 服務類型</label>
         <select id="aiProviderSelect">
+          <option value="proxy">Vercel Proxy / Serverless API</option>
           <option value="demo">Demo 模式，不連 API</option>
-          <option value="proxy">自訂 Proxy / Serverless API</option>
           <option value="openai">OpenAI 相容格式，建議走 Proxy</option>
           <option value="gemini">Gemini 相容格式，建議走 Proxy</option>
         </select>
 
         <label>Proxy / Serverless Endpoint</label>
-        <input id="aiEndpointInput" type="text" placeholder="例如：https://your-domain.vercel.app/api/chat" />
+        <input id="aiEndpointInput" type="text" placeholder="例如：/api/chat 或 https://your-domain.vercel.app/api/chat" />
 
         <label>模型名稱</label>
-        <input id="aiModelInput" type="text" placeholder="例如：gpt-4.1-mini / gemini-1.5-flash / 自訂模型" />
+        <input id="aiModelInput" type="text" placeholder="例如：gemini-3.5-flash / gpt-4.1-mini / 自訂模型" />
 
         <div class="ai-warning">
           <b>安全提醒：</b>正式 API Key 不建議直接放在前端網頁裡。比較安全的做法是：小屋前端 → 妳自己的 Serverless API → AI 服務。
@@ -4758,6 +4758,17 @@ textarea::placeholder {
         <div class="feed-compose-actions">
           <button id="saveAiSettingsBtn" type="button" class="save-btn">儲存 AI 設定</button>
           <button id="previewAiPromptBtn" type="button" class="soft-btn">預覽送出的提示詞</button>
+        </div>
+      </div>
+
+      <div class="ai-card">
+        <div class="daily-label">Vercel 連線步驟</div>
+        <div class="ai-test-result">
+          1. 到 Vercel 專案設定新增環境變數：<b>GEMINI_API_KEY</b><br>
+          2. 重新部署專案<br>
+          3. 這裡的 Endpoint 填：<b>/api/chat</b><br>
+          4. AI 服務類型選：<b>Vercel Proxy / Serverless API</b><br>
+          5. 開啟 AI 回覆模式，再按測試 AI 回覆♡
         </div>
       </div>
 
@@ -4992,9 +5003,9 @@ const defaults = {
   botAutoSocial: true,
   ai: {
     enabled: false,
-    provider: "demo",
-    endpoint: "",
-    model: "",
+    provider: "proxy",
+    endpoint: "/api/chat",
+    model: "gemini-3.5-flash",
     systemPrompt: "",
     memoryLimit: 8,
     historyLimit: 10,
@@ -5375,9 +5386,9 @@ function getAiSettings() {
   state.settings.ai = state.settings.ai || {};
   return {
     enabled: state.settings.ai.enabled === true,
-    provider: state.settings.ai.provider || "demo",
-    endpoint: state.settings.ai.endpoint || "",
-    model: state.settings.ai.model || "",
+    provider: state.settings.ai.provider || "proxy",
+    endpoint: state.settings.ai.endpoint || "/api/chat",
+    model: state.settings.ai.model || "gemini-3.5-flash",
     systemPrompt: state.settings.ai.systemPrompt || defaultAiPrompt(),
     memoryLimit: Number(state.settings.ai.memoryLimit ?? 8),
     historyLimit: Number(state.settings.ai.historyLimit ?? 10),

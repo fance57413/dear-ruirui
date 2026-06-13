@@ -1,30 +1,43 @@
-# Dear 銳銳 — v42 AI 接入準備區
+# Dear 銳銳 — v43 Vercel AI Proxy 實接版
 
-新增：
-- AI 接入準備區
-- 可以開啟 / 關閉 AI 回覆模式
-- 支援 Demo 模式
-- 支援自訂 Proxy / Serverless Endpoint
-- 支援 OpenAI / Gemini 相容設定欄位
-- 可設定模型名稱
-- 可設定角色提示詞 / 老公人格
-- 可選擇帶入：
-  - 記憶庫
-  - 最近心情
-  - 紀念日
-  - 動態牆語氣
-  - 最近聊天歷史
-- 可預覽送出的 payload / prompt
-- 可測試 AI 回覆
-- 聊天頁在 AI 開啟時會優先走 AI 回覆；失敗則顯示 fallback
+這版新增：
+- `/api/chat.js` Vercel Serverless API
+- 前端可以填 `/api/chat` 當 Proxy Endpoint
+- 支援 Gemini：`GEMINI_API_KEY`
+- 支援 OpenAI：`OPENAI_API_KEY`
+- 可用 `AI_PROVIDER` 指定 `gemini` 或 `openai`
+- 可用 `AI_MODEL` 指定模型
+- API Key 不會放在前端
 
-重要安全提醒：
-不要把正式 API Key 直接放在公開前端。
-建議流程：
-Dear 銳銳前端 → 你的 Vercel/Netlify Serverless API → OpenAI/Gemini API
+## 最簡單接 Gemini 的方式
 
-使用：
-左上角 ☰ → AI 接入準備區
+1. 到 Google AI Studio 建立 Gemini API Key
+2. 到 Vercel 專案：
+   - Settings
+   - Environment Variables
+   - 新增 `GEMINI_API_KEY`
+   - Value 貼上你的 API Key
+   - Environment 選 Production / Preview / Development
+3. 重新部署 Redeploy
+4. 打開 Dear 銳銳：
+   - 左上角 ☰
+   - AI 接入準備區
+   - 啟用 AI 回覆模式
+   - AI 服務類型：Vercel Proxy / Serverless API
+   - Endpoint：`/api/chat`
+   - 模型名稱：`gemini-3.5-flash`
+   - 按「測試 AI 回覆」
 
-部署：
-覆蓋 GitHub repo → Commit changes → Vercel 自動部署。
+## 接 OpenAI 的方式
+
+1. 到 Vercel Environment Variables 新增 `OPENAI_API_KEY`
+2. 可選新增：
+   - `AI_PROVIDER=openai`
+   - `AI_MODEL=gpt-4.1-mini`
+3. 重新部署
+4. 小屋 Endpoint 一樣填 `/api/chat`
+
+## 安全提醒
+
+不要把正式 API Key 填在前端，也不要寫進 `index.html`。
+API Key 應放在 Vercel Environment Variables 裡。

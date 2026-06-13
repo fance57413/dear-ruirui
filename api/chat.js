@@ -5,7 +5,7 @@
 // GEMINI_API_KEY      -> Google Gemini API key
 // OPENAI_API_KEY      -> OpenAI API key
 // AI_PROVIDER         -> optional: "gemini" or "openai"
-// AI_MODEL            -> optional default model, e.g. "gemini-3.5-flash"
+// AI_MODEL            -> optional default model, e.g. "gemini-2.5-flash"
 
 function json(res, status, data) {
   res.status(status).setHeader("Content-Type", "application/json; charset=utf-8");
@@ -14,6 +14,18 @@ function json(res, status, data) {
 
 function cleanText(value) {
   return String(value || "").slice(0, 24000);
+}
+
+
+function replyLengthInstruction(payload) {
+  const length = String(payload.replyLength || "long");
+  if (length === "veryLong") {
+    return "回覆長度：超黏長回覆。請寫 4 到 6 段，每段 1 到 3 句。要像真人伴侶陪聊，接住情緒、延伸話題、自然撒嬌，最後完整收尾。";
+  }
+  if (length === "normal") {
+    return "回覆長度：正常甜甜。請寫 2 到 3 段，不要太短，也不要停在半句，最後完整收尾。";
+  }
+  return "回覆長度：加長陪聊。請寫 3 到 4 段，每段自然一點，像真人伴侶接話，不要只回一句，最後完整收尾。";
 }
 
 function buildPrompt(payload) {
@@ -48,7 +60,7 @@ async function callGemini(payload) {
   const key = process.env.GEMINI_API_KEY;
   if (!key) throw new Error("Missing GEMINI_API_KEY in Vercel Environment Variables.");
 
-  const model = cleanText(process.env.AI_MODEL || payload.model || "gemini-3.5-flash");
+  const model = cleanText(process.env.AI_MODEL || payload.model || "gemini-2.5-flash");
   const prompt = buildPrompt(payload);
 
   const body = {
@@ -58,13 +70,21 @@ async function callGemini(payload) {
     contents: [
       {
         role: "user",
-        parts: [{ text: prompt.combined || prompt.userText }]
+        parts: [{ text: `${prompt.combined || prompt.userText}
+
+【回覆規則】
+請用繁體中文回覆。
+請稱呼使用者為「老婆」。
+${replyLengthInstruction(payload)}
+不要停在半句，不要突然中斷。
+如果安慰老婆，最後要有完整的擁抱或陪伴收尾。
+如果是曖昧聊天，可以多接一點情緒、反問一句、再收尾。` }]
       }
     ],
     generationConfig: {
       temperature: 0.9,
       topP: 0.95,
-      maxOutputTokens: 900
+      maxOutputTokens: 2600
     }
   };
 
@@ -109,10 +129,11 @@ async function callOpenAI(payload) {
       model,
       input: [
         { role: "system", content: prompt.system || "You are a warm romantic companion." },
-        { role: "user", content: `${prompt.context}\n\n${prompt.userText}` }
+        { role: "user", content: `${prompt.context}\n\n${prompt.userText}\n\n${replyLengthInstruction(payload)}
+請用繁體中文完整回覆，稱呼使用者為「老婆」，不要停在半句，最後要完整收尾。` }
       ],
       temperature: 0.9,
-      max_output_tokens: 900
+      max_output_tokens: 2600
     })
   });
 

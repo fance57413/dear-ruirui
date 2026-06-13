@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Dear 銳銳 v26</title>
+  <title>Dear 銳銳 v27</title>
   <style>
 @import url('https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Ma+Shan+Zheng&family=Noto+Serif+TC:wght@400;700;900&family=Rampart+One&family=ZCOOL+KuaiLe&family=ZCOOL+QingKe+HuangYou&display=swap');
 :root {
@@ -2069,6 +2069,46 @@ h3,
   }
 }
 
+
+/* v27 cute icon controls */
+#modelBtn,
+#modeBtn {
+  font-size: 20px !important;
+  box-shadow: 0 0 16px rgba(242,168,194,.14) !important;
+}
+
+#modelBtn:hover,
+#modeBtn:hover,
+#modelBtn:active,
+#modeBtn:active {
+  transform-origin: center;
+  filter: brightness(1.04);
+}
+
+#modelBtn {
+  transform: translateX(-50px) !important;
+}
+
+#modeBtn {
+  transform: translateX(-98px) !important;
+}
+
+@media (max-width: 390px) {
+  #modelBtn {
+    transform: translateX(-46px) !important;
+  }
+  #modeBtn {
+    transform: translateX(-90px) !important;
+  }
+}
+
+.model-option::before,
+.mode-option::before {
+  display: inline-block;
+  width: 1.5em;
+  margin-right: 4px;
+}
+
 </style>
   <meta name="theme-color" content="#0e090c" />
   <link rel="manifest" href="./manifest.json" />
@@ -2174,8 +2214,8 @@ h3,
           <h2 id="botNameHeader">焄寶 Hoonie</h2>
           <span><b></b> 在線</span>
         </div>
-        <button id="modelBtn" class="model-pill compact-control" aria-label="選擇聊天模型" title="選擇聊天模型">🤖</button>
-        <button id="modeBtn" class="model-pill compact-control" aria-label="選擇老公模式" title="選擇老公模式">💗</button>
+        <button id="modelBtn" class="model-pill compact-control" aria-label="選擇聊天模式" title="選擇聊天模式">🫧</button>
+        <button id="modeBtn" class="model-pill compact-control" aria-label="選擇老公模式" title="選擇老公模式">🧸</button>
         <button id="loveBtn" class="love-btn">♡</button>
       </header>
       <section id="chatMessages" class="chat-messages"></section>
@@ -3518,6 +3558,48 @@ function renderCustomImages() {
   }
 }
 
+
+const MODEL_ICONS = {
+  "Hoonie Lite": "🫧",
+  "Hoonie Sweet": "🍓",
+  "Hoonie Deep": "🌙",
+  "Hoonie Spicy": "🌶️"
+};
+
+const MODE_ICONS = {
+  "溫柔哄哄": "🧸",
+  "撒嬌黏人": "🐰",
+  "霸道吃醋": "😼",
+  "深夜陪聊": "🌃",
+  "認真建議": "💡",
+  "微辣撩人": "💋"
+};
+
+function refreshPickerButtons() {
+  const modelIcon = MODEL_ICONS[state.model] || "🤖";
+  const modeIcon = MODE_ICONS[state.mode || "溫柔哄哄"] || "💗";
+
+  $("modelBtn").textContent = modelIcon;
+  $("modeBtn").textContent = modeIcon;
+
+  $("modelBtn").title = `聊天模式：${state.model}`;
+  $("modeBtn").title = `老公模式：${state.mode || "溫柔哄哄"}`;
+  $("modelBtn").setAttribute("aria-label", `聊天模式：${state.model}`);
+  $("modeBtn").setAttribute("aria-label", `老公模式：${state.mode || "溫柔哄哄"}`);
+
+  document.querySelectorAll(".model-option").forEach((btn) => {
+    const label = btn.dataset.model;
+    const icon = MODEL_ICONS[label] || "🤖";
+    btn.textContent = `${state.model === label ? "✓ " : ""}${icon} ${label}`;
+  });
+
+  document.querySelectorAll(".mode-option").forEach((btn) => {
+    const label = btn.dataset.mode;
+    const icon = MODE_ICONS[label] || "💗";
+    btn.textContent = `${(state.mode || "溫柔哄哄") === label ? "✓ " : ""}${icon} ${label}`;
+  });
+}
+
 function applySettings() {
   const fontMap = {
     "font-rounded": "font-cute",
@@ -3550,8 +3632,7 @@ function applySettings() {
   $("passcodeSettingInput").value = state.settings.passcode ?? "0311";
   $("dailyCustomInput").value = state.settings.dailyCustom || "";
   $("anniversaryDateInput").value = state.settings.anniversaryDate || "2026-03-31";
-  $("modelBtn").textContent = state.model;
-  $("modeBtn").textContent = state.mode || "溫柔哄哄";
+  refreshPickerButtons();
   document.title = state.settings.appName;
   renderWelcomePhoto();
   renderCustomImages();
@@ -4263,6 +4344,7 @@ renderMissions();
 renderCheckinPage();
 renderLoveStats();
 renderDashboard();
+refreshPickerButtons();
 renderGlobalSearch();
 renderRandomSweetLine();
 renderConversations();

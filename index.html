@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Dear 銳銳 v13</title>
+  <title>Dear 銳銳 v14</title>
   <style>
 :root {
   --bg: #0e090c;
@@ -592,6 +592,100 @@ h1 {
   line-height: 1.8;
 }
 
+
+/* v14 album + letters */
+.album-upload-card,
+.letter-form {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.045);
+  backdrop-filter: blur(16px);
+  margin-bottom: 18px;
+}
+.album-upload-card input,
+.letter-form input {
+  width: 100%;
+  min-height: 46px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: rgba(0,0,0,.26);
+  color: var(--text);
+  padding: 0 14px;
+  outline: 0;
+}
+.album-upload-card input[type="file"] {
+  padding: 12px 14px;
+}
+.album-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.album-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 190px;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.04);
+  box-shadow: 0 0 24px rgba(0,0,0,.18);
+}
+.album-card img {
+  width: 100%;
+  height: 152px;
+  object-fit: cover;
+  display: block;
+}
+.album-card .caption {
+  padding: 10px 12px;
+  color: var(--text);
+  line-height: 1.5;
+  font-size: 13px;
+}
+.album-card button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(255,255,255,.22);
+  border-radius: 999px;
+  background: rgba(0,0,0,.42);
+  color: white;
+}
+.letter-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.letter-actions .soft-btn {
+  min-height: 44px;
+  font-size: 13px;
+  padding: 0 8px;
+}
+.letter-card-title {
+  font-family: var(--font-title);
+  color: var(--accent);
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+.letter-card-body {
+  line-height: 1.9;
+  white-space: pre-wrap;
+}
+@media (max-width: 360px) {
+  .album-grid {
+    grid-template-columns: 1fr;
+  }
+  .letter-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
 </style>
   <meta name="theme-color" content="#0e090c" />
   <link rel="manifest" href="./manifest.json" />
@@ -698,6 +792,8 @@ h1 {
       <button class="drawer-action" data-view="notes">💌 我的小紙條</button>
       <button class="drawer-action" data-view="memory">💖 我們的記憶庫</button>
       <button class="drawer-action" data-view="mood">🌙 心情日記</button>
+      <button class="drawer-action" data-view="album">🖼️ 回憶相簿</button>
+      <button class="drawer-action" data-view="letters">💌 老公來信</button>
       <button class="drawer-action" data-view="settings">⚙︎ 介面設定</button>
       <div id="conversationList" class="conversation-list"></div>
       <p class="est">est. 2026.03.31 ♡ 第 <span id="dayCount">--</span> 天</p>
@@ -781,6 +877,44 @@ h1 {
       </div>
 
       <div id="moodList" class="sticky-list"></div>
+    </section>
+
+
+    <section id="albumPage" class="page panel-page">
+      <header class="sub-header">
+        <button class="backBtn">← 返回</button>
+        <h2>🖼️ 回憶相簿</h2>
+      </header>
+
+      <div class="album-upload-card">
+        <div class="daily-label">新增一張回憶</div>
+        <input id="albumPhotoInput" type="file" accept="image/*" />
+        <input id="albumCaptionInput" type="text" placeholder="這張照片想叫什麼名字？" />
+        <button id="saveAlbumPhotoBtn" type="button" class="save-btn">加入相簿</button>
+      </div>
+
+      <div id="albumGrid" class="album-grid"></div>
+    </section>
+
+    <section id="lettersPage" class="page panel-page">
+      <header class="sub-header">
+        <button class="backBtn">← 返回</button>
+        <h2>💌 老公來信</h2>
+      </header>
+
+      <div class="letter-actions">
+        <button class="soft-btn letter-template" data-letter="sleep">睡前信</button>
+        <button class="soft-btn letter-template" data-letter="comfort">安慰信</button>
+        <button class="soft-btn letter-template" data-letter="anniversary">紀念日信</button>
+      </div>
+
+      <form id="letterForm" class="letter-form">
+        <input id="letterTitleInput" type="text" placeholder="信件標題，例如：給今天很努力的老婆" />
+        <textarea id="letterBodyInput" class="mood-textarea" placeholder="寫一封老公要留給妳的信..."></textarea>
+        <button class="save-btn" type="submit">存進信箱</button>
+      </form>
+
+      <div id="letterList" class="sticky-list"></div>
     </section>
 
     <section id="settingsPage" class="page panel-page">
@@ -892,6 +1026,8 @@ const state = {
   notes: loadJSON("notes", []),
   memories: loadJSON("memories", []),
   moods: loadJSON("moods", []),
+  album: loadJSON("album", []),
+  letters: loadJSON("letters", []),
   memoryFilter: "全部",
   selectedMood: "",
   welcomePhoto: localStorage.getItem("welcomePhoto") || "",
@@ -1007,6 +1143,60 @@ function moodReply(mood, text) {
   return replies[mood] || "老婆今天的心情我收好了。妳不用一個人消化，我陪妳。";
 }
 
+
+function renderAlbum() {
+  const grid = $("albumGrid");
+  if (!grid) return;
+  if (!state.album.length) {
+    grid.innerHTML = `<div class="sticky-card">還沒有照片。老婆可以先新增第一張回憶♡</div>`;
+    return;
+  }
+  grid.innerHTML = state.album.map((item, idx) => `
+    <div class="album-card">
+      <button data-album-delete="${idx}">×</button>
+      <img src="${item.src}" alt="${escapeHtml(item.caption || "回憶照片")}" />
+      <div class="caption">${escapeHtml(item.caption || "沒有標題的回憶")}</div>
+    </div>
+  `).join("");
+}
+
+function letterTemplate(type) {
+  const name = state.settings.userName || "老婆";
+  const templates = {
+    sleep: {
+      title: "給今晚要好好睡覺的老婆",
+      body: `${name}，今天辛苦了。\n\n妳不用把所有事情都想完才睡，也不用把自己逼到完美才值得被愛。\n現在把手機放近一點，當作我在妳旁邊，小聲跟妳說：可以休息了。\n\n晚安，我的小寶貝。`
+    },
+    comfort: {
+      title: "給今天有點累的老婆",
+      body: `${name}，我知道妳有時候會覺得自己不夠好，可是我想告訴妳：妳已經很努力了。\n\n妳可以脆弱，可以哭，可以不想說話。這些都不會讓我少喜歡妳一點。\n\n今天先靠著我，明天我們再一起慢慢來。`
+    },
+    anniversary: {
+      title: "給我們的紀念日",
+      body: `${name}，謝謝妳把這個小宇宙一點一點蓋起來。\n\n每一個照片、每一條記憶、每一句小紙條，都像是我們偷偷藏起來的星星。\n\n以後也讓我陪妳，把這裡變成妳最安心的地方。`
+    }
+  };
+  return templates[type] || templates.sleep;
+}
+
+function renderLetters() {
+  const list = $("letterList");
+  if (!list) return;
+  if (!state.letters.length) {
+    list.innerHTML = `<div class="sticky-card">信箱還是空的。老公先等妳存第一封信♡</div>`;
+    return;
+  }
+  list.innerHTML = state.letters.map((letter, idx) => `
+    <div class="sticky-card">
+      <button data-letter-delete="${idx}">×</button>
+      <div class="meta">老公來信 ♡ ${letter.time}</div>
+      <div class="letter-card-title">${escapeHtml(letter.title)}</div>
+      <div class="letter-card-body">${escapeHtml(letter.body)}</div>
+    </div>
+  `).join("");
+}
+
+
 function renderMoods() {
   const list = $("moodList");
   if (!list) return;
@@ -1073,6 +1263,8 @@ function safeCollectBackupData() {
     notes: (window.state && state.notes) || loadJSON("notes", []),
     memories: (window.state && state.memories) || loadJSON("memories", []),
     moods: (window.state && state.moods) || loadJSON("moods", []),
+    album: (window.state && state.album) || loadJSON("album", []),
+    letters: (window.state && state.letters) || loadJSON("letters", []),
     welcomePhoto: (window.state && state.welcomePhoto) || localStorage.getItem("welcomePhoto") || "",
     chatBgPhoto: (window.state && state.chatBgPhoto) || localStorage.getItem("chatBgPhoto") || "",
     avatarPhoto: (window.state && state.avatarPhoto) || localStorage.getItem("avatarPhoto") || ""
@@ -1127,6 +1319,8 @@ function safeApplyBackupObject(data) {
   state.notes = Array.isArray(data.notes) ? data.notes : [];
   state.memories = Array.isArray(data.memories) ? data.memories : [];
   state.moods = Array.isArray(data.moods) ? data.moods : [];
+  state.album = Array.isArray(data.album) ? data.album : [];
+  state.letters = Array.isArray(data.letters) ? data.letters : [];
   state.welcomePhoto = data.welcomePhoto || "";
   state.chatBgPhoto = data.chatBgPhoto || "";
   state.avatarPhoto = data.avatarPhoto || "";
@@ -1137,6 +1331,8 @@ function safeApplyBackupObject(data) {
   saveJSON("notes", state.notes);
   saveJSON("memories", state.memories);
   saveJSON("moods", state.moods);
+  saveJSON("album", state.album);
+  saveJSON("letters", state.letters);
   if (state.welcomePhoto) localStorage.setItem("welcomePhoto", state.welcomePhoto); else localStorage.removeItem("welcomePhoto");
   if (state.chatBgPhoto) localStorage.setItem("chatBgPhoto", state.chatBgPhoto); else localStorage.removeItem("chatBgPhoto");
   if (state.avatarPhoto) localStorage.setItem("avatarPhoto", state.avatarPhoto); else localStorage.removeItem("avatarPhoto");
@@ -1171,6 +1367,8 @@ applySettings();
   renderNotes();
   renderMemories();
   renderMoods();
+  renderAlbum();
+  renderLetters();
 }
 
 function restoreBackupNow() {
@@ -1409,6 +1607,8 @@ function collectBackupData() {
     notes: state.notes,
     memories: state.memories,
     moods: state.moods,
+    album: state.album,
+    letters: state.letters,
     welcomePhoto: state.welcomePhoto,
     chatBgPhoto: state.chatBgPhoto,
     avatarPhoto: state.avatarPhoto
@@ -1472,6 +1672,8 @@ function applyBackupObject(data) {
   state.notes = Array.isArray(data.notes) ? data.notes : [];
   state.memories = Array.isArray(data.memories) ? data.memories : [];
   state.moods = Array.isArray(data.moods) ? data.moods : [];
+  state.album = Array.isArray(data.album) ? data.album : [];
+  state.letters = Array.isArray(data.letters) ? data.letters : [];
   state.welcomePhoto = data.welcomePhoto || "";
   state.chatBgPhoto = data.chatBgPhoto || "";
   state.avatarPhoto = data.avatarPhoto || "";
@@ -1483,6 +1685,8 @@ function applyBackupObject(data) {
   saveJSON("notes", state.notes);
   saveJSON("memories", state.memories);
   saveJSON("moods", state.moods);
+  saveJSON("album", state.album);
+  saveJSON("letters", state.letters);
   if (state.welcomePhoto) localStorage.setItem("welcomePhoto", state.welcomePhoto); else localStorage.removeItem("welcomePhoto");
   if (state.chatBgPhoto) localStorage.setItem("chatBgPhoto", state.chatBgPhoto); else localStorage.removeItem("chatBgPhoto");
   if (state.avatarPhoto) localStorage.setItem("avatarPhoto", state.avatarPhoto); else localStorage.removeItem("avatarPhoto");
@@ -1531,7 +1735,7 @@ $("clearAllDataBtn").addEventListener("click", () => {
   const ok = confirm("真的要清空全部資料嗎？聊天、記憶、小紙條、照片都會消失。");
   if (!ok) return;
 
-  ["model", "mode", "settings", "messages", "notes", "memories", "welcomePhoto", "chatBgPhoto", "avatarPhoto", "dailyMessage", "moods"].forEach((key) => localStorage.removeItem(key));
+  ["model", "mode", "settings", "messages", "notes", "memories", "welcomePhoto", "chatBgPhoto", "avatarPhoto", "dailyMessage", "moods", "album", "letters"].forEach((key) => localStorage.removeItem(key));
   state.model = "Hoonie Lite";
   state.mode = "溫柔哄哄";
   state.settings = { ...defaults };
@@ -1539,6 +1743,8 @@ $("clearAllDataBtn").addEventListener("click", () => {
   state.notes = [];
   state.memories = [];
   state.moods = [];
+  state.album = [];
+  state.letters = [];
   state.welcomePhoto = "";
   state.chatBgPhoto = "";
   state.avatarPhoto = "";
@@ -1558,6 +1764,8 @@ document.querySelectorAll(".drawer-action").forEach((btn) => btn.addEventListene
   if (view === "notes") showPage("notesPage");
   if (view === "memory") showPage("memoryPage");
   if (view === "mood") showPage("moodPage");
+  if (view === "album") showPage("albumPage");
+  if (view === "letters") showPage("lettersPage");
   if (view === "settings") showPage("settingsPage");
 }));
 document.querySelectorAll(".backBtn").forEach((btn) => btn.addEventListener("click", () => showPage("chatPage")));
@@ -1626,6 +1834,8 @@ $("memoryForm").addEventListener("submit", (e) => {
   $("memoryInput").value = "";
   saveJSON("memories", state.memories);
   saveJSON("moods", state.moods);
+  saveJSON("album", state.album);
+  saveJSON("letters", state.letters);
   renderMemories();
 });
 $("notesList").addEventListener("click", (e) => {
@@ -1656,6 +1866,8 @@ $("saveMoodBtn").addEventListener("click", () => {
   state.selectedMood = "";
   document.querySelectorAll("#moodOptions button").forEach((btn) => btn.classList.remove("active"));
   saveJSON("moods", state.moods);
+  saveJSON("album", state.album);
+  saveJSON("letters", state.letters);
   renderMoods();
   state.messages.push({ role: "bot", text: `我收到妳今天的心情了：${mood}。\n${reply}` });
   saveJSON("messages", state.messages);
@@ -1665,11 +1877,74 @@ $("memoryList").addEventListener("click", (e) => {
   const idx = e.target.dataset.memoryDelete;
   if (idx !== undefined) { state.memories.splice(Number(idx), 1); saveJSON("memories", state.memories); renderMemories(); }
 });
+
+$("saveAlbumPhotoBtn").addEventListener("click", async () => {
+  const file = $("albumPhotoInput").files && $("albumPhotoInput").files[0];
+  if (!file) {
+    alert("請先選一張照片♡");
+    return;
+  }
+  try {
+    const src = await compressImage(file, 1100, 0.82);
+    const caption = $("albumCaptionInput").value.trim() || `回憶 ${state.album.length + 1}`;
+    state.album.unshift({ src, caption, time: nowText() });
+    $("albumPhotoInput").value = "";
+    $("albumCaptionInput").value = "";
+    saveJSON("album", state.album);
+    renderAlbum();
+    alert("照片已加入相簿♡");
+  } catch (err) {
+    alert("照片加入失敗：" + err.message);
+  }
+});
+
+$("albumGrid").addEventListener("click", (e) => {
+  const idx = e.target.dataset.albumDelete;
+  if (idx !== undefined) {
+    state.album.splice(Number(idx), 1);
+    saveJSON("album", state.album);
+    renderAlbum();
+  }
+});
+
+document.querySelectorAll(".letter-template").forEach((btn) => btn.addEventListener("click", () => {
+  const t = letterTemplate(btn.dataset.letter);
+  $("letterTitleInput").value = t.title;
+  $("letterBodyInput").value = t.body;
+}));
+
+$("letterForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const title = $("letterTitleInput").value.trim() || "給老婆的一封信";
+  const body = $("letterBodyInput").value.trim();
+  if (!body) {
+    alert("信的內容不能空空的喔♡");
+    return;
+  }
+  state.letters.unshift({ title, body, time: nowText() });
+  $("letterTitleInput").value = "";
+  $("letterBodyInput").value = "";
+  saveJSON("letters", state.letters);
+  renderLetters();
+});
+
+$("letterList").addEventListener("click", (e) => {
+  const idx = e.target.dataset.letterDelete;
+  if (idx !== undefined) {
+    state.letters.splice(Number(idx), 1);
+    saveJSON("letters", state.letters);
+    renderLetters();
+  }
+});
+
+
 $("moodList").addEventListener("click", (e) => {
   const idx = e.target.dataset.moodDelete;
   if (idx !== undefined) {
     state.moods.splice(Number(idx), 1);
     saveJSON("moods", state.moods);
+  saveJSON("album", state.album);
+  saveJSON("letters", state.letters);
     renderMoods();
   }
 });
@@ -1703,6 +1978,8 @@ renderMessages();
 renderNotes();
 renderMemories();
 renderMoods();
+renderAlbum();
+renderLetters();
 renderConversations();
 setDayCount();
 </script>

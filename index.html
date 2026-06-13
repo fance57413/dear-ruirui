@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Dear 銳銳 v35</title>
+  <title>Dear 銳銳 v36</title>
   <style>
 @import url('https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Ma+Shan+Zheng&family=Noto+Serif+TC:wght@400;700;900&family=Rampart+One&family=ZCOOL+KuaiLe&family=ZCOOL+QingKe+HuangYou&family=DotGothic16&family=Kaisei+Tokumin:wght@400;700&family=Kosugi+Maru&family=Yuji+Syuku&family=Zen+Kurenaido&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
 :root {
@@ -2866,6 +2866,32 @@ textarea::placeholder {
   opacity: .9;
 }
 
+
+/* v36 theme × icon × UI auto match */
+.toggle-line {
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(255,255,255,.035);
+  color: var(--panel-text-auto) !important;
+}
+
+.toggle-line input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--accent);
+}
+
+/* small visual glow when auto theme matching is enabled */
+.auto-theme-pack #themeSelect,
+.auto-theme-pack #iconPackSelect,
+.auto-theme-pack #uiStyleSelect {
+  box-shadow: 0 0 18px var(--shadow);
+}
+
 </style>
   <meta name="theme-color" content="#0e090c" />
   <link rel="manifest" href="./manifest.json" />
@@ -3704,6 +3730,10 @@ textarea::placeholder {
         <h2>🎨 主題商店</h2>
       </header>
 
+      <div class="sticky-card">
+        <div class="meta">自動搭配提示</div>
+        <div>開啟「主題自動配圖示與介面風格」後，套用主題時會自動換成最適合的圖示包與介面質感。想自己混搭的話，到介面設定把它關掉就好♡</div>
+      </div>
       <div class="theme-shop-grid">
         <button class="theme-card-shop rose" data-shop-theme="theme-rose">
           <strong>黑玫瑰</strong><span>曖昧、深夜、戀愛小屋</span>
@@ -3996,6 +4026,12 @@ textarea::placeholder {
           <option value="galaxy">銀河戀人</option>
         </select>
 
+        <label class="toggle-line">
+          <input id="autoThemePackToggle" type="checkbox" />
+          主題自動配圖示與介面風格
+        </label>
+        <p class="mini-hint">開啟後，換主題時會自動幫妳搭配圖示包與介面風格；關掉就可以手動自由搭配。</p>
+
         <label>介面風格</label>
         <select id="uiStyleSelect">
           <option value="ui-glass">玻璃柔光</option>
@@ -4107,6 +4143,7 @@ const defaults = {
   customFont: "",
   iconPack: "sweet",
   uiStyle: "ui-glass",
+  autoThemePack: true,
   spotifyUrl: "",
   localMusic: ""
 };
@@ -5066,10 +5103,14 @@ function renderMusicPlayers() {
 
 function saveCurrentSettingsFromControls() {
   if ($("themeSelect")) state.settings.theme = $("themeSelect").value;
+  if ($("autoThemePackToggle")) state.settings.autoThemePack = $("autoThemePackToggle").checked;
+  if (state.settings.autoThemePack !== false) applyThemePackMatch(state.settings.theme, true);
   if ($("fontStyleSelect")) state.settings.fontStyle = $("fontStyleSelect").value;
   if ($("fontSizeRange")) state.settings.fontSize = Number($("fontSizeRange").value || 100);
-  if ($("iconPackSelect")) state.settings.iconPack = $("iconPackSelect").value;
-  if ($("uiStyleSelect")) state.settings.uiStyle = $("uiStyleSelect").value;
+  if (state.settings.autoThemePack === false) {
+    if ($("iconPackSelect")) state.settings.iconPack = $("iconPackSelect").value;
+    if ($("uiStyleSelect")) state.settings.uiStyle = $("uiStyleSelect").value;
+  }
   if ($("customBgInput")) {
     state.settings.customTheme = {
       bg: $("customBgInput").value,
@@ -5348,7 +5389,39 @@ function setRuntimeFontFromDataUrl(dataUrl) {
   `;
 }
 
+
+const THEME_PACK_MATCHES = {
+  "theme-rose": { iconPack: "sweet", uiStyle: "ui-glass" },
+  "theme-moon": { iconPack: "witch", uiStyle: "ui-dream" },
+  "theme-milk": { iconPack: "coffee", uiStyle: "ui-soft" },
+  "theme-gold": { iconPack: "royal", uiStyle: "ui-luxury" },
+  "theme-blue": { iconPack: "ocean", uiStyle: "ui-floating" },
+  "theme-neon": { iconPack: "candy", uiStyle: "ui-neon" },
+  "theme-sakura": { iconPack: "angel", uiStyle: "ui-soft" },
+  "theme-snow": { iconPack: "star", uiStyle: "ui-glass" },
+  "theme-vampire": { iconPack: "dark", uiStyle: "ui-luxury" },
+  "theme-matcha": { iconPack: "forest", uiStyle: "ui-letter" },
+  "theme-custom": { iconPack: "sweet", uiStyle: "ui-glass" }
+};
+
+function applyThemePackMatch(themeName, force = false) {
+  if (!force && !state.settings.autoThemePack) return;
+  const match = THEME_PACK_MATCHES[themeName] || THEME_PACK_MATCHES["theme-rose"];
+  state.settings.iconPack = match.iconPack;
+  state.settings.uiStyle = match.uiStyle;
+}
+
+function syncThemePackControls() {
+  if ($("autoThemePackToggle")) $("autoThemePackToggle").checked = state.settings.autoThemePack !== false;
+  if ($("iconPackSelect")) $("iconPackSelect").disabled = state.settings.autoThemePack !== false;
+  if ($("uiStyleSelect")) $("uiStyleSelect").disabled = state.settings.autoThemePack !== false;
+  if ($("app")) $("app").classList.toggle("auto-theme-pack", state.settings.autoThemePack !== false);
+}
+
 function applySettings() {
+  if (state.settings.autoThemePack !== false) {
+    applyThemePackMatch(state.settings.theme || "theme-rose", true);
+  }
   const fontMap = {
     "font-rounded": "font-cute",
     "font-system": "font-diary"
@@ -5381,6 +5454,7 @@ function applySettings() {
   $("fontSizeLabel").textContent = `目前：${state.settings.fontSize || 100}%`;
   $("iconPackSelect").value = state.settings.iconPack || "sweet";
   $("uiStyleSelect").value = state.settings.uiStyle || "ui-glass";
+  syncThemePackControls();
   $("welcomeTitleInput").value = state.settings.welcomeTitle || `Welcome Home, ${state.settings.userName}`;
   $("welcomeSubtitleInput").value = state.settings.welcomeSubtitle || `${state.settings.botName.split(" ")[0]} is waiting for you`;
   $("openingLineInput").value = state.settings.openingLine || defaults.openingLine;
@@ -5945,7 +6019,12 @@ function bindIfExists(id, event, handler) {
   if (el) el.addEventListener(event, handler);
 }
 
-bindIfExists("themeSelect", "change", saveCurrentSettingsFromControls);
+bindIfExists("themeSelect", "change", () => {
+  state.settings.theme = $("themeSelect").value;
+  if (state.settings.autoThemePack !== false) applyThemePackMatch(state.settings.theme, true);
+  saveJSON("settings", state.settings);
+  applySettings();
+});
 bindIfExists("fontStyleSelect", "change", () => {
   saveCurrentSettingsFromControls();
   updateFontPreview();
@@ -5958,6 +6037,15 @@ bindIfExists("fontSizeRange", "input", () => {
 });
 bindIfExists("iconPackSelect", "change", saveCurrentSettingsFromControls);
 bindIfExists("uiStyleSelect", "change", saveCurrentSettingsFromControls);
+bindIfExists("autoThemePackToggle", "change", () => {
+  state.settings.autoThemePack = $("autoThemePackToggle").checked;
+  if (state.settings.autoThemePack !== false) {
+    applyThemePackMatch(state.settings.theme || "theme-rose", true);
+  }
+  saveJSON("settings", state.settings);
+  applySettings();
+  alert(state.settings.autoThemePack !== false ? "已開啟自動搭配♡" : "已關閉自動搭配，可以手動自由混搭♡");
+});
 
 bindIfExists("applyCustomFontBtn", "click", () => {
   const file = $("customFontInput").files && $("customFontInput").files[0];
@@ -6047,6 +6135,7 @@ bindIfExists("saveLocalMusicBtn", "click", () => {
 $("applyCustomThemeBtn").addEventListener("click", () => {
   state.settings.theme = "theme-custom";
   $("themeSelect").value = "theme-custom";
+  if (state.settings.autoThemePack !== false) applyThemePackMatch("theme-custom", true);
   saveCurrentSettingsFromControls();
   applyAutoReadableText();
   alert("自訂主題已套用，文字也會自動調成看得清楚的顏色♡");
@@ -6064,6 +6153,7 @@ function updateFontPreview() {
 document.querySelectorAll(".theme-card-shop").forEach((btn) => btn.addEventListener("click", () => {
   const theme = btn.dataset.shopTheme;
   state.settings.theme = theme;
+  if (state.settings.autoThemePack !== false) applyThemePackMatch(theme, true);
   if ($("themeSelect")) $("themeSelect").value = theme;
   saveJSON("settings", state.settings);
   applySettings();
@@ -6172,8 +6262,9 @@ $("saveSettings").addEventListener("click", () => {
       text: $("customTextInput").value
     },
     fontSize: Number($("fontSizeRange").value || 100),
-    iconPack: $("iconPackSelect").value,
-    uiStyle: $("uiStyleSelect").value,
+    iconPack: state.settings.autoThemePack !== false ? (THEME_PACK_MATCHES[$("themeSelect").value] || THEME_PACK_MATCHES["theme-rose"]).iconPack : $("iconPackSelect").value,
+    uiStyle: state.settings.autoThemePack !== false ? (THEME_PACK_MATCHES[$("themeSelect").value] || THEME_PACK_MATCHES["theme-rose"]).uiStyle : $("uiStyleSelect").value,
+    autoThemePack: $("autoThemePackToggle").checked,
     customFont: state.settings.customFont || "",
     welcomeTitle: $("welcomeTitleInput").value.trim(),
     welcomeSubtitle: $("welcomeSubtitleInput").value.trim(),

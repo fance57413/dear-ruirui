@@ -1,4 +1,4 @@
-const CACHE_NAME = "dear-ruirui-v44";
+const CACHE_NAME = "dear-ruirui-v45";
 const FILES = ["./", "./index.html", "./manifest.json", "./icon.svg"];
 
 self.addEventListener("install", (event) => {

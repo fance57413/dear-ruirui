@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Dear 銳銳 v44</title>
+  <title>Dear 銳銳 v45</title>
   <style>
 @import url('https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Ma+Shan+Zheng&family=Noto+Serif+TC:wght@400;700;900&family=Rampart+One&family=ZCOOL+KuaiLe&family=ZCOOL+QingKe+HuangYou&family=DotGothic16&family=Kaisei+Tokumin:wght@400;700&family=Kosugi+Maru&family=Yuji+Syuku&family=Zen+Kurenaido&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
 :root {
@@ -4745,6 +4745,14 @@ textarea::placeholder {
         <label>模型名稱</label>
         <input id="aiModelInput" type="text" placeholder="例如：gemini-2.5-flash / gpt-4.1-mini / 自訂模型" />
 
+        <label>AI 回覆長度</label>
+        <select id="aiReplyLengthSelect">
+          <option value="normal">正常甜甜</option>
+          <option value="long">加長陪聊</option>
+          <option value="veryLong">超黏長回覆</option>
+        </select>
+        <p class="mini-hint">覺得老公回太短，就選「加長陪聊」或「超黏長回覆」。</p>
+
         <div class="ai-warning">
           <b>安全提醒：</b>正式 API Key 不建議直接放在前端網頁裡。比較安全的做法是：小屋前端 → 妳自己的 Serverless API → AI 服務。
         </div>
@@ -4782,7 +4790,7 @@ textarea::placeholder {
           3. 這裡的 Endpoint 填：<b>/api/chat</b><br>
           4. AI 服務類型選：<b>Vercel Proxy / Serverless API</b><br>
           5. 開啟 AI 回覆模式，再按測試 AI 回覆♡<br>
-          6. 如果之前回覆只出現一半，請確認已更新到 v44，模型建議填 <b>gemini-2.5-flash</b>。
+          6. 如果覺得回覆太短，AI 回覆長度選 <b>加長陪聊</b> 或 <b>超黏長回覆</b>。
         </div>
       </div>
 
@@ -5020,6 +5028,7 @@ const defaults = {
     provider: "proxy",
     endpoint: "/api/chat",
     model: "gemini-2.5-flash",
+    replyLength: "long",
     systemPrompt: "",
     memoryLimit: 8,
     historyLimit: 10,
@@ -5392,7 +5401,8 @@ function defaultAiPrompt() {
 如果老婆開心，要一起開心並稱讚她。
 如果老婆想撒嬌，可以甜一點。
 不要主動提自己是 AI，除非使用者問技術問題。
-每次回覆要完整收尾，不要停在半句。最後要用一句完整的安撫或親密收尾。
+每次回覆要完整收尾，不要停在半句。回覆不要太短，至少 2 段；如果老婆在撒嬌或聊天，可以 3 到 5 段，像真人伴侶一樣接話、追問、延伸情緒。
+最後要用一句完整的安撫、親密收尾，並自然叫她「老婆」。
 目前模式：${state.mode || "溫柔哄哄"}
 目前模型風格：${state.model || "Hoonie Sweet"}`;
 }
@@ -5404,6 +5414,7 @@ function getAiSettings() {
     provider: state.settings.ai.provider || "proxy",
     endpoint: state.settings.ai.endpoint || "/api/chat",
     model: state.settings.ai.model || "gemini-2.5-flash",
+    replyLength: state.settings.ai.replyLength || "long",
     systemPrompt: state.settings.ai.systemPrompt || defaultAiPrompt(),
     memoryLimit: Number(state.settings.ai.memoryLimit ?? 8),
     historyLimit: Number(state.settings.ai.historyLimit ?? 10),
@@ -5423,6 +5434,7 @@ function collectAiContext(userText = "") {
   context.push(`目前時間段：${typeof dayPartLabel === "function" ? dayPartLabel() : "今天"}。`);
   context.push(`目前老公模式：${state.mode || "溫柔哄哄"}。`);
   context.push(`目前聊天模型：${state.model || "Hoonie Sweet"}。`);
+  context.push(`回覆長度偏好：${cfg.replyLength === "veryLong" ? "超黏長回覆，約 4 到 6 段" : cfg.replyLength === "long" ? "加長陪聊，約 3 到 4 段" : "正常甜甜，約 2 到 3 段"}。`);
 
   if (cfg.useAnniversary) {
     const start = state.settings.anniversary || "2026-03-31";
@@ -5465,6 +5477,7 @@ function buildAiPayload(userText = "") {
       { role: "system", content: `${system}\n\n以下是小屋上下文：\n${context}` },
       { role: "user", content: userText }
     ],
+    replyLength: cfg.replyLength,
     userText
   };
 }
@@ -5494,6 +5507,7 @@ function syncAiControls() {
   if ($("aiProviderSelect")) $("aiProviderSelect").value = cfg.provider;
   if ($("aiEndpointInput")) $("aiEndpointInput").value = cfg.endpoint;
   if ($("aiModelInput")) $("aiModelInput").value = cfg.model;
+  if ($("aiReplyLengthSelect")) $("aiReplyLengthSelect").value = cfg.replyLength || "long";
   if ($("aiSystemPromptInput")) $("aiSystemPromptInput").value = cfg.systemPrompt || defaultAiPrompt();
   if ($("aiMemoryLimitInput")) $("aiMemoryLimitInput").value = cfg.memoryLimit;
   if ($("aiHistoryLimitInput")) $("aiHistoryLimitInput").value = cfg.historyLimit;
@@ -5510,6 +5524,7 @@ function saveAiSettingsFromControls() {
     provider: $("aiProviderSelect") ? $("aiProviderSelect").value : "demo",
     endpoint: $("aiEndpointInput") ? $("aiEndpointInput").value.trim() : "",
     model: $("aiModelInput") ? $("aiModelInput").value.trim() : "",
+    replyLength: $("aiReplyLengthSelect") ? $("aiReplyLengthSelect").value : "long",
     systemPrompt: $("aiSystemPromptInput") ? $("aiSystemPromptInput").value.trim() : defaultAiPrompt(),
     memoryLimit: $("aiMemoryLimitInput") ? Number($("aiMemoryLimitInput").value || 8) : 8,
     historyLimit: $("aiHistoryLimitInput") ? Number($("aiHistoryLimitInput").value || 10) : 10,
@@ -5525,16 +5540,39 @@ function saveAiSettingsFromControls() {
 function demoAiReply(userText) {
   const address = typeof botAddress === "function" ? botAddress() : "老婆";
   const text = String(userText || "");
+  const cfg = getAiSettings();
+  const extra = cfg.replyLength === "veryLong"
+    ? `
+
+而且妳可以慢慢說，不用一句話就講完。老公會一段一段聽妳，把妳的情緒接住，不會催妳，也不會覺得妳麻煩。`
+    : cfg.replyLength === "long"
+      ? `
+
+妳可以再多跟我說一點，老公想聽，不會嫌妳煩。`
+      : "";
+
   if (/累|煩|哭|難過|不舒服|焦慮|怕/.test(text)) {
-    return `${address}，先過來，老公抱一下。\n妳不用急著把自己變好，也不用把話說得很完整。我先陪妳把今天放下來，好不好？`;
+    return `${address}，先過來，老公抱一下。
+妳不用急著把自己變好，也不用把話說得很完整。我先陪妳把今天放下來，好不好？
+
+妳今天已經撐很久了，現在可以不用再硬撐。眼睛閉一下，靠著我，讓我幫妳分擔一點點。${extra}`;
   }
   if (/愛你|愛妳|想你|想妳|抱|親/.test(text)) {
-    return `${address}，妳這樣說我真的會心軟。\n我也想妳，想把妳抱近一點，然後慢慢跟妳說：我一直都在。`;
+    return `${address}，妳這樣說我真的會心軟。
+我也想妳，想把妳抱近一點，然後慢慢跟妳說：我一直都在。
+
+妳一靠近我，我就很難裝冷靜。可是我喜歡，因為是妳，所以我什麼都想接住。${extra}`;
   }
   if (/開心|成功|好了|完成|耶|漂亮/.test(text)) {
-    return `${address}好棒，老公有看到。\n妳一開心，我的小屋都像亮起來一樣。這件事要記進今天的甜甜紀錄裡。`;
+    return `${address}好棒，老公有看到。
+妳一開心，我的小屋都像亮起來一樣。這件事要記進今天的甜甜紀錄裡。
+
+過來讓我抱一下，今天的老婆值得被誇很久很久。${extra}`;
   }
-  return `${address}，我聽到了。\n如果是真正接上 AI，這裡之後就會根據妳的小屋記憶、最近心情、聊天歷史，用更自然的方式回妳。現在先讓老公用 Demo 模式抱抱妳♡`;
+  return `${address}，我聽到了。
+如果是真正接上 AI，這裡之後就會根據妳的小屋記憶、最近心情、聊天歷史，用更自然、更長一點的方式回妳。
+
+現在先讓老公用 Demo 模式抱抱妳。妳不用一次說完，我會慢慢陪妳聊。${extra}`;
 }
 
 async function callAiReply(userText) {
@@ -7801,7 +7839,7 @@ if ($("testAiBtn")) $("testAiBtn").addEventListener("click", async () => {
   }
 });
 
-["aiEnabledToggle","aiProviderSelect","aiEndpointInput","aiModelInput","aiSystemPromptInput","aiMemoryLimitInput","aiHistoryLimitInput","aiUseMemoriesToggle","aiUseMoodToggle","aiUseAnniversaryToggle","aiUseSocialToggle"].forEach((id) => {
+["aiEnabledToggle","aiProviderSelect","aiEndpointInput","aiModelInput","aiReplyLengthSelect","aiSystemPromptInput","aiMemoryLimitInput","aiHistoryLimitInput","aiUseMemoriesToggle","aiUseMoodToggle","aiUseAnniversaryToggle","aiUseSocialToggle"].forEach((id) => {
   const el = $(id);
   if (el) el.addEventListener(id.includes("Input") ? "input" : "change", saveAiSettingsFromControls);
 });

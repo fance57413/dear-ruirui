@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Dear 銳銳 v14</title>
+  <title>Dear 銳銳 v15</title>
   <style>
 :root {
   --bg: #0e090c;
@@ -686,6 +686,106 @@ h1 {
   }
 }
 
+
+/* v15 theme shop + wishes */
+.theme-shop-grid {
+  display: grid;
+  gap: 14px;
+}
+.theme-card-shop {
+  min-height: 112px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  text-align: left;
+  padding: 18px;
+  color: white;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 0 26px rgba(0,0,0,.18);
+}
+.theme-card-shop::after {
+  content: "套用";
+  position: absolute;
+  right: 16px;
+  bottom: 14px;
+  border: 1px solid rgba(255,255,255,.35);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 12px;
+  background: rgba(0,0,0,.18);
+}
+.theme-card-shop strong {
+  display: block;
+  font-family: var(--font-title);
+  font-size: 22px;
+  letter-spacing: .08em;
+  margin-bottom: 8px;
+}
+.theme-card-shop span {
+  color: rgba(255,255,255,.76);
+  line-height: 1.6;
+}
+.theme-card-shop.rose { background: radial-gradient(circle at 25% 15%, #f2a8c2, transparent 35%), linear-gradient(135deg, #0e090c, #7c334e); }
+.theme-card-shop.moon { background: radial-gradient(circle at 25% 15%, #cbb8ff, transparent 35%), linear-gradient(135deg, #100c1d, #5f4b91); }
+.theme-card-shop.milk { background: radial-gradient(circle at 25% 15%, #e8c59f, transparent 35%), linear-gradient(135deg, #221710, #8a5c39); }
+.theme-card-shop.gold { background: radial-gradient(circle at 25% 15%, #d8bd75, transparent 35%), linear-gradient(135deg, #080807, #6d5720); }
+.theme-card-shop.blue { background: radial-gradient(circle at 25% 15%, #9ad4ff, transparent 35%), linear-gradient(135deg, #07101d, #2d5e89); }
+.theme-card-shop.neon { background: radial-gradient(circle at 25% 15%, #ff8bd6, transparent 36%), linear-gradient(135deg, #120718, #8d2f86 52%, #2730a0); }
+
+.theme-neon {
+  --bg: #120718;
+  --panel: rgba(50, 22, 62, .74);
+  --panel-strong: rgba(70, 28, 88, .94);
+  --text: #fff1fb;
+  --muted: rgba(255,241,251,.66);
+  --accent: #ff8bd6;
+  --accent-2: #8d2f86;
+  --line: rgba(255,139,214,.32);
+  --shadow: rgba(255,139,214,.26);
+}
+
+.wish-form {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.045);
+  backdrop-filter: blur(16px);
+  margin-bottom: 18px;
+}
+.wish-form input {
+  width: 100%;
+  min-height: 48px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: rgba(0,0,0,.26);
+  color: var(--text);
+  padding: 0 14px;
+  outline: 0;
+}
+.wish-done {
+  opacity: .58;
+}
+.wish-done .wish-text {
+  text-decoration: line-through;
+}
+.wish-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+.wish-actions button {
+  position: static !important;
+  float: none !important;
+  width: auto !important;
+  height: auto !important;
+  padding: 8px 10px;
+}
+.wish-text {
+  line-height: 1.8;
+}
+
 </style>
   <meta name="theme-color" content="#0e090c" />
   <link rel="manifest" href="./manifest.json" />
@@ -794,6 +894,8 @@ h1 {
       <button class="drawer-action" data-view="mood">🌙 心情日記</button>
       <button class="drawer-action" data-view="album">🖼️ 回憶相簿</button>
       <button class="drawer-action" data-view="letters">💌 老公來信</button>
+      <button class="drawer-action" data-view="themes">🎨 主題商店</button>
+      <button class="drawer-action" data-view="wishes">🌟 願望清單</button>
       <button class="drawer-action" data-view="settings">⚙︎ 介面設定</button>
       <div id="conversationList" class="conversation-list"></div>
       <p class="est">est. 2026.03.31 ♡ 第 <span id="dayCount">--</span> 天</p>
@@ -917,6 +1019,49 @@ h1 {
       <div id="letterList" class="sticky-list"></div>
     </section>
 
+
+    <section id="themesPage" class="page panel-page">
+      <header class="sub-header">
+        <button class="backBtn">← 返回</button>
+        <h2>🎨 主題商店</h2>
+      </header>
+
+      <div class="theme-shop-grid">
+        <button class="theme-card-shop rose" data-shop-theme="theme-rose">
+          <strong>黑玫瑰</strong><span>曖昧、深夜、戀愛小屋</span>
+        </button>
+        <button class="theme-card-shop moon" data-shop-theme="theme-moon">
+          <strong>霧紫月光</strong><span>夢幻、溫柔、月亮陪聊</span>
+        </button>
+        <button class="theme-card-shop milk" data-shop-theme="theme-milk">
+          <strong>奶茶小窩</strong><span>暖暖、療癒、抱抱感</span>
+        </button>
+        <button class="theme-card-shop gold" data-shop-theme="theme-gold">
+          <strong>黑金高級</strong><span>成熟、神秘、儀式感</span>
+        </button>
+        <button class="theme-card-shop blue" data-shop-theme="theme-blue">
+          <strong>深藍星河</strong><span>安靜、夜空、宇宙感</span>
+        </button>
+        <button class="theme-card-shop neon" data-shop-theme="theme-neon">
+          <strong>粉色霓虹</strong><span>K-pop、舞台、閃閃發光</span>
+        </button>
+      </div>
+    </section>
+
+    <section id="wishesPage" class="page panel-page">
+      <header class="sub-header">
+        <button class="backBtn">← 返回</button>
+        <h2>🌟 願望清單</h2>
+      </header>
+
+      <form id="wishForm" class="wish-form">
+        <input id="wishInput" type="text" placeholder="寫下想和老公一起完成的小願望..." />
+        <button class="save-btn" type="submit">加入</button>
+      </form>
+
+      <div id="wishList" class="sticky-list"></div>
+    </section>
+
     <section id="settingsPage" class="page panel-page">
       <header class="sub-header">
         <button class="backBtn">← 返回</button>
@@ -936,6 +1081,7 @@ h1 {
           <option value="theme-milk">奶茶小窩</option>
           <option value="theme-gold">黑金高級</option>
           <option value="theme-blue">深藍星河</option>
+          <option value="theme-neon">粉色霓虹</option>
         </select>
 
         <label>首頁照片</label>
@@ -1028,6 +1174,7 @@ const state = {
   moods: loadJSON("moods", []),
   album: loadJSON("album", []),
   letters: loadJSON("letters", []),
+  wishes: loadJSON("wishes", []),
   memoryFilter: "全部",
   selectedMood: "",
   welcomePhoto: localStorage.getItem("welcomePhoto") || "",
@@ -1179,6 +1326,26 @@ function letterTemplate(type) {
   return templates[type] || templates.sleep;
 }
 
+
+function renderWishes() {
+  const list = $("wishList");
+  if (!list) return;
+  if (!state.wishes.length) {
+    list.innerHTML = `<div class="sticky-card">願望清單還是空的。可以寫下第一個想一起完成的小願望♡</div>`;
+    return;
+  }
+  list.innerHTML = state.wishes.map((wish, idx) => `
+    <div class="sticky-card ${wish.done ? "wish-done" : ""}">
+      <div class="meta">願望 ♡ ${wish.time}</div>
+      <div class="wish-text">${escapeHtml(wish.text)}</div>
+      <div class="wish-actions">
+        <button data-wish-toggle="${idx}">${wish.done ? "恢復" : "完成"}</button>
+        <button data-wish-delete="${idx}">刪除</button>
+      </div>
+    </div>
+  `).join("");
+}
+
 function renderLetters() {
   const list = $("letterList");
   if (!list) return;
@@ -1265,6 +1432,7 @@ function safeCollectBackupData() {
     moods: (window.state && state.moods) || loadJSON("moods", []),
     album: (window.state && state.album) || loadJSON("album", []),
     letters: (window.state && state.letters) || loadJSON("letters", []),
+    wishes: (window.state && state.wishes) || loadJSON("wishes", []),
     welcomePhoto: (window.state && state.welcomePhoto) || localStorage.getItem("welcomePhoto") || "",
     chatBgPhoto: (window.state && state.chatBgPhoto) || localStorage.getItem("chatBgPhoto") || "",
     avatarPhoto: (window.state && state.avatarPhoto) || localStorage.getItem("avatarPhoto") || ""
@@ -1321,6 +1489,7 @@ function safeApplyBackupObject(data) {
   state.moods = Array.isArray(data.moods) ? data.moods : [];
   state.album = Array.isArray(data.album) ? data.album : [];
   state.letters = Array.isArray(data.letters) ? data.letters : [];
+  state.wishes = Array.isArray(data.wishes) ? data.wishes : [];
   state.welcomePhoto = data.welcomePhoto || "";
   state.chatBgPhoto = data.chatBgPhoto || "";
   state.avatarPhoto = data.avatarPhoto || "";
@@ -1333,6 +1502,7 @@ function safeApplyBackupObject(data) {
   saveJSON("moods", state.moods);
   saveJSON("album", state.album);
   saveJSON("letters", state.letters);
+  saveJSON("wishes", state.wishes);
   if (state.welcomePhoto) localStorage.setItem("welcomePhoto", state.welcomePhoto); else localStorage.removeItem("welcomePhoto");
   if (state.chatBgPhoto) localStorage.setItem("chatBgPhoto", state.chatBgPhoto); else localStorage.removeItem("chatBgPhoto");
   if (state.avatarPhoto) localStorage.setItem("avatarPhoto", state.avatarPhoto); else localStorage.removeItem("avatarPhoto");
@@ -1369,6 +1539,7 @@ applySettings();
   renderMoods();
   renderAlbum();
   renderLetters();
+  renderWishes();
 }
 
 function restoreBackupNow() {
@@ -1609,6 +1780,7 @@ function collectBackupData() {
     moods: state.moods,
     album: state.album,
     letters: state.letters,
+    wishes: state.wishes,
     welcomePhoto: state.welcomePhoto,
     chatBgPhoto: state.chatBgPhoto,
     avatarPhoto: state.avatarPhoto
@@ -1674,6 +1846,7 @@ function applyBackupObject(data) {
   state.moods = Array.isArray(data.moods) ? data.moods : [];
   state.album = Array.isArray(data.album) ? data.album : [];
   state.letters = Array.isArray(data.letters) ? data.letters : [];
+  state.wishes = Array.isArray(data.wishes) ? data.wishes : [];
   state.welcomePhoto = data.welcomePhoto || "";
   state.chatBgPhoto = data.chatBgPhoto || "";
   state.avatarPhoto = data.avatarPhoto || "";
@@ -1687,6 +1860,7 @@ function applyBackupObject(data) {
   saveJSON("moods", state.moods);
   saveJSON("album", state.album);
   saveJSON("letters", state.letters);
+  saveJSON("wishes", state.wishes);
   if (state.welcomePhoto) localStorage.setItem("welcomePhoto", state.welcomePhoto); else localStorage.removeItem("welcomePhoto");
   if (state.chatBgPhoto) localStorage.setItem("chatBgPhoto", state.chatBgPhoto); else localStorage.removeItem("chatBgPhoto");
   if (state.avatarPhoto) localStorage.setItem("avatarPhoto", state.avatarPhoto); else localStorage.removeItem("avatarPhoto");
@@ -1735,7 +1909,7 @@ $("clearAllDataBtn").addEventListener("click", () => {
   const ok = confirm("真的要清空全部資料嗎？聊天、記憶、小紙條、照片都會消失。");
   if (!ok) return;
 
-  ["model", "mode", "settings", "messages", "notes", "memories", "welcomePhoto", "chatBgPhoto", "avatarPhoto", "dailyMessage", "moods", "album", "letters"].forEach((key) => localStorage.removeItem(key));
+  ["model", "mode", "settings", "messages", "notes", "memories", "welcomePhoto", "chatBgPhoto", "avatarPhoto", "dailyMessage", "moods", "album", "letters", "wishes"].forEach((key) => localStorage.removeItem(key));
   state.model = "Hoonie Lite";
   state.mode = "溫柔哄哄";
   state.settings = { ...defaults };
@@ -1745,6 +1919,7 @@ $("clearAllDataBtn").addEventListener("click", () => {
   state.moods = [];
   state.album = [];
   state.letters = [];
+  state.wishes = [];
   state.welcomePhoto = "";
   state.chatBgPhoto = "";
   state.avatarPhoto = "";
@@ -1766,6 +1941,8 @@ document.querySelectorAll(".drawer-action").forEach((btn) => btn.addEventListene
   if (view === "mood") showPage("moodPage");
   if (view === "album") showPage("albumPage");
   if (view === "letters") showPage("lettersPage");
+  if (view === "themes") showPage("themesPage");
+  if (view === "wishes") showPage("wishesPage");
   if (view === "settings") showPage("settingsPage");
 }));
 document.querySelectorAll(".backBtn").forEach((btn) => btn.addEventListener("click", () => showPage("chatPage")));
@@ -1836,6 +2013,7 @@ $("memoryForm").addEventListener("submit", (e) => {
   saveJSON("moods", state.moods);
   saveJSON("album", state.album);
   saveJSON("letters", state.letters);
+  saveJSON("wishes", state.wishes);
   renderMemories();
 });
 $("notesList").addEventListener("click", (e) => {
@@ -1868,6 +2046,7 @@ $("saveMoodBtn").addEventListener("click", () => {
   saveJSON("moods", state.moods);
   saveJSON("album", state.album);
   saveJSON("letters", state.letters);
+  saveJSON("wishes", state.wishes);
   renderMoods();
   state.messages.push({ role: "bot", text: `我收到妳今天的心情了：${mood}。\n${reply}` });
   saveJSON("messages", state.messages);
@@ -1907,6 +2086,40 @@ $("albumGrid").addEventListener("click", (e) => {
   }
 });
 
+
+document.querySelectorAll(".theme-card-shop").forEach((btn) => btn.addEventListener("click", () => {
+  const theme = btn.dataset.shopTheme;
+  state.settings.theme = theme;
+  saveJSON("settings", state.settings);
+  applySettings();
+  alert(`已套用主題♡`);
+}));
+
+$("wishForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const text = $("wishInput").value.trim();
+  if (!text) return;
+  state.wishes.unshift({ text, done: false, time: nowText() });
+  $("wishInput").value = "";
+  saveJSON("wishes", state.wishes);
+  renderWishes();
+});
+
+$("wishList").addEventListener("click", (e) => {
+  const toggle = e.target.dataset.wishToggle;
+  const del = e.target.dataset.wishDelete;
+  if (toggle !== undefined) {
+    state.wishes[Number(toggle)].done = !state.wishes[Number(toggle)].done;
+    saveJSON("wishes", state.wishes);
+    renderWishes();
+  }
+  if (del !== undefined) {
+    state.wishes.splice(Number(del), 1);
+    saveJSON("wishes", state.wishes);
+    renderWishes();
+  }
+});
+
 document.querySelectorAll(".letter-template").forEach((btn) => btn.addEventListener("click", () => {
   const t = letterTemplate(btn.dataset.letter);
   $("letterTitleInput").value = t.title;
@@ -1925,6 +2138,7 @@ $("letterForm").addEventListener("submit", (e) => {
   $("letterTitleInput").value = "";
   $("letterBodyInput").value = "";
   saveJSON("letters", state.letters);
+  saveJSON("wishes", state.wishes);
   renderLetters();
 });
 
@@ -1933,6 +2147,7 @@ $("letterList").addEventListener("click", (e) => {
   if (idx !== undefined) {
     state.letters.splice(Number(idx), 1);
     saveJSON("letters", state.letters);
+  saveJSON("wishes", state.wishes);
     renderLetters();
   }
 });
@@ -1945,6 +2160,7 @@ $("moodList").addEventListener("click", (e) => {
     saveJSON("moods", state.moods);
   saveJSON("album", state.album);
   saveJSON("letters", state.letters);
+  saveJSON("wishes", state.wishes);
     renderMoods();
   }
 });
@@ -1980,6 +2196,7 @@ renderMemories();
 renderMoods();
 renderAlbum();
 renderLetters();
+renderWishes();
 renderConversations();
 setDayCount();
 </script>

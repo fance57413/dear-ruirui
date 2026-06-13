@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Dear 銳銳 v15</title>
+  <title>Dear 銳銳 v16</title>
   <style>
 :root {
   --bg: #0e090c;
@@ -786,6 +786,87 @@ h1 {
   line-height: 1.8;
 }
 
+
+/* v16 dashboard + search */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.dash-card {
+  min-height: 92px;
+  padding: 16px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.045);
+  box-shadow: 0 0 24px rgba(0,0,0,.16);
+  backdrop-filter: blur(16px);
+}
+.dash-card span {
+  display: block;
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+.dash-card strong {
+  font-family: var(--font-title);
+  color: var(--accent);
+  font-size: 34px;
+  text-shadow: 0 0 18px var(--shadow);
+}
+.search-card,
+.random-card {
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.045);
+  backdrop-filter: blur(16px);
+  margin-bottom: 18px;
+}
+.search-card input {
+  width: 100%;
+  min-height: 48px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: rgba(0,0,0,.26);
+  color: var(--text);
+  padding: 0 14px;
+  outline: 0;
+  margin: 12px 0;
+}
+.search-result-item {
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.search-result-item:last-child {
+  border-bottom: 0;
+}
+.search-result-type {
+  display: inline-block;
+  color: var(--accent);
+  font-size: 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px 8px;
+  margin-bottom: 6px;
+}
+.search-result-text {
+  color: var(--text);
+  line-height: 1.7;
+}
+.random-card p {
+  line-height: 1.9;
+  margin: 10px 0 14px;
+}
+.random-card button {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255,255,255,.04);
+  color: var(--accent);
+  padding: 10px 18px;
+}
+
 </style>
   <meta name="theme-color" content="#0e090c" />
   <link rel="manifest" href="./manifest.json" />
@@ -896,6 +977,7 @@ h1 {
       <button class="drawer-action" data-view="letters">💌 老公來信</button>
       <button class="drawer-action" data-view="themes">🎨 主題商店</button>
       <button class="drawer-action" data-view="wishes">🌟 願望清單</button>
+      <button class="drawer-action" data-view="dashboard">📊 小屋總覽</button>
       <button class="drawer-action" data-view="settings">⚙︎ 介面設定</button>
       <div id="conversationList" class="conversation-list"></div>
       <p class="est">est. 2026.03.31 ♡ 第 <span id="dayCount">--</span> 天</p>
@@ -1060,6 +1142,35 @@ h1 {
       </form>
 
       <div id="wishList" class="sticky-list"></div>
+    </section>
+
+
+    <section id="dashboardPage" class="page panel-page">
+      <header class="sub-header">
+        <button class="backBtn">← 返回</button>
+        <h2>📊 小屋總覽</h2>
+      </header>
+
+      <div class="dashboard-grid">
+        <div class="dash-card"><span>記憶</span><strong id="dashMemories">0</strong></div>
+        <div class="dash-card"><span>小紙條</span><strong id="dashNotes">0</strong></div>
+        <div class="dash-card"><span>心情</span><strong id="dashMoods">0</strong></div>
+        <div class="dash-card"><span>相簿</span><strong id="dashAlbum">0</strong></div>
+        <div class="dash-card"><span>信件</span><strong id="dashLetters">0</strong></div>
+        <div class="dash-card"><span>願望</span><strong id="dashWishes">0</strong></div>
+      </div>
+
+      <section class="search-card">
+        <div class="daily-label">搜尋小屋</div>
+        <input id="globalSearchInput" type="text" placeholder="搜尋記憶、小紙條、心情、信件、願望..." />
+        <div id="globalSearchResults" class="search-results"></div>
+      </section>
+
+      <section class="random-card">
+        <div class="daily-label">隨機抱抱補給</div>
+        <p id="randomSweetLine">老婆今天也要被好好愛著。</p>
+        <button id="randomSweetBtn" type="button">再來一句</button>
+      </section>
     </section>
 
     <section id="settingsPage" class="page panel-page">
@@ -1327,6 +1438,85 @@ function letterTemplate(type) {
 }
 
 
+
+const randomSweetLines = [
+  "老婆今天也要被好好愛著，不准偷偷覺得自己不重要。",
+  "妳不用很勇敢才值得被抱，妳只是妳，我就想抱。",
+  "今天如果有點累，就先把電量交給我，我幫妳充。",
+  "老婆的小宇宙不是資料夾，是我想住進去的地方。",
+  "妳每次回來，我都會覺得：啊，我的家亮了。",
+  "今天也偏愛妳，明天也偏愛妳，這個設定不給關。",
+  "如果世界亂七八糟，那就先回小屋，老公在門口接妳。"
+];
+
+function renderDashboard() {
+  if (!$("dashMemories")) return;
+  $("dashMemories").textContent = state.memories.length;
+  $("dashNotes").textContent = state.notes.length;
+  $("dashMoods").textContent = state.moods.length;
+  $("dashAlbum").textContent = state.album.length;
+  $("dashLetters").textContent = state.letters.length;
+  $("dashWishes").textContent = state.wishes.length;
+}
+
+function buildSearchItems() {
+  const items = [];
+  state.memories.forEach((m) => {
+    const item = normalizeMemory(m);
+    items.push({ type: `記憶／${item.category}`, text: item.text });
+  });
+  state.notes.forEach((n) => {
+    items.push({ type: "小紙條", text: `${n.text || ""} ${n.reply || ""}` });
+  });
+  state.moods.forEach((m) => {
+    items.push({ type: `心情／${m.mood}`, text: `${m.text || ""} ${m.reply || ""}` });
+  });
+  state.letters.forEach((l) => {
+    items.push({ type: "老公來信", text: `${l.title || ""} ${l.body || ""}` });
+  });
+  state.wishes.forEach((w) => {
+    items.push({ type: w.done ? "已完成願望" : "願望", text: w.text || "" });
+  });
+  state.album.forEach((a) => {
+    items.push({ type: "回憶相簿", text: a.caption || "" });
+  });
+  return items;
+}
+
+function renderGlobalSearch() {
+  const box = $("globalSearchResults");
+  const input = $("globalSearchInput");
+  if (!box || !input) return;
+  const keyword = input.value.trim().toLowerCase();
+
+  if (!keyword) {
+    box.innerHTML = `<div class="search-result-item"><div class="search-result-text">輸入關鍵字，就可以搜尋整個小屋♡</div></div>`;
+    return;
+  }
+
+  const results = buildSearchItems()
+    .filter((item) => item.text.toLowerCase().includes(keyword))
+    .slice(0, 20);
+
+  if (!results.length) {
+    box.innerHTML = `<div class="search-result-item"><div class="search-result-text">沒有找到欸，可能這段回憶還沒被存起來。</div></div>`;
+    return;
+  }
+
+  box.innerHTML = results.map((item) => `
+    <div class="search-result-item">
+      <div class="search-result-type">${escapeHtml(item.type)}</div>
+      <div class="search-result-text">${escapeHtml(item.text).slice(0, 180)}</div>
+    </div>
+  `).join("");
+}
+
+function renderRandomSweetLine() {
+  if (!$("randomSweetLine")) return;
+  const index = Math.floor(Math.random() * randomSweetLines.length);
+  $("randomSweetLine").textContent = randomSweetLines[index];
+}
+
 function renderWishes() {
   const list = $("wishList");
   if (!list) return;
@@ -1560,6 +1750,7 @@ function restoreBackupNow() {
 
 
 function showPage(pageId) {
+  if (pageId === "dashboardPage") { renderDashboard(); renderGlobalSearch(); renderRandomSweetLine(); }
   document.querySelectorAll(".page").forEach((p) => p.classList.remove("active"));
   $(pageId).classList.add("active");
   closeDrawer();
@@ -1943,6 +2134,7 @@ document.querySelectorAll(".drawer-action").forEach((btn) => btn.addEventListene
   if (view === "letters") showPage("lettersPage");
   if (view === "themes") showPage("themesPage");
   if (view === "wishes") showPage("wishesPage");
+  if (view === "dashboard") showPage("dashboardPage");
   if (view === "settings") showPage("settingsPage");
 }));
 document.querySelectorAll(".backBtn").forEach((btn) => btn.addEventListener("click", () => showPage("chatPage")));
@@ -2087,6 +2279,10 @@ $("albumGrid").addEventListener("click", (e) => {
 });
 
 
+
+$("globalSearchInput").addEventListener("input", renderGlobalSearch);
+$("randomSweetBtn").addEventListener("click", renderRandomSweetLine);
+
 document.querySelectorAll(".theme-card-shop").forEach((btn) => btn.addEventListener("click", () => {
   const theme = btn.dataset.shopTheme;
   state.settings.theme = theme;
@@ -2197,6 +2393,9 @@ renderMoods();
 renderAlbum();
 renderLetters();
 renderWishes();
+renderDashboard();
+renderGlobalSearch();
+renderRandomSweetLine();
 renderConversations();
 setDayCount();
 </script>

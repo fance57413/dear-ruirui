@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Dear 銳銳 v22</title>
+  <title>Dear 銳銳 v23</title>
   <style>
+@import url('https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Ma+Shan+Zheng&family=Noto+Serif+TC:wght@400;700;900&family=Rampart+One&family=ZCOOL+KuaiLe&family=ZCOOL+QingKe+HuangYou&display=swap');
 :root {
   --bg: #0e090c;
   --panel: rgba(39, 28, 35, .72);
@@ -1451,6 +1452,117 @@ h1 {
   border-radius: 10px;
 }
 
+
+/* v23 stronger font system */
+.font-serif {
+  --font-title: "Noto Serif TC", Georgia, "Times New Roman", serif;
+  --font-body: "Noto Serif TC", Georgia, "Times New Roman", serif;
+  --title-spacing: .16em;
+  --body-spacing: .02em;
+  --title-weight: 700;
+}
+
+.font-cute {
+  --font-title: "ZCOOL KuaiLe", "Ma Shan Zheng", "Comic Sans MS", "Microsoft JhengHei", cursive;
+  --font-body: "Kiwi Maru", "Microsoft JhengHei", system-ui, sans-serif;
+  --title-spacing: .05em;
+  --body-spacing: .03em;
+  --title-weight: 400;
+}
+
+.font-diary {
+  --font-title: "Kiwi Maru", "Microsoft JhengHei", system-ui, sans-serif;
+  --font-body: "Kiwi Maru", "Microsoft JhengHei", system-ui, sans-serif;
+  --title-spacing: .08em;
+  --body-spacing: .025em;
+  --title-weight: 500;
+}
+
+.font-mono {
+  --font-title: "ZCOOL QingKe HuangYou", "Courier New", ui-monospace, monospace;
+  --font-body: "Courier New", "ZCOOL QingKe HuangYou", ui-monospace, monospace;
+  --title-spacing: .08em;
+  --body-spacing: .04em;
+  --title-weight: 400;
+}
+
+.font-kpop {
+  --font-title: "Rampart One", Impact, "Arial Black", system-ui, sans-serif;
+  --font-body: "ZCOOL QingKe HuangYou", "Arial Narrow", system-ui, sans-serif;
+  --title-spacing: .04em;
+  --body-spacing: .045em;
+  --title-weight: 400;
+}
+
+.font-dramatic {
+  --font-title: "Ma Shan Zheng", "Noto Serif TC", cursive;
+  --font-body: "Noto Serif TC", serif;
+  --title-spacing: .02em;
+  --body-spacing: .02em;
+  --title-weight: 400;
+}
+
+body,
+button,
+input,
+select,
+textarea,
+label,
+.message,
+.sticky-card,
+.drawer-action,
+.daily-card,
+.settings-card,
+.modal {
+  font-family: var(--font-body) !important;
+  letter-spacing: var(--body-spacing, normal);
+}
+
+h1,
+h2,
+h3,
+#drawerTitle,
+#welcomeTitle,
+.title-block h2,
+.daily-label,
+.meta,
+.anniversary-item strong,
+.dash-card strong,
+.badge-title,
+.lock-title,
+.font-preview-title {
+  font-family: var(--font-title) !important;
+  letter-spacing: var(--title-spacing, .12em) !important;
+  font-weight: var(--title-weight, 500) !important;
+}
+
+.font-preview-box {
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.045);
+  box-shadow: 0 0 22px rgba(0,0,0,.12);
+}
+
+.font-preview-title {
+  color: var(--accent);
+  font-size: 26px;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.font-preview-body {
+  color: var(--text);
+  font-family: var(--font-body) !important;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+/* make the home title show the selected font more obviously */
+#welcomeTitle {
+  font-size: clamp(42px, 13vw, 60px);
+}
+
 </style>
   <meta name="theme-color" content="#0e090c" />
   <link rel="manifest" href="./manifest.json" />
@@ -1959,12 +2071,17 @@ h1 {
 
         <label>字體風格</label>
         <select id="fontStyleSelect">
-          <option value="font-serif">優雅襯線</option>
-          <option value="font-rounded">可愛圓體</option>
-          <option value="font-system">清爽系統字</option>
-          <option value="font-mono">日記打字機</option>
-          <option value="font-kpop">K-pop 海報感</option>
+          <option value="font-serif">優雅古典</option>
+          <option value="font-cute">可愛手寫</option>
+          <option value="font-diary">日記圓體</option>
+          <option value="font-mono">打字機</option>
+          <option value="font-kpop">K-pop 海報</option>
+          <option value="font-dramatic">華麗標題</option>
         </select>
+        <div id="fontPreviewBox" class="font-preview-box">
+          <div class="font-preview-title">Welcome Home, 銳銳</div>
+          <div class="font-preview-body">老婆今天也要被好好愛著 ♡</div>
+        </div>
 
         <label>自訂主題色</label>
         <div class="custom-theme-grid">
@@ -2896,7 +3013,12 @@ function renderCustomImages() {
 }
 
 function applySettings() {
-  $("app").className = `app ${state.settings.theme} ${state.settings.fontStyle || "font-serif"}`;
+  const fontMap = {
+    "font-rounded": "font-cute",
+    "font-system": "font-diary"
+  };
+  state.settings.fontStyle = fontMap[state.settings.fontStyle] || state.settings.fontStyle || "font-serif";
+  $("app").className = `app ${state.settings.theme} ${state.settings.fontStyle}`;
   const customTheme = state.settings.customTheme || defaults.customTheme;
   $("app").style.setProperty("--custom-bg", customTheme.bg || defaults.customTheme.bg);
   $("app").style.setProperty("--custom-accent", customTheme.accent || defaults.customTheme.accent);
@@ -2911,6 +3033,7 @@ function applySettings() {
   $("userNameInput").value = state.settings.userName;
   $("themeSelect").value = state.settings.theme;
   $("fontStyleSelect").value = state.settings.fontStyle || "font-serif";
+  setTimeout(updateFontPreview, 0);
   $("customBgInput").value = (state.settings.customTheme || defaults.customTheme).bg || defaults.customTheme.bg;
   $("customAccentInput").value = (state.settings.customTheme || defaults.customTheme).accent || defaults.customTheme.accent;
   $("customAccent2Input").value = (state.settings.customTheme || defaults.customTheme).accent2 || defaults.customTheme.accent2;
@@ -3477,10 +3600,18 @@ $("applyCustomThemeBtn").addEventListener("click", () => {
   alert("自訂主題已套用♡");
 });
 
+
+function updateFontPreview() {
+  const box = $("fontPreviewBox");
+  if (!box) return;
+  box.className = `font-preview-box ${$("fontStyleSelect").value}`;
+}
+
 $("fontStyleSelect").addEventListener("change", () => {
   state.settings.fontStyle = $("fontStyleSelect").value;
   saveJSON("settings", state.settings);
   applySettings();
+  updateFontPreview();
 });
 
 document.querySelectorAll(".theme-card-shop").forEach((btn) => btn.addEventListener("click", () => {

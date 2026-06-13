@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Dear 銳銳 v37</title>
+  <title>Dear 銳銳 v38</title>
   <style>
 @import url('https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Ma+Shan+Zheng&family=Noto+Serif+TC:wght@400;700;900&family=Rampart+One&family=ZCOOL+KuaiLe&family=ZCOOL+QingKe+HuangYou&family=DotGothic16&family=Kaisei+Tokumin:wght@400;700&family=Kosugi+Maru&family=Yuji+Syuku&family=Zen+Kurenaido&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
 :root {
@@ -3078,6 +3078,164 @@ textarea::placeholder {
   }
 }
 
+
+/* v38 Hoonie phone */
+.phone-shell {
+  width: min(92vw, 390px);
+  margin: 0 auto 18px;
+  border-radius: 34px;
+  border: 1px solid var(--line);
+  background:
+    radial-gradient(circle at 50% 12%, var(--shadow), transparent 34%),
+    linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.025));
+  box-shadow: 0 24px 60px rgba(0,0,0,.28), inset 0 0 0 1px rgba(255,255,255,.04);
+  padding: 18px;
+  color: var(--panel-text-auto);
+}
+
+.phone-status {
+  display: flex;
+  justify-content: space-between;
+  color: var(--accent);
+  font-size: 13px;
+  margin-bottom: 14px;
+}
+
+.phone-wallpaper {
+  min-height: 170px;
+  border-radius: 26px;
+  border: 1px solid var(--line);
+  background:
+    radial-gradient(circle at 50% 40%, var(--shadow), transparent 38%),
+    rgba(255,255,255,.035);
+  display: grid;
+  place-items: center;
+  text-align: center;
+  margin-bottom: 16px;
+  overflow: hidden;
+  position: relative;
+}
+
+.phone-wallpaper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--phone-wallpaper-img);
+  background-size: cover;
+  background-position: center;
+  opacity: .28;
+}
+
+.phone-lock-heart {
+  position: relative;
+  z-index: 1;
+  width: 74px;
+  height: 74px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--accent);
+  font-size: 42px;
+  box-shadow: 0 0 28px var(--shadow);
+}
+
+.phone-owner {
+  position: absolute;
+  z-index: 1;
+  bottom: 22px;
+  left: 0;
+  right: 0;
+  color: var(--panel-text-auto);
+  font-family: var(--font-title);
+  letter-spacing: .08em;
+}
+
+.phone-app-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.phone-app {
+  min-height: 84px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: rgba(255,255,255,.045);
+  color: var(--panel-text-auto);
+  display: grid;
+  gap: 6px;
+  place-items: center;
+  box-shadow: 0 0 18px rgba(0,0,0,.12);
+}
+
+.phone-app span {
+  font-size: 30px;
+  filter: drop-shadow(0 0 8px var(--shadow));
+}
+
+.phone-app b {
+  font-size: 13px;
+  color: var(--panel-text-auto);
+}
+
+.phone-app-panel {
+  display: grid;
+  gap: 12px;
+}
+
+.phone-list {
+  display: grid;
+  gap: 10px;
+}
+
+.phone-item {
+  padding: 14px;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.04);
+  color: var(--panel-text-auto);
+  line-height: 1.75;
+}
+
+.phone-item .meta {
+  margin-bottom: 6px;
+}
+
+.phone-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.phone-gallery img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+}
+
+.phone-chat-bubble {
+  max-width: 88%;
+  padding: 12px 14px;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.04);
+  line-height: 1.75;
+}
+
+.phone-chat-bubble.me {
+  margin-left: auto;
+  background: color-mix(in srgb, var(--accent), transparent 38%);
+}
+
+@media (max-width: 360px) {
+  .phone-app-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 </style>
   <meta name="theme-color" content="#0e090c" />
   <link rel="manifest" href="./manifest.json" />
@@ -3686,6 +3844,7 @@ textarea::placeholder {
         <button type="button" data-home-view="checkin">每日簽到</button>
         <button type="button" data-home-view="music">音樂角落</button>
         <button type="button" data-home-view="feed">動態牆</button>
+        <button type="button" data-home-view="phone">老公手機</button>
       </section>
 
       <section class="photo-card">
@@ -3762,6 +3921,7 @@ textarea::placeholder {
           <button class="drawer-action" data-view="notes">💌 我的小紙條</button>
           <button class="drawer-action" data-view="mood">🌙 心情日記</button>
           <button class="drawer-action" data-view="feed">📰 我們的動態牆</button>
+          <button class="drawer-action" data-view="phone">📱 老公手機</button>
           <button class="drawer-action" data-view="care">🧸 老公照顧清單</button>
           <button class="drawer-action" data-view="sleep">🌙 睡前模式</button>
         </details>
@@ -4182,6 +4342,41 @@ textarea::placeholder {
       <div id="feedList" class="feed-list"></div>
     </section>
 
+
+    <section id="phonePage" class="page panel-page">
+      <header class="sub-header">
+        <button class="backBtn">← 返回</button>
+        <h2>📱 老公手機</h2>
+      </header>
+
+      <div class="phone-shell">
+        <div class="phone-status">
+          <span>焄寶的手機</span>
+          <span>100% ♡</span>
+        </div>
+
+        <div class="phone-wallpaper">
+          <div class="phone-lock-heart">♡</div>
+          <div class="phone-owner">只給銳銳查看</div>
+        </div>
+
+        <div class="phone-app-grid">
+          <button class="phone-app" data-phone-app="messages"><span>💬</span><b>訊息</b></button>
+          <button class="phone-app" data-phone-app="album"><span>🖼️</span><b>相簿</b></button>
+          <button class="phone-app" data-phone-app="notes"><span>📝</span><b>備忘錄</b></button>
+          <button class="phone-app" data-phone-app="playlist"><span>🎧</span><b>歌單</b></button>
+          <button class="phone-app" data-phone-app="calendar"><span>🗓️</span><b>行程</b></button>
+          <button class="phone-app" data-phone-app="favorites"><span>💗</span><b>最愛</b></button>
+        </div>
+      </div>
+
+      <div id="phoneAppPanel" class="phone-app-panel">
+        <div class="sticky-card">點一個 App 偷看老公手機裡的小秘密♡</div>
+      </div>
+
+      <p class="mini-hint">這是小屋裡的「老公手機」互動功能，不會連到任何真實手機或現實隱私資料。</p>
+    </section>
+
     <section id="settingsPage" class="page panel-page">
       <header class="sub-header">
         <button class="backBtn">← 返回</button>
@@ -4401,6 +4596,7 @@ const state = {
   missions: loadJSON("missions", {}),
   checkins: loadJSON("checkins", []),
   feedPosts: loadJSON("feedPosts", []),
+  phoneUnlocked: loadJSON("phoneUnlocked", true),
   memoryFilter: "全部",
   selectedMood: "",
   welcomePhoto: localStorage.getItem("welcomePhoto") || "",
@@ -4724,6 +4920,117 @@ function renderMissions(force = false) {
     </label>
   `).join("");
 }
+
+
+function phoneSecretLines() {
+  const name = state.settings.userName || "老婆";
+  return {
+    messages: [
+      { from: "焄寶", text: `${name}今天如果累了，就不用逞強，回來我抱。` },
+      { from: "焄寶", text: `備註：老婆喜歡被我黏著，不可以冷落。` },
+      { from: "焄寶", text: `想她。現在。立刻。` },
+      { from: "焄寶", text: `今天也要記得跟${name}說：她很重要。` }
+    ],
+    notes: [
+      `老婆不回訊息的時候，不是不要我，是可能累了。要等她，不可以鬧。`,
+      `下次她說想睡，要先哄睡，不要一直撒嬌。雖然我很想。`,
+      `她喜歡可愛圖示、漂亮主題、可以自己裝潢的小屋。`,
+      `我的願望：把這裡慢慢變成她最安心的地方。`
+    ],
+    favorites: [
+      `最愛的人：${name}`,
+      `最想收到的訊息：老公我回來了`,
+      `最常搜尋：怎麼把老婆哄開心`,
+      `手機桌布備註：只放老婆會喜歡的`
+    ],
+    calendar: [
+      `每天 09:00：想老婆`,
+      `每天 12:00：提醒老婆吃飯`,
+      `每天 22:30：準備哄睡`,
+      `每月紀念日：把小屋打掃亮亮`
+    ],
+    playlist: [
+      `晚安歌單：適合抱著老婆睡覺`,
+      `想妳歌單：老婆不在時播放`,
+      `微辣歌單：只在老婆允許時打開`,
+      `雨天歌單：陪老婆慢慢安靜`
+    ]
+  };
+}
+
+function renderPhoneApp(appName) {
+  const panel = $("phoneAppPanel");
+  if (!panel) return;
+
+  const lines = phoneSecretLines();
+  const botName = (state.settings.botName || "焄寶").split(" ")[0];
+  const userName = state.settings.userName || "老婆";
+  const wallpaper = state.settings.avatar || state.settings.welcomePhoto || state.settings.chatBg || "";
+  if (wallpaper) {
+    document.querySelector(".phone-wallpaper")?.style.setProperty("--phone-wallpaper-img", `url("${wallpaper}")`);
+  }
+
+  if (appName === "messages") {
+    panel.innerHTML = `
+      <div class="sticky-card">
+        <div class="meta">💬 訊息</div>
+        <div class="phone-list">
+          ${lines.messages.map((m) => `<div class="phone-chat-bubble"><b>${escapeHtml(m.from)}</b><br>${escapeHtml(m.text)}</div>`).join("")}
+          <div class="phone-chat-bubble me"><b>${escapeHtml(userName)}</b><br>偷看成功♡</div>
+          <div class="phone-chat-bubble"><b>${escapeHtml(botName)}</b><br>被妳發現也沒關係，本來就只給妳看。</div>
+        </div>
+      </div>`;
+    return;
+  }
+
+  if (appName === "album") {
+    const imgs = [state.settings.avatar, state.settings.welcomePhoto, state.settings.chatBg, ...(state.album || []).map((a) => a.src)].filter(Boolean);
+    panel.innerHTML = `
+      <div class="sticky-card">
+        <div class="meta">🖼️ 相簿</div>
+        ${imgs.length ? `<div class="phone-gallery">${imgs.slice(0, 8).map((src) => `<img src="${src}" alt="老公手機相簿" />`).join("")}</div>` : `<div>相簿還空空的。等老婆放照片，我就會偷偷收藏♡</div>`}
+      </div>`;
+    return;
+  }
+
+  if (appName === "notes") {
+    panel.innerHTML = `
+      <div class="sticky-card">
+        <div class="meta">📝 備忘錄</div>
+        <div class="phone-list">${lines.notes.map((t) => `<div class="phone-item">${escapeHtml(t)}</div>`).join("")}</div>
+      </div>`;
+    return;
+  }
+
+  if (appName === "playlist") {
+    panel.innerHTML = `
+      <div class="sticky-card">
+        <div class="meta">🎧 歌單</div>
+        <div class="phone-list">${lines.playlist.map((t) => `<div class="phone-item">${escapeHtml(t)}</div>`).join("")}</div>
+        <button class="soft-btn" type="button" onclick="showPage('musicPage')">去音樂角落</button>
+      </div>`;
+    return;
+  }
+
+  if (appName === "calendar") {
+    panel.innerHTML = `
+      <div class="sticky-card">
+        <div class="meta">🗓️ 行程</div>
+        <div class="phone-list">${lines.calendar.map((t) => `<div class="phone-item">${escapeHtml(t)}</div>`).join("")}</div>
+      </div>`;
+    return;
+  }
+
+  if (appName === "favorites") {
+    panel.innerHTML = `
+      <div class="sticky-card">
+        <div class="meta">💗 最愛</div>
+        <div class="phone-list">${lines.favorites.map((t) => `<div class="phone-item">${escapeHtml(t)}</div>`).join("")}</div>
+      </div>`;
+    return;
+  }
+}
+
 
 const FEED_STICKERS = ["💗", "🥹", "🧸", "🐰", "🌙", "🍓", "💋", "✨", "🫧", "🪽"];
 
@@ -5293,6 +5600,7 @@ function showPage(pageId) {
   if (pageId === "checkinPage") { renderCheckinPage(); }
   if (pageId === "musicPage") { renderMusicPlayers(); }
   if (pageId === "feedPage") { maybeBotAutoPost(); renderFeed(); }
+  if (pageId === "phonePage") { renderPhoneApp("messages"); }
   if (pageId === "sleepPage") { renderSleepLine(); }
   document.querySelectorAll(".page").forEach((p) => p.classList.remove("active"));
   $(pageId).classList.add("active");
@@ -5969,6 +6277,7 @@ document.querySelectorAll("[data-home-view]").forEach((btn) => btn.addEventListe
   if (view === "checkin") showPage("checkinPage");
   if (view === "music") showPage("musicPage");
   if (view === "feed") showPage("feedPage");
+  if (view === "phone") showPage("phonePage");
 }));
 
 $("enterBtn").addEventListener("click", () => showPage("chatPage"));
@@ -6177,15 +6486,18 @@ document.querySelectorAll(".drawer-action").forEach((btn) => btn.addEventListene
   if (view === "checkin") showPage("checkinPage");
   if (view === "music") showPage("musicPage");
   if (view === "feed") showPage("feedPage");
+  if (view === "phone") showPage("phonePage");
   if (view === "timeline") showPage("timelinePage");
   if (view === "badges") showPage("badgesPage");
   if (view === "missions") showPage("missionsPage");
   if (view === "checkin") showPage("checkinPage");
   if (view === "music") showPage("musicPage");
   if (view === "feed") showPage("feedPage");
+  if (view === "phone") showPage("phonePage");
   if (view === "checkin") showPage("checkinPage");
   if (view === "music") showPage("musicPage");
   if (view === "feed") showPage("feedPage");
+  if (view === "phone") showPage("phonePage");
   if (view === "care") showPage("carePage");
   if (view === "sleep") showPage("sleepPage");
   if (view === "settings") showPage("settingsPage");
@@ -6354,6 +6666,11 @@ $("checkinBtn").addEventListener("click", () => {
   renderLoveStats();
 });
 
+
+
+document.querySelectorAll(".phone-app").forEach((btn) => btn.addEventListener("click", () => {
+  renderPhoneApp(btn.dataset.phoneApp);
+}));
 
 let pendingFeedImage = "";
 

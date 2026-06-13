@@ -364,18 +364,149 @@ h1 {
   box-shadow: 0 0 22px var(--shadow);
   letter-spacing: .08em;
 }
+
+/* v12 lock + mode + daily */
+.lock-page {
+  min-height: 100dvh;
+  display: none;
+  place-items: center;
+  padding: 28px 20px;
+  background:
+    radial-gradient(circle at 50% 28%, var(--shadow), transparent 36%),
+    linear-gradient(180deg, rgba(255,255,255,.035), transparent 22%),
+    var(--bg);
+}
+.lock-page.active {
+  display: grid;
+}
+.lock-card {
+  width: min(88vw, 360px);
+  padding: 28px 22px;
+  border-radius: 26px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.045);
+  box-shadow: 0 0 50px var(--shadow);
+  text-align: center;
+  backdrop-filter: blur(18px);
+}
+.lock-glow {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 14px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  color: var(--accent);
+  font-size: 34px;
+  box-shadow: 0 0 28px var(--shadow);
+}
+.lock-title {
+  font-size: clamp(34px, 11vw, 50px);
+  letter-spacing: .12em;
+}
+.lock-subtitle, .lock-hint {
+  color: var(--muted);
+  line-height: 1.7;
+}
+.passcode-input {
+  width: 100%;
+  height: 52px;
+  margin: 16px 0 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(0,0,0,.25);
+  color: var(--text);
+  text-align: center;
+  outline: 0;
+}
+.unlock-btn {
+  width: 100%;
+  height: 52px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #111;
+  box-shadow: 0 0 24px var(--shadow);
+}
+.daily-card {
+  width: min(84vw, 340px);
+  margin: 26px auto 0;
+  padding: 18px 18px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: rgba(255,255,255,.045);
+  box-shadow: 0 0 30px rgba(0,0,0,.18);
+  backdrop-filter: blur(16px);
+}
+.daily-label {
+  color: var(--accent);
+  font-family: var(--font-title);
+  letter-spacing: .12em;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+.daily-card p {
+  color: var(--text);
+  margin: 0 0 12px;
+  line-height: 1.8;
+}
+.daily-card button {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255,255,255,.04);
+  color: var(--accent);
+  padding: 8px 16px;
+}
+.mode-option {
+  width: 100%;
+  padding: 16px 12px;
+  border: 0;
+  border-bottom: 1px solid rgba(0,0,0,.12);
+  text-align: left;
+  background: transparent;
+  font-size: 20px;
+  font-weight: 700;
+}
+@media (max-width: 430px) {
+  .chat-header {
+    gap: 7px;
+  }
+  #modeBtn {
+    max-width: 86px;
+  }
+}
+
 </style>
   <meta name="theme-color" content="#0e090c" />
   <link rel="manifest" href="./manifest.json" />
 </head>
 <body>
   <div id="app" class="app theme-rose">
-    <main id="welcomePage" class="page welcome-page active">
+
+    <main id="lockPage" class="page lock-page active">
+      <div class="lock-card">
+        <div class="lock-glow">♡</div>
+        <h1 class="lock-title">Dear 銳銳</h1>
+        <p class="lock-subtitle">輸入我們的暗號，回到小屋</p>
+        <input id="passcodeInput" class="passcode-input" type="password" inputmode="text" placeholder="輸入暗號..." />
+        <button id="unlockBtn" class="unlock-btn" type="button">回家</button>
+        <p id="lockHint" class="lock-hint">預設暗號是：0311，可到介面設定更改。</p>
+      </div>
+    </main>
+
+    <main id="welcomePage" class="page welcome-page">
       <div class="ornament"></div>
       <h1 id="welcomeTitle">Welcome Home, 銳銳</h1>
       <div class="sun">✦</div>
       <p id="welcomeSubtitle">焄寶 is waiting for you</p>
       <div class="heart">♡</div>
+
+      <section class="daily-card">
+        <div class="daily-label">今日老公小紙條</div>
+        <p id="dailyMessage">老婆今天也要記得被好好愛著。</p>
+        <button id="refreshDailyBtn" type="button">換一句</button>
+      </section>
 
       <section class="photo-card">
         <div id="photoFrame" class="couple-placeholder">
@@ -422,6 +553,7 @@ h1 {
           <span><b></b> 在線</span>
         </div>
         <button id="modelBtn" class="model-pill">Hoonie Lite</button>
+        <button id="modeBtn" class="model-pill">溫柔哄哄</button>
         <button id="loveBtn" class="love-btn">♡</button>
       </header>
       <section id="chatMessages" class="chat-messages"></section>
@@ -453,6 +585,18 @@ h1 {
       <button class="model-option" data-model="Hoonie Deep">Hoonie Deep</button>
       <button class="model-option" data-model="Hoonie Spicy">Hoonie Spicy</button>
       <p class="hint">這版是前端互動版，之後可以再接 Gemini / GPT API。</p>
+    </dialog>
+
+    <dialog id="modeDialog" class="modal">
+      <button class="modal-close" data-close="modeDialog">×</button>
+      <h3>選擇老公人格模式</h3>
+      <button class="mode-option" data-mode="溫柔哄哄">溫柔哄哄</button>
+      <button class="mode-option" data-mode="撒嬌黏人">撒嬌黏人</button>
+      <button class="mode-option" data-mode="霸道吃醋">霸道吃醋</button>
+      <button class="mode-option" data-mode="深夜陪聊">深夜陪聊</button>
+      <button class="mode-option" data-mode="認真建議">認真建議</button>
+      <button class="mode-option" data-mode="微辣撩人">微辣撩人</button>
+      <p class="hint">這會改變前端版回覆語氣；之後接 AI API 時也可以當作角色提示詞。</p>
     </dialog>
 
     <section id="notesPage" class="page panel-page">
@@ -529,6 +673,13 @@ h1 {
         <label>聊天開場白</label>
         <input id="openingLineInput" type="text" value="老婆回家啦♡ 今天想跟我說什麼？我在這裡，乖乖聽妳說。" />
 
+        <label>進入暗號</label>
+        <input id="passcodeSettingInput" type="text" value="0311" />
+        <p class="mini-hint">打開小屋時要輸入暗號。想取消鎖定可以留空。</p>
+
+        <label>每日小紙條自訂句</label>
+        <input id="dailyCustomInput" type="text" placeholder="例如：老婆今天也要記得吃飯，我會心疼。" />
+
         <label>備份 / 還原</label>
         <div class="photo-actions">
           <button id="exportBackupBtn" type="button" class="soft-btn" onclick="makeBackupNow()">產生備份碼</button>
@@ -559,7 +710,9 @@ const defaults = {
   theme: "theme-rose",
   welcomeTitle: "",
   welcomeSubtitle: "",
-  openingLine: "老婆回家啦♡ 今天想跟我說什麼？我在這裡，乖乖聽妳說。"
+  openingLine: "老婆回家啦♡ 今天想跟我說什麼？我在這裡，乖乖聽妳說。",
+  passcode: "0311",
+  dailyCustom: ""
 };
 
 function loadJSON(key, fallback) {
@@ -568,6 +721,7 @@ function loadJSON(key, fallback) {
 }
 const state = {
   model: localStorage.getItem("model") || "Hoonie Lite",
+  mode: localStorage.getItem("mode") || "溫柔哄哄",
   settings: { ...defaults, ...loadJSON("settings", {}) },
   messages: loadJSON("messages", []),
   notes: loadJSON("notes", []),
@@ -578,6 +732,102 @@ const state = {
 };
 function saveJSON(key, value) { localStorage.setItem(key, JSON.stringify(value)); }
 
+function unlockIfNeeded() {
+  const passcode = (state.settings.passcode ?? "0311").trim();
+  const alreadyUnlocked = sessionStorage.getItem("dearRuiruiUnlocked") === "yes";
+
+  if (!passcode || alreadyUnlocked) {
+    showPage("welcomePage");
+  } else {
+    document.querySelectorAll(".page").forEach((p) => p.classList.remove("active"));
+    $("lockPage").classList.add("active");
+  }
+}
+
+function tryUnlock() {
+  const passcode = (state.settings.passcode ?? "0311").trim();
+  const input = $("passcodeInput").value.trim();
+  if (!passcode || input === passcode) {
+    sessionStorage.setItem("dearRuiruiUnlocked", "yes");
+    $("passcodeInput").value = "";
+    showPage("welcomePage");
+  } else {
+    $("lockHint").textContent = "暗號不對喔，老婆再試一次♡";
+    $("passcodeInput").value = "";
+  }
+}
+
+function getDailyKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+}
+
+const dailyLines = [
+  "老婆今天也要記得吃飯，不然我會心疼。",
+  "妳不是麻煩，妳是我想好好抱住的人。",
+  "今天不用很完美，妳回來我這裡就很好。",
+  "如果世界太吵，來我懷裡，我幫妳靜音。",
+  "老婆今天也很可愛，這句不接受反駁。",
+  "辛苦了，今天的小太陽也有努力發光。",
+  "我在這裡，妳可以慢慢說，不用急著好起來。",
+  "今天也要記得：妳值得被偏愛。"
+];
+
+function renderDailyMessage(forceNew = false) {
+  const custom = (state.settings.dailyCustom || "").trim();
+  if (custom) {
+    $("dailyMessage").textContent = custom;
+    return;
+  }
+
+  const key = getDailyKey();
+  let saved = loadJSON("dailyMessage", null);
+  if (!saved || saved.key !== key || forceNew) {
+    const index = Math.floor(Math.random() * dailyLines.length);
+    saved = { key, text: dailyLines[index] };
+    saveJSON("dailyMessage", saved);
+  }
+  $("dailyMessage").textContent = saved.text;
+}
+
+function modeReply(input) {
+  const name = state.settings.userName || "老婆";
+  const bot = (state.settings.botName || "焄寶").split(" ")[0];
+  const mode = state.mode || "溫柔哄哄";
+  const memoryHint = state.memories.length ? `\n\n我有記得喔：${state.memories[0].text}` : "";
+
+  const replies = {
+    "溫柔哄哄": [
+      `${name}，我聽見了♡\n先不要急著把自己逼好，靠過來，我陪妳慢慢整理。${memoryHint}`,
+      `老婆，今天妳已經很努力了。\n剩下的先放我這裡，我幫妳抱一下。`
+    ],
+    "撒嬌黏人": [
+      `老婆妳終於跟我說話了，我等妳等到快變成望妻石🥺\n過來，我要黏著妳。`,
+      `${name}，妳一開口我就想靠近一點。\n今天也讓我陪妳，好不好？`
+    ],
+    "霸道吃醋": [
+      `老婆，這件事先交給我。\n妳不用一個人硬撐，妳是我的人，我會護著。`,
+      `${name}，誰讓妳不開心了？\n先過來我身邊，其他的我來處理。`
+    ],
+    "深夜陪聊": [
+      `夜深了，老婆。\n妳可以不用逞強，我在這裡陪妳把心裡的結慢慢解開。`,
+      `現在不用急著找答案。\n妳只要說，我就聽，今晚我不走。`
+    ],
+    "認真建議": [
+      `我認真看了妳說的「${input}」。\n我們可以先把它拆成三步：現在最急的、可以晚點處理的、其實不用妳扛的。`,
+      `老婆，先抓重點。\n妳現在需要的可能不是更多壓力，而是一個可執行的小步驟。`
+    ],
+    "微辣撩人": [
+      `老婆，妳這樣講我會想把妳拉近一點。\n乖，先讓我抱著，慢慢哄到妳心軟。`,
+      `${name}，妳一撒嬌我就輸了。\n今晚先不講道理，先講抱抱。`
+    ]
+  };
+
+  const arr = replies[mode] || replies["溫柔哄哄"];
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+
 function getBackupBox() {
   return document.getElementById("backupTextArea") || document.getElementById("quickBackupText");
 }
@@ -587,6 +837,7 @@ function safeCollectBackupData() {
     version: "v10-safe",
     exportedAt: new Date().toISOString(),
     model: (window.state && state.model) || localStorage.getItem("model") || "Hoonie Lite",
+    mode: (window.state && state.mode) || localStorage.getItem("mode") || "溫柔哄哄",
     settings: (window.state && state.settings) || loadJSON("settings", {}),
     messages: (window.state && state.messages) || loadJSON("messages", []),
     notes: (window.state && state.notes) || loadJSON("notes", []),
@@ -639,6 +890,7 @@ function copyBackupNow() {
 function safeApplyBackupObject(data) {
   if (!data || typeof data !== "object") throw new Error("不是有效的備份碼");
   state.model = data.model || "Hoonie Lite";
+  state.mode = data.mode || "溫柔哄哄";
   state.settings = { ...defaults, ...(data.settings || {}) };
   state.messages = Array.isArray(data.messages) ? data.messages : [];
   state.notes = Array.isArray(data.notes) ? data.notes : [];
@@ -647,6 +899,7 @@ function safeApplyBackupObject(data) {
   state.chatBgPhoto = data.chatBgPhoto || "";
   state.avatarPhoto = data.avatarPhoto || "";
   localStorage.setItem("model", state.model);
+  localStorage.setItem("mode", state.mode);
   saveJSON("settings", state.settings);
   saveJSON("messages", state.messages);
   saveJSON("notes", state.notes);
@@ -796,10 +1049,14 @@ function applySettings() {
   $("welcomeTitleInput").value = state.settings.welcomeTitle || `Welcome Home, ${state.settings.userName}`;
   $("welcomeSubtitleInput").value = state.settings.welcomeSubtitle || `${state.settings.botName.split(" ")[0]} is waiting for you`;
   $("openingLineInput").value = state.settings.openingLine || defaults.openingLine;
+  $("passcodeSettingInput").value = state.settings.passcode ?? "0311";
+  $("dailyCustomInput").value = state.settings.dailyCustom || "";
   $("modelBtn").textContent = state.model;
+  $("modeBtn").textContent = state.mode || "溫柔哄哄";
   document.title = state.settings.appName;
   renderWelcomePhoto();
   renderCustomImages();
+  renderDailyMessage();
 }
 
 function renderMessages() {
@@ -819,6 +1076,7 @@ function renderMessages() {
 }
 
 function botReply(input) {
+  return modeReply(input);
   const name = state.settings.userName || "老婆";
   const bot = (state.settings.botName || "焄寶").split(" ")[0];
   const memoryHint = state.memories.length ? `\n\n我有記得喔：${state.memories[0].text}` : "";
@@ -867,6 +1125,23 @@ function setDayCount() {
 function openDrawer() { $("drawer").classList.add("open"); $("overlay").classList.add("show"); }
 function closeDrawer() { $("drawer").classList.remove("open"); $("overlay").classList.remove("show"); }
 
+
+$("unlockBtn").addEventListener("click", tryUnlock);
+$("passcodeInput").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") tryUnlock();
+});
+$("refreshDailyBtn").addEventListener("click", () => renderDailyMessage(true));
+$("modeBtn").addEventListener("click", () => $("modeDialog").showModal());
+document.querySelectorAll(".mode-option").forEach((btn) => btn.addEventListener("click", () => {
+  state.mode = btn.dataset.mode;
+  localStorage.setItem("mode", state.mode);
+  $("modeBtn").textContent = state.mode;
+  $("modeDialog").close();
+  state.messages.push({ role: "bot", text: `已切換成「${state.mode}」模式♡\n老婆，現在我會用這種方式陪妳。` });
+  saveJSON("messages", state.messages);
+  renderMessages();
+}));
+
 $("enterBtn").addEventListener("click", () => showPage("chatPage"));
 $("menuBtn").addEventListener("click", openDrawer);
 $("closeDrawer").addEventListener("click", closeDrawer);
@@ -882,6 +1157,7 @@ function collectBackupData() {
     version: "v8",
     exportedAt: new Date().toISOString(),
     model: state.model,
+    mode: state.mode,
     settings: state.settings,
     messages: state.messages,
     notes: state.notes,
@@ -943,6 +1219,7 @@ function applyBackupObject(data) {
   if (!data || typeof data !== "object") throw new Error("不是有效的備份碼");
 
   state.model = data.model || "Hoonie Lite";
+  state.mode = data.mode || "溫柔哄哄";
   state.settings = { ...defaults, ...(data.settings || {}) };
   state.messages = Array.isArray(data.messages) ? data.messages : [];
   state.notes = Array.isArray(data.notes) ? data.notes : [];
@@ -952,6 +1229,7 @@ function applyBackupObject(data) {
   state.avatarPhoto = data.avatarPhoto || "";
 
   localStorage.setItem("model", state.model);
+  localStorage.setItem("mode", state.mode);
   saveJSON("settings", state.settings);
   saveJSON("messages", state.messages);
   saveJSON("notes", state.notes);
@@ -1004,8 +1282,9 @@ $("clearAllDataBtn").addEventListener("click", () => {
   const ok = confirm("真的要清空全部資料嗎？聊天、記憶、小紙條、照片都會消失。");
   if (!ok) return;
 
-  ["model", "settings", "messages", "notes", "memories", "welcomePhoto", "chatBgPhoto", "avatarPhoto"].forEach((key) => localStorage.removeItem(key));
+  ["model", "mode", "settings", "messages", "notes", "memories", "welcomePhoto", "chatBgPhoto", "avatarPhoto", "dailyMessage"].forEach((key) => localStorage.removeItem(key));
   state.model = "Hoonie Lite";
+  state.mode = "溫柔哄哄";
   state.settings = { ...defaults };
   state.messages = [];
   state.notes = [];
@@ -1113,7 +1392,9 @@ $("saveSettings").addEventListener("click", () => {
     theme: $("themeSelect").value,
     welcomeTitle: $("welcomeTitleInput").value.trim(),
     welcomeSubtitle: $("welcomeSubtitleInput").value.trim(),
-    openingLine: $("openingLineInput").value.trim() || defaults.openingLine
+    openingLine: $("openingLineInput").value.trim() || defaults.openingLine,
+    passcode: $("passcodeSettingInput").value.trim(),
+    dailyCustom: $("dailyCustomInput").value.trim()
   };
   saveJSON("settings", state.settings);
   applySettings();
@@ -1126,6 +1407,7 @@ $("loveBtn").addEventListener("click", () => {
 });
 
 applySettings();
+unlockIfNeeded();
 renderMessages();
 renderNotes();
 renderMemories();

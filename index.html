@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Dear 銳銳 v21</title>
+  <title>Dear 銳銳 v22</title>
   <style>
 :root {
   --bg: #0e090c;
@@ -1341,6 +1341,116 @@ h1 {
   height: 14px;
 }
 
+
+/* v22 fonts + more themes + custom theme */
+.font-serif {
+  --font-title: Georgia, "Times New Roman", "Noto Serif TC", serif;
+  --font-body: system-ui, -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif;
+}
+.font-rounded {
+  --font-title: "Trebuchet MS", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+  --font-body: "Trebuchet MS", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+}
+.font-system {
+  --font-title: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+  --font-body: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+}
+.font-mono {
+  --font-title: "Courier New", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-body: "Courier New", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+.font-kpop {
+  --font-title: Impact, "Arial Black", "Noto Sans TC", system-ui, sans-serif;
+  --font-body: "Arial Narrow", "Noto Sans TC", system-ui, sans-serif;
+}
+
+.theme-card-shop.sakura { background: radial-gradient(circle at 25% 15%, #ffd3e5, transparent 36%), linear-gradient(135deg, #fff7fb, #e891b7); color: #442133; }
+.theme-card-shop.sakura span { color: rgba(68,33,51,.72); }
+.theme-card-shop.snow { background: radial-gradient(circle at 25% 15%, #e8fbff, transparent 36%), linear-gradient(135deg, #07101d, #b8dfff); color: white; }
+.theme-card-shop.vampire { background: radial-gradient(circle at 25% 15%, #ff5e74, transparent 36%), linear-gradient(135deg, #080005, #4b0012 58%, #120005); }
+.theme-card-shop.matcha { background: radial-gradient(circle at 25% 15%, #d9f2b4, transparent 36%), linear-gradient(135deg, #07140b, #5f7f3b); }
+.theme-card-shop.custom { background: radial-gradient(circle at 25% 15%, var(--accent), transparent 36%), linear-gradient(135deg, var(--bg), var(--accent-2)); }
+
+.theme-sakura {
+  --bg: #fff7fb;
+  --panel: rgba(255, 231, 241, .78);
+  --panel-strong: rgba(255, 214, 232, .94);
+  --text: #3d2330;
+  --muted: rgba(61,35,48,.66);
+  --accent: #e891b7;
+  --accent-2: #b95c89;
+  --line: rgba(232,145,183,.36);
+  --shadow: rgba(232,145,183,.28);
+}
+.theme-snow {
+  --bg: #07101d;
+  --panel: rgba(19, 38, 58, .76);
+  --panel-strong: rgba(36, 63, 88, .94);
+  --text: #f3fbff;
+  --muted: rgba(243,251,255,.68);
+  --accent: #b8dfff;
+  --accent-2: #4b8fc2;
+  --line: rgba(184,223,255,.34);
+  --shadow: rgba(184,223,255,.24);
+}
+.theme-vampire {
+  --bg: #080005;
+  --panel: rgba(45, 0, 18, .76);
+  --panel-strong: rgba(72, 0, 28, .94);
+  --text: #fff1f4;
+  --muted: rgba(255,241,244,.64);
+  --accent: #ff5e74;
+  --accent-2: #7d001c;
+  --line: rgba(255,94,116,.34);
+  --shadow: rgba(255,94,116,.26);
+}
+.theme-matcha {
+  --bg: #07140b;
+  --panel: rgba(28, 50, 26, .76);
+  --panel-strong: rgba(49, 80, 39, .94);
+  --text: #f3ffe8;
+  --muted: rgba(243,255,232,.64);
+  --accent: #d9f2b4;
+  --accent-2: #5f7f3b;
+  --line: rgba(217,242,180,.32);
+  --shadow: rgba(217,242,180,.22);
+}
+.theme-custom {
+  --bg: var(--custom-bg, #0e090c);
+  --text: var(--custom-text, #fff3f7);
+  --accent: var(--custom-accent, #f2a8c2);
+  --accent-2: var(--custom-accent-2, #7c334e);
+  --panel: color-mix(in srgb, var(--custom-bg, #0e090c), var(--custom-accent, #f2a8c2) 14%);
+  --panel-strong: color-mix(in srgb, var(--custom-bg, #0e090c), var(--custom-accent, #f2a8c2) 22%);
+  --muted: color-mix(in srgb, var(--custom-text, #fff3f7), transparent 34%);
+  --line: color-mix(in srgb, var(--custom-accent, #f2a8c2), transparent 66%);
+  --shadow: color-mix(in srgb, var(--custom-accent, #f2a8c2), transparent 74%);
+}
+
+.custom-theme-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.custom-theme-grid div {
+  display: grid;
+  gap: 6px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(255,255,255,.035);
+}
+.custom-theme-grid span {
+  color: var(--muted);
+  font-size: 12px;
+}
+.custom-theme-grid input[type="color"] {
+  width: 100%;
+  height: 42px;
+  padding: 4px;
+  border-radius: 10px;
+}
+
 </style>
   <meta name="theme-color" content="#0e090c" />
   <link rel="manifest" href="./manifest.json" />
@@ -1649,6 +1759,21 @@ h1 {
         <button class="theme-card-shop neon" data-shop-theme="theme-neon">
           <strong>粉色霓虹</strong><span>K-pop、舞台、閃閃發光</span>
         </button>
+        <button class="theme-card-shop sakura" data-shop-theme="theme-sakura">
+          <strong>櫻花白夢</strong><span>乾淨、甜甜、日系戀愛</span>
+        </button>
+        <button class="theme-card-shop snow" data-shop-theme="theme-snow">
+          <strong>雪夜戀人</strong><span>冬天、安靜、牽手呼吸</span>
+        </button>
+        <button class="theme-card-shop vampire" data-shop-theme="theme-vampire">
+          <strong>紅酒吸血鬼</strong><span>暗黑、危險、微醺曖昧</span>
+        </button>
+        <button class="theme-card-shop matcha" data-shop-theme="theme-matcha">
+          <strong>抹茶森林</strong><span>自然、療癒、清新小屋</span>
+        </button>
+        <button class="theme-card-shop custom" data-shop-theme="theme-custom">
+          <strong>自訂主題</strong><span>用妳在設定頁選的顏色</span>
+        </button>
       </div>
     </section>
 
@@ -1825,7 +1950,31 @@ h1 {
           <option value="theme-gold">黑金高級</option>
           <option value="theme-blue">深藍星河</option>
           <option value="theme-neon">粉色霓虹</option>
+          <option value="theme-sakura">櫻花白夢</option>
+          <option value="theme-snow">雪夜戀人</option>
+          <option value="theme-vampire">紅酒吸血鬼</option>
+          <option value="theme-matcha">抹茶森林</option>
+          <option value="theme-custom">自訂主題</option>
         </select>
+
+        <label>字體風格</label>
+        <select id="fontStyleSelect">
+          <option value="font-serif">優雅襯線</option>
+          <option value="font-rounded">可愛圓體</option>
+          <option value="font-system">清爽系統字</option>
+          <option value="font-mono">日記打字機</option>
+          <option value="font-kpop">K-pop 海報感</option>
+        </select>
+
+        <label>自訂主題色</label>
+        <div class="custom-theme-grid">
+          <div><span>背景</span><input id="customBgInput" type="color" value="#0e090c" /></div>
+          <div><span>主色</span><input id="customAccentInput" type="color" value="#f2a8c2" /></div>
+          <div><span>副色</span><input id="customAccent2Input" type="color" value="#7c334e" /></div>
+          <div><span>文字</span><input id="customTextInput" type="color" value="#fff3f7" /></div>
+        </div>
+        <button id="applyCustomThemeBtn" type="button" class="soft-btn">套用自訂主題</button>
+        <p class="mini-hint">套用後主題會切成「自訂主題」。如果想換回預設，就到主題商店點其他主題。</p>
 
         <label>首頁照片</label>
         <input id="photoUploadInput" type="file" accept="image/*" />
@@ -1900,7 +2049,14 @@ const defaults = {
   openingLine: "老婆回家啦♡ 今天想跟我說什麼？我在這裡，乖乖聽妳說。",
   passcode: "0311",
   dailyCustom: "",
-  anniversaryDate: "2026-03-31"
+  anniversaryDate: "2026-03-31",
+  fontStyle: "font-serif",
+  customTheme: {
+    bg: "#0e090c",
+    accent: "#f2a8c2",
+    accent2: "#7c334e",
+    text: "#fff3f7"
+  }
 };
 
 function loadJSON(key, fallback) {
@@ -2740,7 +2896,12 @@ function renderCustomImages() {
 }
 
 function applySettings() {
-  $("app").className = `app ${state.settings.theme}`;
+  $("app").className = `app ${state.settings.theme} ${state.settings.fontStyle || "font-serif"}`;
+  const customTheme = state.settings.customTheme || defaults.customTheme;
+  $("app").style.setProperty("--custom-bg", customTheme.bg || defaults.customTheme.bg);
+  $("app").style.setProperty("--custom-accent", customTheme.accent || defaults.customTheme.accent);
+  $("app").style.setProperty("--custom-accent-2", customTheme.accent2 || defaults.customTheme.accent2);
+  $("app").style.setProperty("--custom-text", customTheme.text || defaults.customTheme.text);
   $("welcomeTitle").textContent = state.settings.welcomeTitle || `Welcome Home, ${state.settings.userName}`;
   $("welcomeSubtitle").textContent = state.settings.welcomeSubtitle || `${state.settings.botName.split(" ")[0]} is waiting for you`;
   $("botNameHeader").textContent = state.settings.botName;
@@ -2749,6 +2910,11 @@ function applySettings() {
   $("botNameInput").value = state.settings.botName;
   $("userNameInput").value = state.settings.userName;
   $("themeSelect").value = state.settings.theme;
+  $("fontStyleSelect").value = state.settings.fontStyle || "font-serif";
+  $("customBgInput").value = (state.settings.customTheme || defaults.customTheme).bg || defaults.customTheme.bg;
+  $("customAccentInput").value = (state.settings.customTheme || defaults.customTheme).accent || defaults.customTheme.accent;
+  $("customAccent2Input").value = (state.settings.customTheme || defaults.customTheme).accent2 || defaults.customTheme.accent2;
+  $("customTextInput").value = (state.settings.customTheme || defaults.customTheme).text || defaults.customTheme.text;
   $("welcomeTitleInput").value = state.settings.welcomeTitle || `Welcome Home, ${state.settings.userName}`;
   $("welcomeSubtitleInput").value = state.settings.welcomeSubtitle || `${state.settings.botName.split(" ")[0]} is waiting for you`;
   $("openingLineInput").value = state.settings.openingLine || defaults.openingLine;
@@ -3295,9 +3461,32 @@ $("breathBtn").addEventListener("click", startBreathing);
 $("globalSearchInput").addEventListener("input", renderGlobalSearch);
 $("randomSweetBtn").addEventListener("click", renderRandomSweetLine);
 
+
+$("applyCustomThemeBtn").addEventListener("click", () => {
+  state.settings.theme = "theme-custom";
+  state.settings.fontStyle = $("fontStyleSelect").value;
+  state.settings.customTheme = {
+    bg: $("customBgInput").value,
+    accent: $("customAccentInput").value,
+    accent2: $("customAccent2Input").value,
+    text: $("customTextInput").value
+  };
+  $("themeSelect").value = "theme-custom";
+  saveJSON("settings", state.settings);
+  applySettings();
+  alert("自訂主題已套用♡");
+});
+
+$("fontStyleSelect").addEventListener("change", () => {
+  state.settings.fontStyle = $("fontStyleSelect").value;
+  saveJSON("settings", state.settings);
+  applySettings();
+});
+
 document.querySelectorAll(".theme-card-shop").forEach((btn) => btn.addEventListener("click", () => {
   const theme = btn.dataset.shopTheme;
   state.settings.theme = theme;
+  if ($("themeSelect")) $("themeSelect").value = theme;
   saveJSON("settings", state.settings);
   applySettings();
   alert(`已套用主題♡`);
@@ -3397,6 +3586,13 @@ $("saveSettings").addEventListener("click", () => {
     botName: $("botNameInput").value.trim() || defaults.botName,
     userName: $("userNameInput").value.trim() || defaults.userName,
     theme: $("themeSelect").value,
+    fontStyle: $("fontStyleSelect").value,
+    customTheme: {
+      bg: $("customBgInput").value,
+      accent: $("customAccentInput").value,
+      accent2: $("customAccent2Input").value,
+      text: $("customTextInput").value
+    },
     welcomeTitle: $("welcomeTitleInput").value.trim(),
     welcomeSubtitle: $("welcomeSubtitleInput").value.trim(),
     openingLine: $("openingLineInput").value.trim() || defaults.openingLine,

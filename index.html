@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Dear 銳銳 v34</title>
+  <title>Dear 銳銳 v35</title>
   <style>
 @import url('https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Ma+Shan+Zheng&family=Noto+Serif+TC:wght@400;700;900&family=Rampart+One&family=ZCOOL+KuaiLe&family=ZCOOL+QingKe+HuangYou&family=DotGothic16&family=Kaisei+Tokumin:wght@400;700&family=Kosugi+Maru&family=Yuji+Syuku&family=Zen+Kurenaido&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
 :root {
@@ -2825,6 +2825,47 @@ textarea::placeholder {
   transform: translateY(-2px) rotate(.12deg);
 }
 
+
+/* v35 modal/dialog readable text fix */
+.modal {
+  --modal-text-auto: var(--panel-text-auto);
+  --modal-muted-auto: color-mix(in srgb, var(--modal-text-auto), transparent 35%);
+  --modal-line-auto: color-mix(in srgb, var(--modal-text-auto), transparent 82%);
+}
+
+.modal.read-light-surface {
+  --modal-text-auto: #3d2330;
+  --modal-muted-auto: rgba(61,35,48,.68);
+  --modal-line-auto: rgba(61,35,48,.12);
+}
+
+.modal.read-dark-surface {
+  --modal-text-auto: #fff3f7;
+  --modal-muted-auto: rgba(255,243,247,.78);
+  --modal-line-auto: rgba(255,243,247,.14);
+}
+
+.modal,
+.modal h3,
+.modal .model-option,
+.modal .mode-option,
+.modal .modal-close {
+  color: var(--modal-text-auto) !important;
+}
+
+.modal .hint {
+  color: var(--modal-muted-auto) !important;
+}
+
+.modal .model-option,
+.modal .mode-option {
+  border-bottom-color: var(--modal-line-auto) !important;
+}
+
+.modal .modal-close {
+  opacity: .9;
+}
+
 </style>
   <meta name="theme-color" content="#0e090c" />
   <link rel="manifest" href="./manifest.json" />
@@ -5241,6 +5282,26 @@ function setSurfaceReadabilityClasses() {
   }
 }
 
+function setDialogReadabilityClasses() {
+  const app = $("app");
+  if (!app) return;
+
+  const appBg = getComputedStyle(app).backgroundColor || getComputedStyle(document.body).backgroundColor || "rgb(14,9,12)";
+  document.querySelectorAll(".modal").forEach((dialog) => {
+    dialog.classList.remove("read-light-surface", "read-dark-surface");
+    const dialogBg = getComputedStyle(dialog).backgroundColor || "rgba(252,248,250,.94)";
+    const rgba = parseCssColorToRgba(dialogBg);
+    let rgb;
+    if (rgba && rgba.a != null && rgba.a < 0.999) {
+      rgb = compositeRgbaOver(appBg, dialogBg);
+    } else {
+      rgb = parseCssColorToRgb(dialogBg);
+    }
+    const lum = rgbLuminance(rgb);
+    dialog.classList.add(lum > 0.52 ? "read-light-surface" : "read-dark-surface");
+  });
+}
+
 function applyAutoReadableText() {
   const app = $("app");
   if (!app) return;
@@ -5266,6 +5327,7 @@ function applyAutoReadableText() {
     setSurfaceReadabilityClasses();
     setWelcomeReadabilityClass();
     setLockReadabilityClass();
+    setDialogReadabilityClasses();
   }, 0);
 }
 
@@ -5423,7 +5485,7 @@ $("passcodeInput").addEventListener("keydown", (e) => {
   if (e.key === "Enter") tryUnlock();
 });
 $("refreshDailyBtn").addEventListener("click", () => renderDailyMessage(true));
-$("modeBtn").addEventListener("click", () => $("modeDialog").showModal());
+$("modeBtn").addEventListener("click", () => { setDialogReadabilityClasses(); $("modeDialog").showModal(); });
 document.querySelectorAll(".mode-option").forEach((btn) => btn.addEventListener("click", () => {
   state.mode = btn.dataset.mode;
   localStorage.setItem("mode", state.mode);
@@ -5450,7 +5512,7 @@ $("enterBtn").addEventListener("click", () => showPage("chatPage"));
 $("menuBtn").addEventListener("click", openDrawer);
 $("closeDrawer").addEventListener("click", closeDrawer);
 $("overlay").addEventListener("click", closeDrawer);
-$("modelBtn").addEventListener("click", () => $("modelDialog").showModal());
+$("modelBtn").addEventListener("click", () => { setDialogReadabilityClasses(); $("modelDialog").showModal(); });
 document.querySelectorAll("[data-close]").forEach((btn) => btn.addEventListener("click", () => $(btn.dataset.close).close()));
 document.querySelectorAll(".model-option").forEach((btn) => btn.addEventListener("click", () => {
   state.model = btn.dataset.model;

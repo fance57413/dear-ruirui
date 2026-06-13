@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Dear 銳銳 v25</title>
+  <title>Dear 銳銳 v26</title>
   <style>
 @import url('https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Ma+Shan+Zheng&family=Noto+Serif+TC:wght@400;700;900&family=Rampart+One&family=ZCOOL+KuaiLe&family=ZCOOL+QingKe+HuangYou&display=swap');
 :root {
@@ -1906,6 +1906,169 @@ h3,
   }
 }
 
+
+/* v26 compact header controls: only show icons, open modal on tap */
+.chat-header {
+  grid-template-columns: 42px 52px minmax(0, 1fr) auto !important;
+  grid-template-rows: auto !important;
+  min-height: 84px !important;
+  padding: calc(10px + env(safe-area-inset-top)) 14px 10px !important;
+}
+
+#menuBtn {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+}
+
+#profileDot {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+}
+
+.title-block {
+  grid-column: 3 !important;
+  grid-row: 1 !important;
+}
+
+#loveBtn {
+  grid-column: 4 !important;
+  grid-row: 1 !important;
+}
+
+#modelBtn,
+#modeBtn {
+  grid-row: 1 !important;
+  width: 40px !important;
+  min-width: 40px !important;
+  max-width: 40px !important;
+  height: 40px !important;
+  padding: 0 !important;
+  border-radius: 999px !important;
+  font-size: 18px !important;
+  line-height: 1 !important;
+  display: grid !important;
+  place-items: center !important;
+  background: rgba(255,255,255,.045) !important;
+}
+
+#modelBtn {
+  grid-column: 4 !important;
+  transform: translateX(-52px);
+}
+
+#modeBtn {
+  grid-column: 4 !important;
+  transform: translateX(-104px);
+}
+
+#loveBtn {
+  transform: translateX(0);
+}
+
+.chat-messages {
+  height: calc(100dvh - 156px) !important;
+}
+
+/* keep title close to avatar and not too wide because icon buttons sit on right */
+.title-block h2 {
+  max-width: min(42vw, 210px) !important;
+}
+
+.model-picker .modal-card,
+.mode-picker .modal-card {
+  width: min(88vw, 420px) !important;
+  max-height: min(78dvh, 560px) !important;
+  overflow-y: auto !important;
+}
+
+.model-picker .modal-options button,
+.mode-picker .modal-options button {
+  min-height: 58px !important;
+  padding: 14px 18px !important;
+  font-size: 20px !important;
+}
+
+.mode-picker .modal-options button {
+  font-size: 18px !important;
+}
+
+@media (max-width: 390px) {
+  .chat-header {
+    grid-template-columns: 40px 48px minmax(0, 1fr) auto !important;
+    min-height: 82px !important;
+    column-gap: 8px !important;
+  }
+
+  #modelBtn,
+  #modeBtn {
+    width: 38px !important;
+    min-width: 38px !important;
+    max-width: 38px !important;
+    height: 38px !important;
+    font-size: 17px !important;
+  }
+
+  #modelBtn {
+    transform: translateX(-48px);
+  }
+
+  #modeBtn {
+    transform: translateX(-96px);
+  }
+
+  #loveBtn {
+    width: 40px !important;
+    min-width: 40px !important;
+    height: 40px !important;
+  }
+
+  .title-block h2 {
+    max-width: 34vw !important;
+  }
+
+  .chat-messages {
+    height: calc(100dvh - 154px) !important;
+  }
+}
+
+@media (max-width: 340px) {
+  .chat-header {
+    grid-template-columns: 38px 44px minmax(0, 1fr) auto !important;
+    min-height: 80px !important;
+  }
+
+  #profileDot {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+  }
+
+  #modelBtn,
+  #modeBtn {
+    width: 34px !important;
+    min-width: 34px !important;
+    max-width: 34px !important;
+    height: 34px !important;
+    font-size: 15px !important;
+  }
+
+  #modelBtn {
+    transform: translateX(-42px);
+  }
+
+  #modeBtn {
+    transform: translateX(-84px);
+  }
+
+  #loveBtn {
+    display: none !important;
+  }
+
+  .title-block h2 {
+    max-width: 40vw !important;
+  }
+}
+
 </style>
   <meta name="theme-color" content="#0e090c" />
   <link rel="manifest" href="./manifest.json" />
@@ -2011,8 +2174,8 @@ h3,
           <h2 id="botNameHeader">焄寶 Hoonie</h2>
           <span><b></b> 在線</span>
         </div>
-        <button id="modelBtn" class="model-pill">Hoonie Lite</button>
-        <button id="modeBtn" class="model-pill">溫柔哄哄</button>
+        <button id="modelBtn" class="model-pill compact-control" aria-label="選擇聊天模型" title="選擇聊天模型">🤖</button>
+        <button id="modeBtn" class="model-pill compact-control" aria-label="選擇老公模式" title="選擇老公模式">💗</button>
         <button id="loveBtn" class="love-btn">♡</button>
       </header>
       <section id="chatMessages" class="chat-messages"></section>

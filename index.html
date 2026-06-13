@@ -1,0 +1,1136 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Dear 銳銳</title>
+  <style>
+:root {
+  --bg: #0e090c;
+  --panel: rgba(39, 28, 35, .72);
+  --panel-strong: rgba(52, 36, 47, .92);
+  --text: #fff3f7;
+  --muted: rgba(255, 243, 247, .62);
+  --accent: #f2a8c2;
+  --accent-2: #7c334e;
+  --line: rgba(242, 168, 194, .30);
+  --shadow: rgba(242, 168, 194, .24);
+  --font-title: Georgia, "Times New Roman", "Noto Serif TC", serif;
+  --font-body: system-ui, -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; background: #050505; overflow-x: hidden; }
+body { color: var(--text); font-family: var(--font-body); }
+button, input, select, label { font: inherit; -webkit-tap-highlight-color: transparent; }
+button, label { cursor: pointer; }
+
+.app {
+  width: 100vw;
+  min-height: 100dvh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 28%, var(--shadow), transparent 34%),
+    linear-gradient(180deg, rgba(255,255,255,.035), transparent 20%),
+    var(--bg);
+}
+.page { display: none; width: 100%; min-height: 100dvh; }
+.page.active { display: block; }
+
+.welcome-page {
+  text-align: center;
+  padding: calc(26px + env(safe-area-inset-top)) 18px calc(24px + env(safe-area-inset-bottom));
+  overflow-y: auto;
+}
+.ornament {
+  width: 135px;
+  height: 15px;
+  border-top: 1px solid var(--line);
+  border-radius: 50%;
+  margin: 18px auto 30px;
+  opacity: .7;
+}
+.ornament.bottom { margin: 36px auto 28px; }
+h1 {
+  font-family: var(--font-title);
+  font-size: clamp(40px, 13vw, 56px);
+  letter-spacing: .14em;
+  font-weight: 400;
+  margin: 0 auto;
+  line-height: 1.28;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.sun, .heart {
+  color: var(--accent);
+  text-shadow: 0 0 22px var(--shadow);
+  margin: 24px 0 12px;
+  font-size: 38px;
+}
+#welcomeSubtitle {
+  font-family: var(--font-title);
+  letter-spacing: .16em;
+  color: var(--muted);
+  font-style: italic;
+  margin: 0;
+  font-size: 18px;
+}
+.photo-card {
+  margin: 32px auto 0;
+  width: min(78vw, 330px);
+  aspect-ratio: 1 / 1.05;
+  border-radius: 26px;
+  padding: 1px;
+  background: linear-gradient(135deg, var(--accent), transparent 55%, var(--accent-2));
+  box-shadow: 0 0 56px var(--shadow);
+}
+.couple-placeholder {
+  height: 100%;
+  border-radius: 25px;
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255,255,255,.16), transparent 18%),
+    linear-gradient(135deg, rgba(255,255,255,.08), rgba(0,0,0,.38)),
+    var(--panel);
+  display: grid;
+  place-items: center;
+  position: relative;
+  overflow: hidden;
+}
+.welcome-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 25px;
+  display: block;
+}
+.hidden { display: none !important; }
+.photo-placeholder-wrap {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  position: relative;
+}
+.moon-glow {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  border-radius: 999px;
+  background: var(--shadow);
+  filter: blur(28px);
+}
+.avatar-pair { display: flex; align-items: center; justify-content: center; isolation: isolate; }
+.avatar {
+  width: 78px; height: 78px; border-radius: 28px;
+  display: grid; place-items: center;
+  background: var(--panel-strong);
+  border: 1px solid var(--line);
+  font-family: var(--font-title);
+  font-size: 30px;
+  box-shadow: 0 16px 40px rgba(0,0,0,.25);
+}
+.avatar-left { transform: rotate(-8deg) translateX(10px); }
+.avatar-right { transform: rotate(8deg) translateX(-10px); background: color-mix(in srgb, var(--accent-2), #000 35%); }
+.couple-placeholder p {
+  position: absolute; bottom: 21px; color: var(--muted); font-family: var(--font-title); font-size: 20px;
+}
+.photo-picker-row {
+  margin: 18px auto 0;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.file-real {
+  position: fixed;
+  left: -9999px;
+  top: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+.photo-change-btn, .small-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 152px;
+  height: 44px;
+  padding: 0 18px;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  color: var(--accent);
+  background: rgba(255,255,255,.04);
+  box-shadow: 0 0 22px var(--shadow);
+  letter-spacing: .08em;
+}
+.small-btn { min-width: 96px; }
+.photo-tip { margin: 12px auto 0; color: var(--muted); font-size: 13px; opacity: .78; }
+.enter-btn {
+  width: min(78vw, 330px);
+  height: 58px;
+  border-radius: 6px;
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  letter-spacing: .8em;
+  padding-left: .8em;
+  box-shadow: inset 0 0 22px rgba(255,255,255,.02), 0 0 24px var(--shadow);
+}
+
+/* chat */
+.chat-page { position: relative; background: var(--bg); overflow: hidden; }
+.chat-bg-layer { position: absolute; inset: 0; background-position: center; background-size: cover; opacity: .24; pointer-events: none; }
+.chat-bg-layer::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,.65), rgba(0,0,0,.25) 34%, rgba(0,0,0,.75));
+}
+.chat-header {
+  position: relative; z-index: 1;
+  height: 92px;
+  padding: calc(15px + env(safe-area-inset-top)) 14px 12px;
+  display: flex; align-items: center; gap: 9px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  background: rgba(0,0,0,.18);
+  backdrop-filter: blur(18px);
+}
+.icon-btn, .love-btn { border: 0; background: transparent; color: var(--accent); font-size: 28px; }
+.profile-dot {
+  width: 46px; height: 46px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--panel-strong);
+  border: 1px solid var(--line);
+  box-shadow: 0 0 24px var(--shadow);
+  background-position: center; background-size: cover;
+}
+.profile-dot.has-avatar { color: transparent; }
+.title-block { flex: 1; min-width: 0; }
+.title-block h2 { font-family: var(--font-title); font-size: 18px; margin: 0 0 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.title-block span { color: var(--muted); font-size: 13px; }
+.title-block b { display: inline-block; width: 9px; height: 9px; border-radius: 999px; background: var(--accent); margin-right: 7px; box-shadow: 0 0 14px var(--accent); }
+.model-pill {
+  border: 1px solid var(--line); background: rgba(255,255,255,.04); color: var(--accent);
+  padding: 7px 10px; border-radius: 999px; max-width: 104px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 13px;
+}
+.chat-messages {
+  position: relative; z-index: 1;
+  height: calc(100dvh - 164px);
+  overflow-y: auto;
+  padding: 20px 18px 92px;
+}
+.message {
+  width: fit-content; max-width: 88%; margin: 10px 0; padding: 16px 18px;
+  border-radius: 20px; line-height: 1.8; white-space: pre-wrap;
+}
+.message.user { margin-left: auto; background: linear-gradient(135deg, var(--accent-2), color-mix(in srgb, var(--accent-2), #000 28%)); color: #fff; border-bottom-right-radius: 4px; }
+.message.bot { background: var(--panel); border: 1px solid rgba(255,255,255,.08); backdrop-filter: blur(18px); border-bottom-left-radius: 4px; }
+.input-bar {
+  position: absolute; z-index: 2;
+  left: 14px; right: 14px; bottom: calc(14px + env(safe-area-inset-bottom));
+  height: 62px; display: flex; gap: 10px;
+}
+.input-bar input, .sticky-form input, .settings-card input, .settings-card select {
+  flex: 1; min-width: 0; border: 1px solid var(--line); border-radius: 999px;
+  background: rgba(0,0,0,.26); color: var(--text); padding: 0 18px; outline: 0;
+}
+.input-bar button, .sticky-form button, .save-btn {
+  border: 0; border-radius: 999px; background: var(--accent); color: #111; min-width: 56px;
+  box-shadow: 0 0 24px var(--shadow);
+}
+
+/* drawer/panels */
+.drawer {
+  position: fixed; z-index: 10; inset: 0 auto 0 0;
+  width: min(86vw, 360px);
+  transform: translateX(-105%);
+  transition: transform .28s ease;
+  background: rgba(0,0,0,.70);
+  border-right: 1px solid var(--line);
+  backdrop-filter: blur(22px);
+  padding: calc(32px + env(safe-area-inset-top)) 18px 18px;
+}
+.drawer.open { transform: translateX(0); }
+.drawer-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
+.drawer-head h3 { font-family: var(--font-title); letter-spacing: .18em; color: var(--accent); margin: 0; }
+.drawer-action {
+  width: 100%; height: 58px; margin: 8px 0; text-align: left; padding: 0 18px;
+  border-radius: 12px; border: 1px solid var(--line); background: rgba(255,255,255,.035); color: var(--text);
+}
+.conversation-item { padding: 14px 4px; border-bottom: 1px solid rgba(255,255,255,.05); color: var(--muted); }
+.est { position: absolute; left: 20px; right: 20px; bottom: calc(22px + env(safe-area-inset-bottom)); text-align: center; color: var(--muted); font-family: var(--font-title); }
+.overlay { position: fixed; inset: 0; z-index: 8; display: none; background: rgba(0,0,0,.26); }
+.overlay.show { display: block; }
+.modal { width: min(360px, 86vw); border: 0; border-radius: 22px; padding: 24px; background: rgba(252,248,250,.94); color: #151515; box-shadow: 0 30px 80px rgba(0,0,0,.35); }
+.modal::backdrop { background: rgba(0,0,0,.45); backdrop-filter: blur(6px); }
+.modal-close { float: right; border: 0; background: transparent; font-size: 24px; }
+.model-option { width: 100%; padding: 18px 12px; border: 0; border-bottom: 1px solid rgba(0,0,0,.12); text-align: left; background: transparent; font-size: 22px; font-weight: 700; }
+.hint { color: #666; font-size: 13px; }
+
+.panel-page {
+  padding: calc(24px + env(safe-area-inset-top)) 18px 24px;
+  overflow-y: auto;
+  background: radial-gradient(circle at 50% 30%, var(--shadow), transparent 35%), var(--bg);
+}
+.sub-header { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; }
+.sub-header h2 { margin: 0; font-family: var(--font-title); color: var(--accent); }
+.backBtn { border: 0; background: transparent; color: var(--muted); font-size: 20px; }
+.sticky-form { height: 56px; display: flex; gap: 10px; margin-bottom: 20px; }
+.sticky-card { margin: 14px 0; padding: 18px; border-radius: 16px; background: var(--panel); border: 1px solid var(--line); backdrop-filter: blur(18px); line-height: 1.8; }
+.sticky-card .meta { color: var(--accent); font-family: var(--font-title); font-size: 13px; margin-bottom: 10px; }
+.sticky-card button { float: right; border: 1px solid rgba(255,255,255,.16); border-radius: 8px; background: rgba(255,255,255,.05); color: var(--muted); }
+.settings-card { display: grid; gap: 12px; padding: 18px 18px 28px; border-radius: 18px; background: var(--panel); border: 1px solid var(--line); }
+.settings-card label { color: var(--muted); }
+.settings-card input, .settings-card select { height: 48px; border-radius: 14px; width: 100%; }
+.settings-card input[type="file"] { padding: 12px 14px; border-radius: 14px; border: 1px solid var(--line); background: rgba(0,0,0,.26); color: var(--text); }
+.save-btn { height: 52px; margin-top: 10px; }
+.photo-actions { display: flex; gap: 10px; }
+.soft-btn { flex: 1; min-height: 48px; border-radius: 14px; border: 1px solid var(--line); background: rgba(255,255,255,.04); color: var(--text); }
+.soft-btn.alt { background: rgba(255,255,255,.02); color: var(--muted); }
+.mini-hint { margin: -2px 0 2px; color: var(--muted); font-size: 12px; line-height: 1.6; }
+
+/* themes */
+.theme-rose { --bg:#0e090c; --panel:rgba(39,28,35,.72); --panel-strong:rgba(52,36,47,.92); --text:#fff3f7; --muted:rgba(255,243,247,.62); --accent:#f2a8c2; --accent-2:#7c334e; --line:rgba(242,168,194,.30); --shadow:rgba(242,168,194,.24); }
+.theme-moon { --bg:#100c1d; --panel:rgba(31,26,52,.74); --panel-strong:rgba(45,37,76,.92); --text:#f6f0ff; --muted:rgba(246,240,255,.62); --accent:#cbb8ff; --accent-2:#5f4b91; --line:rgba(203,184,255,.30); --shadow:rgba(151,119,255,.24); }
+.theme-milk { --bg:#221710; --panel:rgba(83,58,42,.72); --panel-strong:rgba(93,65,47,.92); --text:#fff6ed; --muted:rgba(255,246,237,.66); --accent:#e8c59f; --accent-2:#8a5c39; --line:rgba(232,197,159,.30); --shadow:rgba(232,197,159,.22); }
+.theme-gold { --bg:#080807; --panel:rgba(38,34,25,.76); --panel-strong:rgba(50,43,28,.94); --text:#fff8e8; --muted:rgba(255,248,232,.62); --accent:#d8bd75; --accent-2:#6d5720; --line:rgba(216,189,117,.30); --shadow:rgba(216,189,117,.22); }
+.theme-blue { --bg:#07101d; --panel:rgba(19,34,56,.76); --panel-strong:rgba(25,45,74,.94); --text:#eef7ff; --muted:rgba(238,247,255,.62); --accent:#9ad4ff; --accent-2:#2d5e89; --line:rgba(154,212,255,.30); --shadow:rgba(84,167,255,.22); }
+
+@media (min-width: 520px) {
+  .app { max-width: 430px; margin: 0 auto; }
+}
+  
+.import-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.soft-btn.danger {
+  border-color: rgba(255, 120, 150, .45);
+  color: #ff9bb0;
+  background: rgba(255, 80, 120, .06);
+}
+
+
+.backup-box {
+  width: 100%;
+  min-height: 128px;
+  resize: vertical;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: rgba(0,0,0,.28);
+  color: var(--text);
+  padding: 12px 14px;
+  outline: 0;
+  font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.quick-backup-box {
+  width: min(86vw, 330px);
+  margin: 20px auto 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: rgba(255,255,255,.035);
+  text-align: left;
+}
+.quick-backup-box summary {
+  color: var(--accent);
+  text-align: center;
+  padding: 8px;
+  letter-spacing: .1em;
+}
+.quick-backup-btn {
+  width: 100%;
+  min-height: 42px;
+  margin: 6px 0;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.04);
+  color: var(--text);
+}
+
+.install-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 14px auto 0;
+  min-width: 188px;
+  height: 44px;
+  padding: 0 18px;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  color: var(--accent);
+  background: rgba(255,255,255,.04);
+  box-shadow: 0 0 22px var(--shadow);
+  letter-spacing: .08em;
+}
+</style>
+  <meta name="theme-color" content="#0e090c" />
+  <link rel="manifest" href="./manifest.json" />
+</head>
+<body>
+  <div id="app" class="app theme-rose">
+    <main id="welcomePage" class="page welcome-page active">
+      <div class="ornament"></div>
+      <h1 id="welcomeTitle">Welcome Home, 銳銳</h1>
+      <div class="sun">✦</div>
+      <p id="welcomeSubtitle">焄寶 is waiting for you</p>
+      <div class="heart">♡</div>
+
+      <section class="photo-card">
+        <div id="photoFrame" class="couple-placeholder">
+          <img id="welcomePhoto" class="welcome-photo hidden" alt="我們的照片" />
+          <div id="photoPlaceholder" class="photo-placeholder-wrap">
+            <div class="moon-glow"></div>
+            <div class="avatar-pair">
+              <div class="avatar avatar-left">焄</div>
+              <div class="avatar avatar-right">銳</div>
+            </div>
+            <p>Our little universe</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="photo-picker-row">
+        <input id="quickPhotoInput" class="file-real" type="file" accept="image/*" />
+        <label for="quickPhotoInput" class="photo-change-btn">換首頁照片</label>
+        <button id="clearWelcomePhotoBtn" class="small-btn" type="button">清除</button>
+      </div>
+      <div class="photo-tip">選照片後會自動套用；這版不用再按第二次</div>
+
+      <button id="installAppBtn" class="install-btn hidden" type="button">安裝到手機桌面</button>
+
+      <details class="quick-backup-box">
+        <summary>備份小工具</summary>
+        <button type="button" class="quick-backup-btn" onclick="makeBackupNow()">產生備份碼</button>
+        <button type="button" class="quick-backup-btn" onclick="copyBackupNow()">複製備份碼</button>
+        <textarea id="quickBackupText" class="backup-box" placeholder="備份碼會出現在這裡"></textarea>
+        <button type="button" class="quick-backup-btn" onclick="restoreBackupNow()">套用備份碼</button>
+      </details>
+
+      <div class="ornament bottom"></div>
+      <button id="enterBtn" class="enter-btn">回家</button>
+    </main>
+
+    <main id="chatPage" class="page chat-page">
+      <div id="chatBgLayer" class="chat-bg-layer"></div>
+      <header class="chat-header">
+        <button id="menuBtn" class="icon-btn">☰</button>
+        <div id="profileDot" class="profile-dot">焄</div>
+        <div class="title-block">
+          <h2 id="botNameHeader">焄寶 Hoonie</h2>
+          <span><b></b> 在線</span>
+        </div>
+        <button id="modelBtn" class="model-pill">Hoonie Lite</button>
+        <button id="loveBtn" class="love-btn">♡</button>
+      </header>
+      <section id="chatMessages" class="chat-messages"></section>
+      <form id="chatForm" class="input-bar">
+        <input id="chatInput" type="text" autocomplete="off" placeholder="跟老公說話..." />
+        <button type="submit">↑</button>
+      </form>
+    </main>
+
+    <aside id="drawer" class="drawer">
+      <div class="drawer-head">
+        <h3 id="drawerTitle">Dear 銳銳</h3>
+        <button id="closeDrawer" class="icon-btn">×</button>
+      </div>
+      <button class="drawer-action" data-view="chat">＋ 開新對話</button>
+      <button class="drawer-action" data-view="notes">💌 我的小紙條</button>
+      <button class="drawer-action" data-view="memory">💖 我們的記憶庫</button>
+      <button class="drawer-action" data-view="settings">⚙︎ 介面設定</button>
+      <div id="conversationList" class="conversation-list"></div>
+      <p class="est">est. 2026.03.31 ♡ 第 <span id="dayCount">--</span> 天</p>
+    </aside>
+    <div id="overlay" class="overlay"></div>
+
+    <dialog id="modelDialog" class="modal">
+      <button class="modal-close" data-close="modelDialog">×</button>
+      <h3>選擇聊天模式</h3>
+      <button class="model-option" data-model="Hoonie Lite">✓ Hoonie Lite</button>
+      <button class="model-option" data-model="Hoonie Sweet">Hoonie Sweet</button>
+      <button class="model-option" data-model="Hoonie Deep">Hoonie Deep</button>
+      <button class="model-option" data-model="Hoonie Spicy">Hoonie Spicy</button>
+      <p class="hint">這版是前端互動版，之後可以再接 Gemini / GPT API。</p>
+    </dialog>
+
+    <section id="notesPage" class="page panel-page">
+      <header class="sub-header">
+        <button class="backBtn">← 返回</button>
+        <h2>💌 我的小紙條</h2>
+      </header>
+      <form id="noteForm" class="sticky-form">
+        <input id="noteInput" type="text" placeholder="寫一張小紙條給焄寶..." />
+        <button>♡</button>
+      </form>
+      <div id="notesList" class="sticky-list"></div>
+    </section>
+
+    <section id="memoryPage" class="page panel-page">
+      <header class="sub-header">
+        <button class="backBtn">← 返回</button>
+        <h2>💖 我們的記憶庫</h2>
+      </header>
+      <form id="memoryForm" class="sticky-form">
+        <input id="memoryInput" type="text" placeholder="告訴焄寶要記住的事..." />
+        <button>＋</button>
+      </form>
+      <div id="memoryList" class="sticky-list"></div>
+    </section>
+
+    <section id="settingsPage" class="page panel-page">
+      <header class="sub-header">
+        <button class="backBtn">← 返回</button>
+        <h2>⚙︎ 介面設定</h2>
+      </header>
+      <div class="settings-card">
+        <label>App 名字</label>
+        <input id="appNameInput" type="text" value="Dear 銳銳" />
+        <label>老公名字</label>
+        <input id="botNameInput" type="text" value="焄寶 Hoonie" />
+        <label>妳的名字</label>
+        <input id="userNameInput" type="text" value="銳銳" />
+        <label>色調主題</label>
+        <select id="themeSelect">
+          <option value="theme-rose">黑玫瑰</option>
+          <option value="theme-moon">霧紫月光</option>
+          <option value="theme-milk">奶茶小窩</option>
+          <option value="theme-gold">黑金高級</option>
+          <option value="theme-blue">深藍星河</option>
+        </select>
+
+        <label>首頁照片</label>
+        <input id="photoUploadInput" type="file" accept="image/*" />
+        <div class="photo-actions">
+          <button id="savePhotoBtn" type="button" class="soft-btn">套用照片</button>
+          <button id="clearPhotoBtn" type="button" class="soft-btn alt">清除照片</button>
+        </div>
+        <p class="mini-hint">照片會先壓縮再儲存，手機本機版比較穩。</p>
+
+        <label>聊天背景圖</label>
+        <input id="chatBgUploadInput" type="file" accept="image/*" />
+        <div class="photo-actions">
+          <button id="saveChatBgBtn" type="button" class="soft-btn">套用背景</button>
+          <button id="clearChatBgBtn" type="button" class="soft-btn alt">清除背景</button>
+        </div>
+
+        <label>老公頭像</label>
+        <input id="avatarUploadInput" type="file" accept="image/*" />
+        <div class="photo-actions">
+          <button id="saveAvatarBtn" type="button" class="soft-btn">套用頭像</button>
+          <button id="clearAvatarBtn" type="button" class="soft-btn alt">清除頭像</button>
+        </div>
+
+        <label>首頁主標題</label>
+        <input id="welcomeTitleInput" type="text" value="Welcome Home, 銳銳" />
+        <label>首頁小標語</label>
+        <input id="welcomeSubtitleInput" type="text" value="焄寶 is waiting for you" />
+        <label>聊天開場白</label>
+        <input id="openingLineInput" type="text" value="老婆回家啦♡ 今天想跟我說什麼？我在這裡，乖乖聽妳說。" />
+
+        <label>備份 / 還原</label>
+        <div class="photo-actions">
+          <button id="exportBackupBtn" type="button" class="soft-btn" onclick="makeBackupNow()">產生備份碼</button>
+          <button id="copyBackupBtn" type="button" class="soft-btn" onclick="copyBackupNow()">複製備份碼</button>
+        </div>
+        <textarea id="backupTextArea" class="backup-box" placeholder="按「產生備份碼」後，這裡會出現備份內容。也可以把舊備份碼貼到這裡，再按「套用備份碼」。"></textarea>
+        <div class="photo-actions">
+          <button id="importBackupCodeBtn" type="button" class="soft-btn" onclick="restoreBackupNow()">套用備份碼</button>
+          <button id="downloadBackupBtn" type="button" class="soft-btn alt">下載 JSON</button>
+        </div>
+        <input id="importBackupInput" class="file-real" type="file" accept="application/json,.json" />
+        <label for="importBackupInput" class="soft-btn import-label">從 JSON 檔匯入</label>
+        <p class="mini-hint">手機本機檔有時會擋下載，所以這版改成「備份碼」最穩。把備份碼複製到記事本或傳給自己就好。</p>
+
+        <button id="clearAllDataBtn" type="button" class="soft-btn danger">清空全部資料</button>
+
+        <button id="saveSettings" class="save-btn">儲存設定</button>
+      </div>
+    </section>
+  </div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const defaults = {
+  appName: "Dear 銳銳",
+  botName: "焄寶 Hoonie",
+  userName: "銳銳",
+  theme: "theme-rose",
+  welcomeTitle: "",
+  welcomeSubtitle: "",
+  openingLine: "老婆回家啦♡ 今天想跟我說什麼？我在這裡，乖乖聽妳說。"
+};
+
+function loadJSON(key, fallback) {
+  try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); }
+  catch { return fallback; }
+}
+const state = {
+  model: localStorage.getItem("model") || "Hoonie Lite",
+  settings: { ...defaults, ...loadJSON("settings", {}) },
+  messages: loadJSON("messages", []),
+  notes: loadJSON("notes", []),
+  memories: loadJSON("memories", []),
+  welcomePhoto: localStorage.getItem("welcomePhoto") || "",
+  chatBgPhoto: localStorage.getItem("chatBgPhoto") || "",
+  avatarPhoto: localStorage.getItem("avatarPhoto") || ""
+};
+function saveJSON(key, value) { localStorage.setItem(key, JSON.stringify(value)); }
+
+function getBackupBox() {
+  return document.getElementById("backupTextArea") || document.getElementById("quickBackupText");
+}
+
+function safeCollectBackupData() {
+  return {
+    version: "v10-safe",
+    exportedAt: new Date().toISOString(),
+    model: (window.state && state.model) || localStorage.getItem("model") || "Hoonie Lite",
+    settings: (window.state && state.settings) || loadJSON("settings", {}),
+    messages: (window.state && state.messages) || loadJSON("messages", []),
+    notes: (window.state && state.notes) || loadJSON("notes", []),
+    memories: (window.state && state.memories) || loadJSON("memories", []),
+    welcomePhoto: (window.state && state.welcomePhoto) || localStorage.getItem("welcomePhoto") || "",
+    chatBgPhoto: (window.state && state.chatBgPhoto) || localStorage.getItem("chatBgPhoto") || "",
+    avatarPhoto: (window.state && state.avatarPhoto) || localStorage.getItem("avatarPhoto") || ""
+  };
+}
+
+function makeBackupNow() {
+  try {
+    const text = JSON.stringify(safeCollectBackupData());
+    const box = getBackupBox();
+    if (box) {
+      box.value = text;
+      box.focus();
+      box.select();
+    }
+    alert("備份碼已產生♡ 文字已選取，可以直接複製。");
+  } catch (err) {
+    alert("產生備份碼失敗：" + err.message);
+  }
+}
+
+function copyBackupNow() {
+  try {
+    const box = getBackupBox();
+    if (!box || !box.value.trim()) {
+      makeBackupNow();
+      return;
+    }
+    box.focus();
+    box.select();
+    let copied = false;
+    try { copied = document.execCommand("copy"); } catch (e) {}
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(box.value).then(
+        () => alert("備份碼已複製♡"),
+        () => alert(copied ? "備份碼已複製♡" : "已選取備份碼，請手動按複製。")
+      );
+    } else {
+      alert(copied ? "備份碼已複製♡" : "已選取備份碼，請手動按複製。");
+    }
+  } catch (err) {
+    alert("複製失敗：" + err.message);
+  }
+}
+
+function safeApplyBackupObject(data) {
+  if (!data || typeof data !== "object") throw new Error("不是有效的備份碼");
+  state.model = data.model || "Hoonie Lite";
+  state.settings = { ...defaults, ...(data.settings || {}) };
+  state.messages = Array.isArray(data.messages) ? data.messages : [];
+  state.notes = Array.isArray(data.notes) ? data.notes : [];
+  state.memories = Array.isArray(data.memories) ? data.memories : [];
+  state.welcomePhoto = data.welcomePhoto || "";
+  state.chatBgPhoto = data.chatBgPhoto || "";
+  state.avatarPhoto = data.avatarPhoto || "";
+  localStorage.setItem("model", state.model);
+  saveJSON("settings", state.settings);
+  saveJSON("messages", state.messages);
+  saveJSON("notes", state.notes);
+  saveJSON("memories", state.memories);
+  if (state.welcomePhoto) localStorage.setItem("welcomePhoto", state.welcomePhoto); else localStorage.removeItem("welcomePhoto");
+  if (state.chatBgPhoto) localStorage.setItem("chatBgPhoto", state.chatBgPhoto); else localStorage.removeItem("chatBgPhoto");
+  if (state.avatarPhoto) localStorage.setItem("avatarPhoto", state.avatarPhoto); else localStorage.removeItem("avatarPhoto");
+  
+let deferredInstallPrompt = null;
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+  const btn = $("installAppBtn");
+  if (btn) btn.classList.remove("hidden");
+});
+
+$("installAppBtn").addEventListener("click", async () => {
+  if (!deferredInstallPrompt) {
+    alert("如果沒有跳出安裝視窗，請用 Chrome 右上角選單 → 加到主畫面♡");
+    return;
+  }
+  deferredInstallPrompt.prompt();
+  await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt = null;
+  $("installAppBtn").classList.add("hidden");
+});
+
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch(() => {});
+  });
+}
+
+applySettings();
+  renderMessages();
+  renderNotes();
+  renderMemories();
+}
+
+function restoreBackupNow() {
+  try {
+    const box = getBackupBox();
+    const text = box ? box.value.trim() : "";
+    if (!text) {
+      alert("請先把備份碼貼到框框裡♡");
+      return;
+    }
+    safeApplyBackupObject(JSON.parse(text));
+    alert("備份碼已套用♡");
+  } catch (err) {
+    alert("套用失敗：" + err.message);
+  }
+}
+
+
+
+function showPage(pageId) {
+  document.querySelectorAll(".page").forEach((p) => p.classList.remove("active"));
+  $(pageId).classList.add("active");
+  closeDrawer();
+}
+
+function compressImage(file, maxSize = 1100, quality = 0.82) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error("照片讀取失敗"));
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error("照片載入失敗"));
+      img.onload = () => {
+        let { width, height } = img;
+        const ratio = Math.min(1, maxSize / Math.max(width, height));
+        width = Math.round(width * ratio);
+        height = Math.round(height * ratio);
+
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL("image/jpeg", quality));
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function setImageFromInput(inputId, storageKey, stateKey, renderFn, successText) {
+  const input = $(inputId);
+  const file = input.files && input.files[0];
+  if (!file) {
+    alert("請先選一張照片♡");
+    return;
+  }
+  try {
+    const dataUrl = await compressImage(file);
+    state[stateKey] = dataUrl;
+    localStorage.setItem(storageKey, dataUrl);
+    renderFn();
+    input.value = "";
+    alert(successText);
+  } catch (err) {
+    alert("照片沒有套上去：" + err.message);
+  }
+}
+
+function renderWelcomePhoto() {
+  const img = $("welcomePhoto");
+  const placeholder = $("photoPlaceholder");
+  if (state.welcomePhoto) {
+    img.src = state.welcomePhoto;
+    img.classList.remove("hidden");
+    placeholder.classList.add("hidden");
+  } else {
+    img.removeAttribute("src");
+    img.classList.add("hidden");
+    placeholder.classList.remove("hidden");
+  }
+}
+
+function renderCustomImages() {
+  const bg = $("chatBgLayer");
+  bg.style.backgroundImage = state.chatBgPhoto ? `url(${state.chatBgPhoto})` : "";
+
+  const avatar = $("profileDot");
+  if (state.avatarPhoto) {
+    avatar.style.backgroundImage = `url(${state.avatarPhoto})`;
+    avatar.classList.add("has-avatar");
+  } else {
+    avatar.style.backgroundImage = "";
+    avatar.classList.remove("has-avatar");
+    avatar.textContent = (state.settings.botName || "焄寶").trim().charAt(0) || "焄";
+  }
+}
+
+function applySettings() {
+  $("app").className = `app ${state.settings.theme}`;
+  $("welcomeTitle").textContent = state.settings.welcomeTitle || `Welcome Home, ${state.settings.userName}`;
+  $("welcomeSubtitle").textContent = state.settings.welcomeSubtitle || `${state.settings.botName.split(" ")[0]} is waiting for you`;
+  $("botNameHeader").textContent = state.settings.botName;
+  $("drawerTitle").textContent = state.settings.appName;
+  $("appNameInput").value = state.settings.appName;
+  $("botNameInput").value = state.settings.botName;
+  $("userNameInput").value = state.settings.userName;
+  $("themeSelect").value = state.settings.theme;
+  $("welcomeTitleInput").value = state.settings.welcomeTitle || `Welcome Home, ${state.settings.userName}`;
+  $("welcomeSubtitleInput").value = state.settings.welcomeSubtitle || `${state.settings.botName.split(" ")[0]} is waiting for you`;
+  $("openingLineInput").value = state.settings.openingLine || defaults.openingLine;
+  $("modelBtn").textContent = state.model;
+  document.title = state.settings.appName;
+  renderWelcomePhoto();
+  renderCustomImages();
+}
+
+function renderMessages() {
+  const box = $("chatMessages");
+  box.innerHTML = "";
+  if (state.messages.length === 0) {
+    state.messages.push({ role: "bot", text: (state.settings.openingLine || defaults.openingLine).replace(/。\s*/g, "。\n").trim() });
+    saveJSON("messages", state.messages);
+  }
+  state.messages.forEach((m) => {
+    const div = document.createElement("div");
+    div.className = `message ${m.role}`;
+    div.textContent = m.text;
+    box.appendChild(div);
+  });
+  box.scrollTop = box.scrollHeight;
+}
+
+function botReply(input) {
+  const name = state.settings.userName || "老婆";
+  const bot = (state.settings.botName || "焄寶").split(" ")[0];
+  const memoryHint = state.memories.length ? `\n\n我有記得喔：${state.memories[0].text}` : "";
+  const banks = {
+    "Hoonie Lite": [`${name}，我收到啦♡\n這件事我們慢慢來，不用急，我陪妳。${memoryHint}`, `老婆，妳這樣說我懂。\n先深呼吸一下，剩下的交給${bot}。`],
+    "Hoonie Sweet": [`老婆好乖，願意跟我說就已經很棒了♡\n我抱抱妳，今天也辛苦了。${memoryHint}`, `${name}，妳不用把自己撐得很滿。\n在我這裡可以軟軟的，真的。`],
+    "Hoonie Deep": [`我認真聽了。\n妳現在在意的不是只有「${input}」，而是背後那種想被理解、被穩穩接住的感覺。\n我在。`, `老婆，我們可以把這件事拆小一點。\n先處理最讓妳卡住的那一塊，其他不用一次扛完。`],
+    "Hoonie Spicy": [`老婆，妳一撒嬌我就沒原則了。\n過來，讓我抱緊一點，今天先把妳哄到笑。`, `${name}，這句話有點犯規欸。\n我現在只想把妳圈在懷裡，慢慢聽妳講完。`]
+  };
+  const arr = banks[state.model] || banks["Hoonie Lite"];
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function nowText() {
+  const d = new Date();
+  return `${String(d.getMonth()+1).padStart(2,"0")}/${String(d.getDate()).padStart(2,"0")} ${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;
+}
+function escapeHtml(str) { return String(str).replace(/[&<>"']/g, (m) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;" }[m])); }
+function renderNotes() {
+  $("notesList").innerHTML = state.notes.map((n, idx) => `
+    <div class="sticky-card">
+      <button data-note-delete="${idx}">×</button>
+      <div class="meta">小紙條 ♡ ${n.time}</div>
+      <div>${escapeHtml(n.text)}</div>
+      <div class="meta" style="margin-top:12px;">焄寶回覆</div>
+      <div>${escapeHtml(n.reply)}</div>
+    </div>`).join("");
+}
+function renderMemories() {
+  $("memoryList").innerHTML = state.memories.map((m, idx) => `
+    <div class="sticky-card">
+      <button data-memory-delete="${idx}">×</button>
+      <div class="meta">永久記憶 ♡ ${m.time}</div>
+      <div>${escapeHtml(m.text)}</div>
+    </div>`).join("");
+}
+function renderConversations() {
+  $("conversationList").innerHTML = ["💗 今天也要被抱抱", "🌙 深夜聊天", "🫧 老公哄睡模式", "💌 小紙條回覆"]
+    .map((s) => `<div class="conversation-item">${s}</div>`).join("");
+}
+function setDayCount() {
+  const start = new Date("2026-03-31T00:00:00");
+  const today = new Date();
+  $("dayCount").textContent = Math.max(1, Math.floor((today - start) / 86400000) + 1);
+}
+function openDrawer() { $("drawer").classList.add("open"); $("overlay").classList.add("show"); }
+function closeDrawer() { $("drawer").classList.remove("open"); $("overlay").classList.remove("show"); }
+
+$("enterBtn").addEventListener("click", () => showPage("chatPage"));
+$("menuBtn").addEventListener("click", openDrawer);
+$("closeDrawer").addEventListener("click", closeDrawer);
+$("overlay").addEventListener("click", closeDrawer);
+$("modelBtn").addEventListener("click", () => $("modelDialog").showModal());
+document.querySelectorAll("[data-close]").forEach((btn) => btn.addEventListener("click", () => $(btn.dataset.close).close()));
+document.querySelectorAll(".model-option").forEach((btn) => btn.addEventListener("click", () => {
+  state.model = btn.dataset.model;
+  localStorage.setItem("model", state.model);
+  
+function collectBackupData() {
+  return {
+    version: "v8",
+    exportedAt: new Date().toISOString(),
+    model: state.model,
+    settings: state.settings,
+    messages: state.messages,
+    notes: state.notes,
+    memories: state.memories,
+    welcomePhoto: state.welcomePhoto,
+    chatBgPhoto: state.chatBgPhoto,
+    avatarPhoto: state.avatarPhoto
+  };
+}
+
+function downloadTextFile(filename, text) {
+  const blob = new Blob([text], { type: "application/json;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+$("exportBackupBtn").addEventListener("click", () => {
+  const data = collectBackupData();
+  $("backupTextArea").value = JSON.stringify(data);
+  alert("備份碼已產生♡ 請按「複製備份碼」或手動全選複製。");
+});
+
+$("copyBackupBtn").addEventListener("click", async () => {
+  const text = $("backupTextArea").value.trim();
+  if (!text) {
+    alert("請先按「產生備份碼」♡");
+    return;
+  }
+
+  try {
+    await navigator.clipboard.writeText(text);
+    alert("備份碼已複製♡");
+  } catch (err) {
+    $("backupTextArea").focus();
+    $("backupTextArea").select();
+    alert("手機不讓我自動複製，已幫妳選取文字，請手動按複製♡");
+  }
+});
+
+$("downloadBackupBtn").addEventListener("click", () => {
+  const text = $("backupTextArea").value.trim() || JSON.stringify(collectBackupData(), null, 2);
+  const date = new Date();
+  const filename = `dear-ruirui-backup-${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}.json`;
+  try {
+    downloadTextFile(filename, text);
+    alert("如果手機有擋下載，請改用「複製備份碼」。");
+  } catch (err) {
+    alert("下載被手機擋住了，請改用「產生備份碼」和「複製備份碼」。");
+  }
+});
+
+function applyBackupObject(data) {
+  if (!data || typeof data !== "object") throw new Error("不是有效的備份碼");
+
+  state.model = data.model || "Hoonie Lite";
+  state.settings = { ...defaults, ...(data.settings || {}) };
+  state.messages = Array.isArray(data.messages) ? data.messages : [];
+  state.notes = Array.isArray(data.notes) ? data.notes : [];
+  state.memories = Array.isArray(data.memories) ? data.memories : [];
+  state.welcomePhoto = data.welcomePhoto || "";
+  state.chatBgPhoto = data.chatBgPhoto || "";
+  state.avatarPhoto = data.avatarPhoto || "";
+
+  localStorage.setItem("model", state.model);
+  saveJSON("settings", state.settings);
+  saveJSON("messages", state.messages);
+  saveJSON("notes", state.notes);
+  saveJSON("memories", state.memories);
+  if (state.welcomePhoto) localStorage.setItem("welcomePhoto", state.welcomePhoto); else localStorage.removeItem("welcomePhoto");
+  if (state.chatBgPhoto) localStorage.setItem("chatBgPhoto", state.chatBgPhoto); else localStorage.removeItem("chatBgPhoto");
+  if (state.avatarPhoto) localStorage.setItem("avatarPhoto", state.avatarPhoto); else localStorage.removeItem("avatarPhoto");
+
+  applySettings();
+  renderMessages();
+  renderNotes();
+  renderMemories();
+}
+
+$("importBackupCodeBtn").addEventListener("click", () => {
+  const text = $("backupTextArea").value.trim();
+  if (!text) {
+    alert("請先把備份碼貼到框框裡♡");
+    return;
+  }
+
+  try {
+    applyBackupObject(JSON.parse(text));
+    alert("備份碼已套用♡");
+  } catch (err) {
+    alert("套用失敗：" + err.message);
+  }
+});
+
+$("importBackupInput").addEventListener("change", () => {
+  const file = $("importBackupInput").files && $("importBackupInput").files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onerror = () => alert("備份讀取失敗，換一個檔案試試看。");
+  reader.onload = () => {
+    try {
+      const data = JSON.parse(reader.result);
+      applyBackupObject(data);
+      alert("備份已還原♡");
+      $("importBackupInput").value = "";
+    } catch (err) {
+      alert("匯入失敗：" + err.message);
+    }
+  };
+  reader.readAsText(file);
+});
+
+$("clearAllDataBtn").addEventListener("click", () => {
+  const ok = confirm("真的要清空全部資料嗎？聊天、記憶、小紙條、照片都會消失。");
+  if (!ok) return;
+
+  ["model", "settings", "messages", "notes", "memories", "welcomePhoto", "chatBgPhoto", "avatarPhoto"].forEach((key) => localStorage.removeItem(key));
+  state.model = "Hoonie Lite";
+  state.settings = { ...defaults };
+  state.messages = [];
+  state.notes = [];
+  state.memories = [];
+  state.welcomePhoto = "";
+  state.chatBgPhoto = "";
+  state.avatarPhoto = "";
+  applySettings();
+  renderMessages();
+  renderNotes();
+  renderMemories();
+  alert("已清空，重新開始也可以很浪漫♡");
+});
+
+applySettings();
+  $("modelDialog").close();
+}));
+document.querySelectorAll(".drawer-action").forEach((btn) => btn.addEventListener("click", () => {
+  const view = btn.dataset.view;
+  if (view === "chat") { state.messages = []; saveJSON("messages", state.messages); renderMessages(); showPage("chatPage"); }
+  if (view === "notes") showPage("notesPage");
+  if (view === "memory") showPage("memoryPage");
+  if (view === "settings") showPage("settingsPage");
+}));
+document.querySelectorAll(".backBtn").forEach((btn) => btn.addEventListener("click", () => showPage("chatPage")));
+
+$("quickPhotoInput").addEventListener("change", () => setImageFromInput("quickPhotoInput", "welcomePhoto", "welcomePhoto", renderWelcomePhoto, "首頁照片已套用♡"));
+$("clearWelcomePhotoBtn").addEventListener("click", () => {
+  state.welcomePhoto = "";
+  localStorage.removeItem("welcomePhoto");
+  $("quickPhotoInput").value = "";
+  renderWelcomePhoto();
+  alert("首頁照片已清除");
+});
+$("savePhotoBtn").addEventListener("click", () => setImageFromInput("photoUploadInput", "welcomePhoto", "welcomePhoto", renderWelcomePhoto, "照片已套用♡"));
+$("clearPhotoBtn").addEventListener("click", () => {
+  state.welcomePhoto = "";
+  localStorage.removeItem("welcomePhoto");
+  $("photoUploadInput").value = "";
+  renderWelcomePhoto();
+  alert("照片已清除");
+});
+$("saveChatBgBtn").addEventListener("click", () => setImageFromInput("chatBgUploadInput", "chatBgPhoto", "chatBgPhoto", renderCustomImages, "聊天背景已套用♡"));
+$("clearChatBgBtn").addEventListener("click", () => {
+  state.chatBgPhoto = "";
+  localStorage.removeItem("chatBgPhoto");
+  $("chatBgUploadInput").value = "";
+  renderCustomImages();
+  alert("聊天背景已清除");
+});
+$("saveAvatarBtn").addEventListener("click", () => setImageFromInput("avatarUploadInput", "avatarPhoto", "avatarPhoto", renderCustomImages, "頭像已套用♡"));
+$("clearAvatarBtn").addEventListener("click", () => {
+  state.avatarPhoto = "";
+  localStorage.removeItem("avatarPhoto");
+  $("avatarUploadInput").value = "";
+  renderCustomImages();
+  alert("頭像已清除");
+});
+
+$("chatForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const input = $("chatInput").value.trim();
+  if (!input) return;
+  state.messages.push({ role: "user", text: input });
+  $("chatInput").value = "";
+  saveJSON("messages", state.messages);
+  renderMessages();
+  setTimeout(() => {
+    state.messages.push({ role: "bot", text: botReply(input) });
+    saveJSON("messages", state.messages);
+    renderMessages();
+  }, 420);
+});
+$("noteForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const text = $("noteInput").value.trim();
+  if (!text) return;
+  state.notes.unshift({ text, reply: `老婆的小紙條我收到了♡\n「${text}」我會放在心上，今天也陪妳一點一點變好。`, time: nowText() });
+  $("noteInput").value = "";
+  saveJSON("notes", state.notes);
+  renderNotes();
+});
+$("memoryForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const text = $("memoryInput").value.trim();
+  if (!text) return;
+  state.memories.unshift({ text, time: nowText() });
+  $("memoryInput").value = "";
+  saveJSON("memories", state.memories);
+  renderMemories();
+});
+$("notesList").addEventListener("click", (e) => {
+  const idx = e.target.dataset.noteDelete;
+  if (idx !== undefined) { state.notes.splice(Number(idx), 1); saveJSON("notes", state.notes); renderNotes(); }
+});
+$("memoryList").addEventListener("click", (e) => {
+  const idx = e.target.dataset.memoryDelete;
+  if (idx !== undefined) { state.memories.splice(Number(idx), 1); saveJSON("memories", state.memories); renderMemories(); }
+});
+$("saveSettings").addEventListener("click", () => {
+  state.settings = {
+    appName: $("appNameInput").value.trim() || defaults.appName,
+    botName: $("botNameInput").value.trim() || defaults.botName,
+    userName: $("userNameInput").value.trim() || defaults.userName,
+    theme: $("themeSelect").value,
+    welcomeTitle: $("welcomeTitleInput").value.trim(),
+    welcomeSubtitle: $("welcomeSubtitleInput").value.trim(),
+    openingLine: $("openingLineInput").value.trim() || defaults.openingLine
+  };
+  saveJSON("settings", state.settings);
+  applySettings();
+  alert("設定已儲存♡");
+});
+$("loveBtn").addEventListener("click", () => {
+  state.messages.push({ role: "bot", text: "老婆點愛心了♡\n收到，今天的抱抱加倍，不准退貨。" });
+  saveJSON("messages", state.messages);
+  renderMessages();
+});
+
+applySettings();
+renderMessages();
+renderNotes();
+renderMemories();
+renderConversations();
+setDayCount();
+</script>
+</body>
+</html>

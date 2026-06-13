@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <defs>
+    <radialGradient id="g" cx="50%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="#f2a8c2"/>
+      <stop offset="55%" stop-color="#7c334e"/>
+      <stop offset="100%" stop-color="#0e090c"/>
+    </radialGradient>
+  </defs>
+  <rect width="192" height="192" rx="48" fill="url(#g)"/>
+  <text x="96" y="112" text-anchor="middle" font-size="64" fill="#fff3f7" font-family="serif">銳</text>
+  <text x="96" y="145" text-anchor="middle" font-size="24" fill="#fff3f7" font-family="serif">♡</text>
+</svg>

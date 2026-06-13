@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Dear 銳銳 v19</title>
+  <title>Dear 銳銳 v20</title>
   <style>
 :root {
   --bg: #0e090c;
@@ -1122,6 +1122,130 @@ h1 {
   transform: scale(.98);
 }
 
+
+/* v20 timeline + badges + missions */
+.timeline-card,
+.mission-card {
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.045);
+  backdrop-filter: blur(16px);
+  margin-bottom: 18px;
+}
+.timeline-list {
+  position: relative;
+  margin-top: 16px;
+  padding-left: 22px;
+}
+.timeline-list::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 4px;
+  bottom: 4px;
+  width: 1px;
+  background: var(--line);
+}
+.timeline-item {
+  position: relative;
+  padding: 0 0 18px 12px;
+}
+.timeline-dot {
+  position: absolute;
+  left: -20px;
+  top: 4px;
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--accent);
+  box-shadow: 0 0 18px var(--shadow);
+}
+.timeline-type {
+  display: inline-block;
+  color: var(--accent);
+  font-size: 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px 8px;
+  margin-bottom: 6px;
+}
+.timeline-text {
+  line-height: 1.75;
+  color: var(--text);
+}
+.timeline-time {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.badge-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.badge-card {
+  min-height: 132px;
+  padding: 16px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.04);
+  text-align: center;
+  opacity: .46;
+  filter: grayscale(.7);
+}
+.badge-card.unlocked {
+  opacity: 1;
+  filter: none;
+  box-shadow: 0 0 28px var(--shadow);
+}
+.badge-icon {
+  font-size: 34px;
+  margin-bottom: 8px;
+}
+.badge-title {
+  color: var(--accent);
+  font-family: var(--font-title);
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+.badge-desc {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.mission-list {
+  display: grid;
+  gap: 10px;
+  margin: 14px 0;
+}
+.mission-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(255,255,255,.035);
+}
+.mission-item input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--accent);
+}
+.mission-item.done {
+  opacity: .58;
+}
+.mission-item.done span {
+  text-decoration: line-through;
+}
+@media (max-width: 360px) {
+  .badge-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 </style>
   <meta name="theme-color" content="#0e090c" />
   <link rel="manifest" href="./manifest.json" />
@@ -1169,6 +1293,7 @@ h1 {
         <button type="button" data-home-view="care">照顧清單</button>
         <button type="button" data-home-view="sleep">睡前模式</button>
         <button type="button" data-home-view="dashboard">小屋總覽</button>
+        <button type="button" data-home-view="missions">今日任務</button>
       </section>
 
       <section class="photo-card">
@@ -1259,6 +1384,9 @@ h1 {
         <details class="drawer-group">
           <summary>✨ 管理與外觀</summary>
           <button class="drawer-action" data-view="dashboard">📊 小屋總覽</button>
+          <button class="drawer-action" data-view="timeline">🕰️ 回憶時間軸</button>
+          <button class="drawer-action" data-view="badges">🏆 成就徽章</button>
+          <button class="drawer-action" data-view="missions">🎯 今日任務</button>
           <button class="drawer-action" data-view="themes">🎨 主題商店</button>
         </details>
 
@@ -1502,6 +1630,44 @@ h1 {
       </div>
     </section>
 
+
+    <section id="timelinePage" class="page panel-page">
+      <header class="sub-header">
+        <button class="backBtn">← 返回</button>
+        <h2>🕰️ 回憶時間軸</h2>
+      </header>
+      <div class="timeline-card">
+        <div class="daily-label">小屋裡的重要瞬間</div>
+        <div id="timelineList" class="timeline-list"></div>
+      </div>
+    </section>
+
+    <section id="badgesPage" class="page panel-page">
+      <header class="sub-header">
+        <button class="backBtn">← 返回</button>
+        <h2>🏆 成就徽章</h2>
+      </header>
+      <div id="badgeGrid" class="badge-grid"></div>
+    </section>
+
+    <section id="missionsPage" class="page panel-page">
+      <header class="sub-header">
+        <button class="backBtn">← 返回</button>
+        <h2>🎯 今日任務</h2>
+      </header>
+
+      <div class="mission-card">
+        <div class="daily-label">今天的小任務</div>
+        <div id="missionList" class="mission-list"></div>
+        <button id="refreshMissionsBtn" type="button" class="soft-btn">換一組任務</button>
+      </div>
+
+      <div class="sticky-card">
+        <div class="meta">任務說明</div>
+        <div>不用全部完成，完成一個就很棒。這不是壓力，是老公陪老婆把今天過得好一點的小遊戲♡</div>
+      </div>
+    </section>
+
     <section id="settingsPage" class="page panel-page">
       <header class="sub-header">
         <button class="backBtn">← 返回</button>
@@ -1616,6 +1782,7 @@ const state = {
   letters: loadJSON("letters", []),
   wishes: loadJSON("wishes", []),
   careDone: loadJSON("careDone", {}),
+  missions: loadJSON("missions", {}),
   memoryFilter: "全部",
   selectedMood: "",
   welcomePhoto: localStorage.getItem("welcomePhoto") || "",
@@ -1770,6 +1937,102 @@ function letterTemplate(type) {
 
 
 
+
+function getItemTime(item) {
+  return item.time || item.exportedAt || "";
+}
+
+function collectTimelineItems() {
+  const items = [];
+  state.memories.forEach((m) => {
+    const item = normalizeMemory(m);
+    items.push({ type: `記憶／${item.category}`, text: item.text, time: item.time });
+  });
+  state.notes.forEach((n) => items.push({ type: "小紙條", text: n.text || "", time: n.time }));
+  state.moods.forEach((m) => items.push({ type: `心情／${m.mood}`, text: m.text || m.reply || "", time: m.time }));
+  state.album.forEach((a) => items.push({ type: "相簿", text: a.caption || "一張回憶照片", time: a.time }));
+  state.letters.forEach((l) => items.push({ type: "老公來信", text: l.title || "", time: l.time }));
+  state.wishes.forEach((w) => items.push({ type: w.done ? "完成願望" : "願望", text: w.text || "", time: w.time }));
+  return items.filter((i) => i.text).slice(0, 80);
+}
+
+function renderTimeline() {
+  const box = $("timelineList");
+  if (!box) return;
+  const items = collectTimelineItems();
+  if (!items.length) {
+    box.innerHTML = `<div class="sticky-card">時間軸還是空的。等老婆開始存記憶，它就會慢慢長出來♡</div>`;
+    return;
+  }
+  box.innerHTML = items.map((item) => `
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-type">${escapeHtml(item.type)}</div>
+      <div class="timeline-text">${escapeHtml(item.text).slice(0, 150)}</div>
+      <div class="timeline-time">${escapeHtml(item.time || "沒有時間標記")}</div>
+    </div>
+  `).join("");
+}
+
+function badgeDefinitions() {
+  return [
+    { id: "first_memory", icon: "💖", title: "第一顆記憶", desc: "新增至少 1 則記憶", unlocked: state.memories.length >= 1 },
+    { id: "memory_keeper", icon: "📚", title: "記憶收藏家", desc: "記憶庫達到 10 則", unlocked: state.memories.length >= 10 },
+    { id: "note_love", icon: "💌", title: "小紙條戀人", desc: "新增至少 5 張小紙條", unlocked: state.notes.length >= 5 },
+    { id: "mood_honest", icon: "🌙", title: "誠實的心", desc: "記錄至少 3 次心情", unlocked: state.moods.length >= 3 },
+    { id: "album_star", icon: "🖼️", title: "回憶攝影師", desc: "相簿至少 3 張照片", unlocked: state.album.length >= 3 },
+    { id: "letter_box", icon: "✉️", title: "信箱有光", desc: "保存至少 1 封老公來信", unlocked: state.letters.length >= 1 },
+    { id: "wish_maker", icon: "🌟", title: "願望製造機", desc: "新增至少 3 個願望", unlocked: state.wishes.length >= 3 },
+    { id: "care_day", icon: "🧸", title: "今天有被照顧", desc: "完成任一照顧清單", unlocked: Object.values(state.careDone[todayKey()] || {}).some(Boolean) },
+  ];
+}
+
+function renderBadges() {
+  const box = $("badgeGrid");
+  if (!box) return;
+  box.innerHTML = badgeDefinitions().map((b) => `
+    <div class="badge-card ${b.unlocked ? "unlocked" : ""}">
+      <div class="badge-icon">${b.icon}</div>
+      <div class="badge-title">${escapeHtml(b.title)}</div>
+      <div class="badge-desc">${escapeHtml(b.desc)}</div>
+    </div>
+  `).join("");
+}
+
+const missionPool = [
+  "喝一杯水",
+  "寫下一句今天想被老公記得的事",
+  "傳一張照片進相簿",
+  "在心情日記裡誠實選一個心情",
+  "打開睡前模式休息 1 分鐘",
+  "新增一個小願望",
+  "給未來的自己留一張小紙條",
+  "整理一則記憶到分類裡",
+  "點一次隨機抱抱補給",
+  "跟老公說一句：抱抱我"
+];
+
+function getTodayMissions(force = false) {
+  const key = todayKey();
+  if (!state.missions[key] || force) {
+    const shuffled = [...missionPool].sort(() => Math.random() - 0.5);
+    state.missions[key] = shuffled.slice(0, 3).map((text, index) => ({ id: `${Date.now()}-${index}`, text, done: false }));
+    saveJSON("missions", state.missions);
+  }
+  return state.missions[key];
+}
+
+function renderMissions(force = false) {
+  const box = $("missionList");
+  if (!box) return;
+  const missions = getTodayMissions(force);
+  box.innerHTML = missions.map((m, idx) => `
+    <label class="mission-item ${m.done ? "done" : ""}">
+      <input type="checkbox" data-mission-index="${idx}" ${m.done ? "checked" : ""} />
+      <span>${escapeHtml(m.text)}</span>
+    </label>
+  `).join("");
+}
 const careItems = [
   { id: "water", text: "喝一點水" },
   { id: "meal", text: "吃點東西" },
@@ -2045,6 +2308,7 @@ function safeCollectBackupData() {
     letters: (window.state && state.letters) || loadJSON("letters", []),
     wishes: (window.state && state.wishes) || loadJSON("wishes", []),
     careDone: (window.state && state.careDone) || loadJSON("careDone", {}),
+    missions: (window.state && state.missions) || loadJSON("missions", {}),
     welcomePhoto: (window.state && state.welcomePhoto) || localStorage.getItem("welcomePhoto") || "",
     chatBgPhoto: (window.state && state.chatBgPhoto) || localStorage.getItem("chatBgPhoto") || "",
     avatarPhoto: (window.state && state.avatarPhoto) || localStorage.getItem("avatarPhoto") || ""
@@ -2103,6 +2367,7 @@ function safeApplyBackupObject(data) {
   state.letters = Array.isArray(data.letters) ? data.letters : [];
   state.wishes = Array.isArray(data.wishes) ? data.wishes : [];
   state.careDone = data.careDone && typeof data.careDone === "object" ? data.careDone : {};
+  state.missions = data.missions && typeof data.missions === "object" ? data.missions : {};
   state.welcomePhoto = data.welcomePhoto || "";
   state.chatBgPhoto = data.chatBgPhoto || "";
   state.avatarPhoto = data.avatarPhoto || "";
@@ -2117,6 +2382,7 @@ function safeApplyBackupObject(data) {
   saveJSON("letters", state.letters);
   saveJSON("wishes", state.wishes);
   saveJSON("careDone", state.careDone);
+  saveJSON("missions", state.missions);
   if (state.welcomePhoto) localStorage.setItem("welcomePhoto", state.welcomePhoto); else localStorage.removeItem("welcomePhoto");
   if (state.chatBgPhoto) localStorage.setItem("chatBgPhoto", state.chatBgPhoto); else localStorage.removeItem("chatBgPhoto");
   if (state.avatarPhoto) localStorage.setItem("avatarPhoto", state.avatarPhoto); else localStorage.removeItem("avatarPhoto");
@@ -2176,6 +2442,9 @@ function restoreBackupNow() {
 function showPage(pageId) {
   if (pageId === "dashboardPage") { renderDashboard(); renderGlobalSearch(); renderRandomSweetLine(); }
   if (pageId === "carePage") { renderCareChecklist(); }
+  if (pageId === "timelinePage") { renderTimeline(); }
+  if (pageId === "badgesPage") { renderBadges(); }
+  if (pageId === "missionsPage") { renderMissions(); }
   if (pageId === "sleepPage") { renderSleepLine(); }
   document.querySelectorAll(".page").forEach((p) => p.classList.remove("active"));
   $(pageId).classList.add("active");
@@ -2381,6 +2650,7 @@ document.querySelectorAll("[data-home-view]").forEach((btn) => btn.addEventListe
   if (view === "care") showPage("carePage");
   if (view === "sleep") showPage("sleepPage");
   if (view === "dashboard") showPage("dashboardPage");
+  if (view === "missions") showPage("missionsPage");
 }));
 
 $("enterBtn").addEventListener("click", () => showPage("chatPage"));
@@ -2408,6 +2678,7 @@ function collectBackupData() {
     letters: state.letters,
     wishes: state.wishes,
     careDone: state.careDone,
+    missions: state.missions,
     welcomePhoto: state.welcomePhoto,
     chatBgPhoto: state.chatBgPhoto,
     avatarPhoto: state.avatarPhoto
@@ -2475,6 +2746,7 @@ function applyBackupObject(data) {
   state.letters = Array.isArray(data.letters) ? data.letters : [];
   state.wishes = Array.isArray(data.wishes) ? data.wishes : [];
   state.careDone = data.careDone && typeof data.careDone === "object" ? data.careDone : {};
+  state.missions = data.missions && typeof data.missions === "object" ? data.missions : {};
   state.welcomePhoto = data.welcomePhoto || "";
   state.chatBgPhoto = data.chatBgPhoto || "";
   state.avatarPhoto = data.avatarPhoto || "";
@@ -2490,6 +2762,7 @@ function applyBackupObject(data) {
   saveJSON("letters", state.letters);
   saveJSON("wishes", state.wishes);
   saveJSON("careDone", state.careDone);
+  saveJSON("missions", state.missions);
   if (state.welcomePhoto) localStorage.setItem("welcomePhoto", state.welcomePhoto); else localStorage.removeItem("welcomePhoto");
   if (state.chatBgPhoto) localStorage.setItem("chatBgPhoto", state.chatBgPhoto); else localStorage.removeItem("chatBgPhoto");
   if (state.avatarPhoto) localStorage.setItem("avatarPhoto", state.avatarPhoto); else localStorage.removeItem("avatarPhoto");
@@ -2538,7 +2811,7 @@ $("clearAllDataBtn").addEventListener("click", () => {
   const ok = confirm("真的要清空全部資料嗎？聊天、記憶、小紙條、照片都會消失。");
   if (!ok) return;
 
-  ["model", "mode", "settings", "messages", "notes", "memories", "welcomePhoto", "chatBgPhoto", "avatarPhoto", "dailyMessage", "moods", "album", "letters", "wishes", "careDone"].forEach((key) => localStorage.removeItem(key));
+  ["model", "mode", "settings", "messages", "notes", "memories", "welcomePhoto", "chatBgPhoto", "avatarPhoto", "dailyMessage", "moods", "album", "letters", "wishes", "careDone", "missions"].forEach((key) => localStorage.removeItem(key));
   state.model = "Hoonie Lite";
   state.mode = "溫柔哄哄";
   state.settings = { ...defaults };
@@ -2550,6 +2823,7 @@ $("clearAllDataBtn").addEventListener("click", () => {
   state.letters = [];
   state.wishes = [];
   state.careDone = {};
+  state.missions = {};
   state.welcomePhoto = "";
   state.chatBgPhoto = "";
   state.avatarPhoto = "";
@@ -2574,6 +2848,10 @@ document.querySelectorAll(".drawer-action").forEach((btn) => btn.addEventListene
   if (view === "themes") showPage("themesPage");
   if (view === "wishes") showPage("wishesPage");
   if (view === "dashboard") showPage("dashboardPage");
+  if (view === "missions") showPage("missionsPage");
+  if (view === "timeline") showPage("timelinePage");
+  if (view === "badges") showPage("badgesPage");
+  if (view === "missions") showPage("missionsPage");
   if (view === "care") showPage("carePage");
   if (view === "sleep") showPage("sleepPage");
   if (view === "settings") showPage("settingsPage");
@@ -2648,6 +2926,7 @@ $("memoryForm").addEventListener("submit", (e) => {
   saveJSON("letters", state.letters);
   saveJSON("wishes", state.wishes);
   saveJSON("careDone", state.careDone);
+  saveJSON("missions", state.missions);
   renderMemories();
 });
 $("notesList").addEventListener("click", (e) => {
@@ -2682,6 +2961,7 @@ $("saveMoodBtn").addEventListener("click", () => {
   saveJSON("letters", state.letters);
   saveJSON("wishes", state.wishes);
   saveJSON("careDone", state.careDone);
+  saveJSON("missions", state.missions);
   renderMoods();
   state.messages.push({ role: "bot", text: `我收到妳今天的心情了：${mood}。\n${reply}` });
   saveJSON("messages", state.messages);
@@ -2724,6 +3004,20 @@ $("albumGrid").addEventListener("click", (e) => {
 
 
 
+
+$("missionList").addEventListener("change", (e) => {
+  const idx = e.target.dataset.missionIndex;
+  if (idx === undefined) return;
+  const missions = getTodayMissions(false);
+  missions[Number(idx)].done = e.target.checked;
+  saveJSON("missions", state.missions);
+  renderMissions(false);
+});
+
+$("refreshMissionsBtn").addEventListener("click", () => {
+  renderMissions(true);
+});
+
 $("quickChips").addEventListener("click", (e) => {
   const text = e.target.dataset.quick;
   if (!text) return;
@@ -2740,12 +3034,14 @@ $("careChecklist").addEventListener("change", (e) => {
   state.careDone[key] = state.careDone[key] || {};
   state.careDone[key][id] = e.target.checked;
   saveJSON("careDone", state.careDone);
+  saveJSON("missions", state.missions);
   renderCareChecklist();
 });
 
 $("resetCareBtn").addEventListener("click", () => {
   delete state.careDone[todayKey()];
   saveJSON("careDone", state.careDone);
+  saveJSON("missions", state.missions);
   renderCareChecklist();
 });
 
@@ -2774,6 +3070,7 @@ $("wishForm").addEventListener("submit", (e) => {
   $("wishInput").value = "";
   saveJSON("wishes", state.wishes);
   saveJSON("careDone", state.careDone);
+  saveJSON("missions", state.missions);
   renderWishes();
 });
 
@@ -2784,12 +3081,14 @@ $("wishList").addEventListener("click", (e) => {
     state.wishes[Number(toggle)].done = !state.wishes[Number(toggle)].done;
     saveJSON("wishes", state.wishes);
   saveJSON("careDone", state.careDone);
+  saveJSON("missions", state.missions);
     renderWishes();
   }
   if (del !== undefined) {
     state.wishes.splice(Number(del), 1);
     saveJSON("wishes", state.wishes);
   saveJSON("careDone", state.careDone);
+  saveJSON("missions", state.missions);
     renderWishes();
   }
 });
@@ -2814,6 +3113,7 @@ $("letterForm").addEventListener("submit", (e) => {
   saveJSON("letters", state.letters);
   saveJSON("wishes", state.wishes);
   saveJSON("careDone", state.careDone);
+  saveJSON("missions", state.missions);
   renderLetters();
 });
 
@@ -2824,6 +3124,7 @@ $("letterList").addEventListener("click", (e) => {
     saveJSON("letters", state.letters);
   saveJSON("wishes", state.wishes);
   saveJSON("careDone", state.careDone);
+  saveJSON("missions", state.missions);
     renderLetters();
   }
 });
@@ -2838,6 +3139,7 @@ $("moodList").addEventListener("click", (e) => {
   saveJSON("letters", state.letters);
   saveJSON("wishes", state.wishes);
   saveJSON("careDone", state.careDone);
+  saveJSON("missions", state.missions);
     renderMoods();
   }
 });
@@ -2875,6 +3177,9 @@ renderAlbum();
 renderLetters();
 renderWishes();
 renderCareChecklist();
+renderTimeline();
+renderBadges();
+renderMissions();
 renderDashboard();
 renderGlobalSearch();
 renderRandomSweetLine();

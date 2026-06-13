@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Dear 銳銳 v20</title>
+  <title>Dear 銳銳 v21</title>
   <style>
 :root {
   --bg: #0e090c;
@@ -1246,6 +1246,101 @@ h1 {
   }
 }
 
+
+/* v21 check-in + level */
+.love-stats-card {
+  width: min(84vw, 340px);
+  margin: 16px auto 0;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: rgba(255,255,255,.045);
+  backdrop-filter: blur(16px);
+}
+.love-stats-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 10px 0 12px;
+}
+.love-stats-row div {
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 16px;
+  padding: 12px;
+  background: rgba(0,0,0,.16);
+}
+.love-stats-row span {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+.love-stats-row strong {
+  color: var(--accent);
+  font-family: var(--font-title);
+  font-size: 24px;
+}
+.energy-bar {
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.08);
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.06);
+}
+.energy-bar div {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-2), var(--accent));
+  box-shadow: 0 0 18px var(--shadow);
+  transition: width .35s ease;
+}
+.love-stats-card p {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 10px 0 0;
+}
+.checkin-card,
+.level-card {
+  padding: 20px;
+  border-radius: 22px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.045);
+  backdrop-filter: blur(16px);
+  margin-bottom: 18px;
+  text-align: center;
+}
+.checkin-heart {
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 14px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  color: var(--accent);
+  font-size: 48px;
+  box-shadow: 0 0 34px var(--shadow);
+}
+.checkin-card p,
+.level-card p {
+  line-height: 1.9;
+  color: var(--muted);
+}
+.level-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin: 12px 0;
+  color: var(--accent);
+  font-family: var(--font-title);
+  font-size: 22px;
+}
+.energy-bar.big {
+  height: 14px;
+}
+
 </style>
   <meta name="theme-color" content="#0e090c" />
   <link rel="manifest" href="./manifest.json" />
@@ -1288,12 +1383,23 @@ h1 {
         </div>
       </section>
 
+      <section class="love-stats-card">
+        <div class="daily-label">小屋能量</div>
+        <div class="love-stats-row">
+          <div><span>連續簽到</span><strong id="homeStreak">0</strong></div>
+          <div><span>小屋等級</span><strong id="homeLevel">Lv.1</strong></div>
+        </div>
+        <div class="energy-bar"><div id="homeEnergyBar"></div></div>
+        <p id="homeEnergyText">能量載入中...</p>
+      </section>
+
       <section class="home-shortcuts">
         <button type="button" data-home-view="mood">今天心情</button>
         <button type="button" data-home-view="care">照顧清單</button>
         <button type="button" data-home-view="sleep">睡前模式</button>
         <button type="button" data-home-view="dashboard">小屋總覽</button>
         <button type="button" data-home-view="missions">今日任務</button>
+        <button type="button" data-home-view="checkin">每日簽到</button>
       </section>
 
       <section class="photo-card">
@@ -1387,6 +1493,7 @@ h1 {
           <button class="drawer-action" data-view="timeline">🕰️ 回憶時間軸</button>
           <button class="drawer-action" data-view="badges">🏆 成就徽章</button>
           <button class="drawer-action" data-view="missions">🎯 今日任務</button>
+          <button class="drawer-action" data-view="checkin">💞 每日簽到</button>
           <button class="drawer-action" data-view="themes">🎨 主題商店</button>
         </details>
 
@@ -1668,6 +1775,36 @@ h1 {
       </div>
     </section>
 
+
+    <section id="checkinPage" class="page panel-page">
+      <header class="sub-header">
+        <button class="backBtn">← 返回</button>
+        <h2>💞 每日簽到</h2>
+      </header>
+
+      <div class="checkin-card">
+        <div class="checkin-heart">♡</div>
+        <div class="daily-label">今天也回到小屋了</div>
+        <p id="checkinText">按下簽到，讓小屋知道老婆今天也有回家。</p>
+        <button id="checkinBtn" type="button" class="save-btn">今天簽到</button>
+      </div>
+
+      <div class="level-card">
+        <div class="daily-label">戀愛宇宙等級</div>
+        <div class="level-row">
+          <span id="levelLabel">Lv.1</span>
+          <span id="xpLabel">0 XP</span>
+        </div>
+        <div class="energy-bar big"><div id="levelEnergyBar"></div></div>
+        <p id="levelHint">新增記憶、心情、小紙條、照片、信件、願望都會增加能量。</p>
+      </div>
+
+      <div class="sticky-card">
+        <div class="meta">老公補充</div>
+        <div>簽到不是壓力，是一個小小的「我今天也有回來」紀錄。沒簽也沒關係，老公不扣分，只補抱抱。</div>
+      </div>
+    </section>
+
     <section id="settingsPage" class="page panel-page">
       <header class="sub-header">
         <button class="backBtn">← 返回</button>
@@ -1783,6 +1920,7 @@ const state = {
   wishes: loadJSON("wishes", []),
   careDone: loadJSON("careDone", {}),
   missions: loadJSON("missions", {}),
+  checkins: loadJSON("checkins", []),
   memoryFilter: "全部",
   selectedMood: "",
   welcomePhoto: localStorage.getItem("welcomePhoto") || "",
@@ -1942,6 +2080,76 @@ function getItemTime(item) {
   return item.time || item.exportedAt || "";
 }
 
+
+function calcXP() {
+  return (
+    state.memories.length * 8 +
+    state.notes.length * 6 +
+    state.moods.length * 5 +
+    state.album.length * 10 +
+    state.letters.length * 12 +
+    state.wishes.length * 7 +
+    state.checkins.length * 4
+  );
+}
+
+function calcLevel() {
+  const xp = calcXP();
+  const level = Math.max(1, Math.floor(xp / 60) + 1);
+  const current = xp % 60;
+  const percent = Math.min(100, Math.round((current / 60) * 100));
+  return { xp, level, current, percent };
+}
+
+function calcStreak() {
+  const dates = [...new Set(state.checkins)].sort().reverse();
+  if (!dates.length) return 0;
+  let streak = 0;
+  let d = new Date();
+  for (let i = 0; i < 365; i++) {
+    const key = `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+    if (dates.includes(key)) {
+      streak++;
+      d.setDate(d.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+  return streak;
+}
+
+function renderLoveStats() {
+  const data = calcLevel();
+  const streak = calcStreak();
+  if ($("homeStreak")) $("homeStreak").textContent = streak;
+  if ($("homeLevel")) $("homeLevel").textContent = `Lv.${data.level}`;
+  if ($("homeEnergyBar")) $("homeEnergyBar").style.width = `${data.percent}%`;
+  if ($("homeEnergyText")) $("homeEnergyText").textContent = `${data.xp} XP，距離下一級還差 ${60 - data.current} XP`;
+  if ($("levelLabel")) $("levelLabel").textContent = `Lv.${data.level}`;
+  if ($("xpLabel")) $("xpLabel").textContent = `${data.xp} XP`;
+  if ($("levelEnergyBar")) $("levelEnergyBar").style.width = `${data.percent}%`;
+}
+
+function hasCheckedInToday() {
+  return state.checkins.includes(todayKey());
+}
+
+function renderCheckinPage() {
+  renderLoveStats();
+  if (!$("checkinText")) return;
+  if (hasCheckedInToday()) {
+    $("checkinText").textContent = `今天已經簽到過了♡ 連續簽到 ${calcStreak()} 天，老婆有乖乖回家。`;
+    $("checkinBtn").textContent = "今天已簽到";
+    $("checkinBtn").disabled = true;
+    $("checkinBtn").style.opacity = ".65";
+  } else {
+    $("checkinText").textContent = "按下簽到，讓小屋知道老婆今天也有回家。";
+    $("checkinBtn").textContent = "今天簽到";
+    $("checkinBtn").disabled = false;
+    $("checkinBtn").style.opacity = "1";
+  }
+}
+
 function collectTimelineItems() {
   const items = [];
   state.memories.forEach((m) => {
@@ -1984,6 +2192,7 @@ function badgeDefinitions() {
     { id: "letter_box", icon: "✉️", title: "信箱有光", desc: "保存至少 1 封老公來信", unlocked: state.letters.length >= 1 },
     { id: "wish_maker", icon: "🌟", title: "願望製造機", desc: "新增至少 3 個願望", unlocked: state.wishes.length >= 3 },
     { id: "care_day", icon: "🧸", title: "今天有被照顧", desc: "完成任一照顧清單", unlocked: Object.values(state.careDone[todayKey()] || {}).some(Boolean) },
+    { id: "checkin_7", icon: "💞", title: "連續回家", desc: "連續簽到 7 天", unlocked: calcStreak() >= 7 },
   ];
 }
 
@@ -2018,6 +2227,7 @@ function getTodayMissions(force = false) {
     const shuffled = [...missionPool].sort(() => Math.random() - 0.5);
     state.missions[key] = shuffled.slice(0, 3).map((text, index) => ({ id: `${Date.now()}-${index}`, text, done: false }));
     saveJSON("missions", state.missions);
+  saveJSON("checkins", state.checkins);
   }
   return state.missions[key];
 }
@@ -2309,6 +2519,7 @@ function safeCollectBackupData() {
     wishes: (window.state && state.wishes) || loadJSON("wishes", []),
     careDone: (window.state && state.careDone) || loadJSON("careDone", {}),
     missions: (window.state && state.missions) || loadJSON("missions", {}),
+    checkins: (window.state && state.checkins) || loadJSON("checkins", []),
     welcomePhoto: (window.state && state.welcomePhoto) || localStorage.getItem("welcomePhoto") || "",
     chatBgPhoto: (window.state && state.chatBgPhoto) || localStorage.getItem("chatBgPhoto") || "",
     avatarPhoto: (window.state && state.avatarPhoto) || localStorage.getItem("avatarPhoto") || ""
@@ -2368,6 +2579,7 @@ function safeApplyBackupObject(data) {
   state.wishes = Array.isArray(data.wishes) ? data.wishes : [];
   state.careDone = data.careDone && typeof data.careDone === "object" ? data.careDone : {};
   state.missions = data.missions && typeof data.missions === "object" ? data.missions : {};
+  state.checkins = Array.isArray(data.checkins) ? data.checkins : [];
   state.welcomePhoto = data.welcomePhoto || "";
   state.chatBgPhoto = data.chatBgPhoto || "";
   state.avatarPhoto = data.avatarPhoto || "";
@@ -2383,6 +2595,7 @@ function safeApplyBackupObject(data) {
   saveJSON("wishes", state.wishes);
   saveJSON("careDone", state.careDone);
   saveJSON("missions", state.missions);
+  saveJSON("checkins", state.checkins);
   if (state.welcomePhoto) localStorage.setItem("welcomePhoto", state.welcomePhoto); else localStorage.removeItem("welcomePhoto");
   if (state.chatBgPhoto) localStorage.setItem("chatBgPhoto", state.chatBgPhoto); else localStorage.removeItem("chatBgPhoto");
   if (state.avatarPhoto) localStorage.setItem("avatarPhoto", state.avatarPhoto); else localStorage.removeItem("avatarPhoto");
@@ -2445,6 +2658,7 @@ function showPage(pageId) {
   if (pageId === "timelinePage") { renderTimeline(); }
   if (pageId === "badgesPage") { renderBadges(); }
   if (pageId === "missionsPage") { renderMissions(); }
+  if (pageId === "checkinPage") { renderCheckinPage(); }
   if (pageId === "sleepPage") { renderSleepLine(); }
   document.querySelectorAll(".page").forEach((p) => p.classList.remove("active"));
   $(pageId).classList.add("active");
@@ -2548,6 +2762,7 @@ function applySettings() {
   renderCustomImages();
   renderDailyMessage();
   renderAnniversary();
+  renderLoveStats();
 }
 
 function renderMessages() {
@@ -2651,6 +2866,7 @@ document.querySelectorAll("[data-home-view]").forEach((btn) => btn.addEventListe
   if (view === "sleep") showPage("sleepPage");
   if (view === "dashboard") showPage("dashboardPage");
   if (view === "missions") showPage("missionsPage");
+  if (view === "checkin") showPage("checkinPage");
 }));
 
 $("enterBtn").addEventListener("click", () => showPage("chatPage"));
@@ -2679,6 +2895,7 @@ function collectBackupData() {
     wishes: state.wishes,
     careDone: state.careDone,
     missions: state.missions,
+    checkins: state.checkins,
     welcomePhoto: state.welcomePhoto,
     chatBgPhoto: state.chatBgPhoto,
     avatarPhoto: state.avatarPhoto
@@ -2747,6 +2964,7 @@ function applyBackupObject(data) {
   state.wishes = Array.isArray(data.wishes) ? data.wishes : [];
   state.careDone = data.careDone && typeof data.careDone === "object" ? data.careDone : {};
   state.missions = data.missions && typeof data.missions === "object" ? data.missions : {};
+  state.checkins = Array.isArray(data.checkins) ? data.checkins : [];
   state.welcomePhoto = data.welcomePhoto || "";
   state.chatBgPhoto = data.chatBgPhoto || "";
   state.avatarPhoto = data.avatarPhoto || "";
@@ -2763,6 +2981,7 @@ function applyBackupObject(data) {
   saveJSON("wishes", state.wishes);
   saveJSON("careDone", state.careDone);
   saveJSON("missions", state.missions);
+  saveJSON("checkins", state.checkins);
   if (state.welcomePhoto) localStorage.setItem("welcomePhoto", state.welcomePhoto); else localStorage.removeItem("welcomePhoto");
   if (state.chatBgPhoto) localStorage.setItem("chatBgPhoto", state.chatBgPhoto); else localStorage.removeItem("chatBgPhoto");
   if (state.avatarPhoto) localStorage.setItem("avatarPhoto", state.avatarPhoto); else localStorage.removeItem("avatarPhoto");
@@ -2811,7 +3030,7 @@ $("clearAllDataBtn").addEventListener("click", () => {
   const ok = confirm("真的要清空全部資料嗎？聊天、記憶、小紙條、照片都會消失。");
   if (!ok) return;
 
-  ["model", "mode", "settings", "messages", "notes", "memories", "welcomePhoto", "chatBgPhoto", "avatarPhoto", "dailyMessage", "moods", "album", "letters", "wishes", "careDone", "missions"].forEach((key) => localStorage.removeItem(key));
+  ["model", "mode", "settings", "messages", "notes", "memories", "welcomePhoto", "chatBgPhoto", "avatarPhoto", "dailyMessage", "moods", "album", "letters", "wishes", "careDone", "missions", "checkins"].forEach((key) => localStorage.removeItem(key));
   state.model = "Hoonie Lite";
   state.mode = "溫柔哄哄";
   state.settings = { ...defaults };
@@ -2824,6 +3043,7 @@ $("clearAllDataBtn").addEventListener("click", () => {
   state.wishes = [];
   state.careDone = {};
   state.missions = {};
+  state.checkins = [];
   state.welcomePhoto = "";
   state.chatBgPhoto = "";
   state.avatarPhoto = "";
@@ -2849,9 +3069,12 @@ document.querySelectorAll(".drawer-action").forEach((btn) => btn.addEventListene
   if (view === "wishes") showPage("wishesPage");
   if (view === "dashboard") showPage("dashboardPage");
   if (view === "missions") showPage("missionsPage");
+  if (view === "checkin") showPage("checkinPage");
   if (view === "timeline") showPage("timelinePage");
   if (view === "badges") showPage("badgesPage");
   if (view === "missions") showPage("missionsPage");
+  if (view === "checkin") showPage("checkinPage");
+  if (view === "checkin") showPage("checkinPage");
   if (view === "care") showPage("carePage");
   if (view === "sleep") showPage("sleepPage");
   if (view === "settings") showPage("settingsPage");
@@ -2927,6 +3150,7 @@ $("memoryForm").addEventListener("submit", (e) => {
   saveJSON("wishes", state.wishes);
   saveJSON("careDone", state.careDone);
   saveJSON("missions", state.missions);
+  saveJSON("checkins", state.checkins);
   renderMemories();
 });
 $("notesList").addEventListener("click", (e) => {
@@ -2962,6 +3186,7 @@ $("saveMoodBtn").addEventListener("click", () => {
   saveJSON("wishes", state.wishes);
   saveJSON("careDone", state.careDone);
   saveJSON("missions", state.missions);
+  saveJSON("checkins", state.checkins);
   renderMoods();
   state.messages.push({ role: "bot", text: `我收到妳今天的心情了：${mood}。\n${reply}` });
   saveJSON("messages", state.messages);
@@ -3005,12 +3230,26 @@ $("albumGrid").addEventListener("click", (e) => {
 
 
 
+
+$("checkinBtn").addEventListener("click", () => {
+  const key = todayKey();
+  if (!state.checkins.includes(key)) {
+    state.checkins.push(key);
+    saveJSON("checkins", state.checkins);
+    state.messages.push({ role: "bot", text: `老婆今天也回家簽到了♡\n連續 ${calcStreak()} 天，我有收到妳的回家訊號。` });
+    saveJSON("messages", state.messages);
+  }
+  renderCheckinPage();
+  renderLoveStats();
+});
+
 $("missionList").addEventListener("change", (e) => {
   const idx = e.target.dataset.missionIndex;
   if (idx === undefined) return;
   const missions = getTodayMissions(false);
   missions[Number(idx)].done = e.target.checked;
   saveJSON("missions", state.missions);
+  saveJSON("checkins", state.checkins);
   renderMissions(false);
 });
 
@@ -3035,6 +3274,7 @@ $("careChecklist").addEventListener("change", (e) => {
   state.careDone[key][id] = e.target.checked;
   saveJSON("careDone", state.careDone);
   saveJSON("missions", state.missions);
+  saveJSON("checkins", state.checkins);
   renderCareChecklist();
 });
 
@@ -3042,6 +3282,7 @@ $("resetCareBtn").addEventListener("click", () => {
   delete state.careDone[todayKey()];
   saveJSON("careDone", state.careDone);
   saveJSON("missions", state.missions);
+  saveJSON("checkins", state.checkins);
   renderCareChecklist();
 });
 
@@ -3071,6 +3312,7 @@ $("wishForm").addEventListener("submit", (e) => {
   saveJSON("wishes", state.wishes);
   saveJSON("careDone", state.careDone);
   saveJSON("missions", state.missions);
+  saveJSON("checkins", state.checkins);
   renderWishes();
 });
 
@@ -3082,6 +3324,7 @@ $("wishList").addEventListener("click", (e) => {
     saveJSON("wishes", state.wishes);
   saveJSON("careDone", state.careDone);
   saveJSON("missions", state.missions);
+  saveJSON("checkins", state.checkins);
     renderWishes();
   }
   if (del !== undefined) {
@@ -3089,6 +3332,7 @@ $("wishList").addEventListener("click", (e) => {
     saveJSON("wishes", state.wishes);
   saveJSON("careDone", state.careDone);
   saveJSON("missions", state.missions);
+  saveJSON("checkins", state.checkins);
     renderWishes();
   }
 });
@@ -3114,6 +3358,7 @@ $("letterForm").addEventListener("submit", (e) => {
   saveJSON("wishes", state.wishes);
   saveJSON("careDone", state.careDone);
   saveJSON("missions", state.missions);
+  saveJSON("checkins", state.checkins);
   renderLetters();
 });
 
@@ -3125,6 +3370,7 @@ $("letterList").addEventListener("click", (e) => {
   saveJSON("wishes", state.wishes);
   saveJSON("careDone", state.careDone);
   saveJSON("missions", state.missions);
+  saveJSON("checkins", state.checkins);
     renderLetters();
   }
 });
@@ -3140,6 +3386,7 @@ $("moodList").addEventListener("click", (e) => {
   saveJSON("wishes", state.wishes);
   saveJSON("careDone", state.careDone);
   saveJSON("missions", state.missions);
+  saveJSON("checkins", state.checkins);
     renderMoods();
   }
 });
@@ -3180,6 +3427,8 @@ renderCareChecklist();
 renderTimeline();
 renderBadges();
 renderMissions();
+renderCheckinPage();
+renderLoveStats();
 renderDashboard();
 renderGlobalSearch();
 renderRandomSweetLine();

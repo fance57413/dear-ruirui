@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Dear 銳銳</title>
+  <title>Dear 銳銳 v13</title>
   <style>
 :root {
   --bg: #0e090c;
@@ -477,6 +477,121 @@ h1 {
   }
 }
 
+
+/* v13 mood diary + anniversary + memory categories */
+.anniversary-card {
+  width: min(84vw, 340px);
+  margin: 16px auto 0;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: rgba(255,255,255,.035);
+  backdrop-filter: blur(16px);
+}
+.anniversary-item {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  color: var(--muted);
+}
+.anniversary-item strong {
+  font-family: var(--font-title);
+  font-size: 34px;
+  color: var(--accent);
+  text-shadow: 0 0 18px var(--shadow);
+}
+.anniversary-item.small {
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.memory-form {
+  height: auto;
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+.memory-category-select {
+  width: 100%;
+  flex: none !important;
+  height: 46px;
+  border-radius: 14px !important;
+}
+.memory-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 2px 0 12px;
+  margin-bottom: 6px;
+}
+.memory-tabs button {
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255,255,255,.04);
+  color: var(--muted);
+  padding: 8px 12px;
+}
+.memory-tabs button.active {
+  color: var(--accent);
+  box-shadow: 0 0 18px var(--shadow);
+}
+.category-badge {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--accent);
+  font-size: 12px;
+}
+.mood-card {
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.045);
+  backdrop-filter: blur(16px);
+  margin-bottom: 18px;
+}
+.mood-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 14px 0;
+}
+.mood-options button {
+  min-height: 46px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.04);
+  color: var(--text);
+}
+.mood-options button.active {
+  color: var(--accent);
+  box-shadow: 0 0 18px var(--shadow);
+}
+.mood-textarea {
+  width: 100%;
+  min-height: 108px;
+  resize: vertical;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: rgba(0,0,0,.26);
+  color: var(--text);
+  padding: 12px 14px;
+  outline: 0;
+  line-height: 1.6;
+}
+.mood-save {
+  width: 100%;
+  margin-top: 12px;
+}
+.mood-reply {
+  margin-top: 10px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
 </style>
   <meta name="theme-color" content="#0e090c" />
   <link rel="manifest" href="./manifest.json" />
@@ -506,6 +621,17 @@ h1 {
         <div class="daily-label">今日老公小紙條</div>
         <p id="dailyMessage">老婆今天也要記得被好好愛著。</p>
         <button id="refreshDailyBtn" type="button">換一句</button>
+      </section>
+
+      <section class="anniversary-card">
+        <div class="anniversary-item">
+          <span>我們已經</span>
+          <strong id="loveDayCount">--</strong>
+          <span>天</span>
+        </div>
+        <div class="anniversary-item small">
+          <span id="nextAnniversaryText">下一個紀念日載入中...</span>
+        </div>
       </section>
 
       <section class="photo-card">
@@ -571,6 +697,7 @@ h1 {
       <button class="drawer-action" data-view="chat">＋ 開新對話</button>
       <button class="drawer-action" data-view="notes">💌 我的小紙條</button>
       <button class="drawer-action" data-view="memory">💖 我們的記憶庫</button>
+      <button class="drawer-action" data-view="mood">🌙 心情日記</button>
       <button class="drawer-action" data-view="settings">⚙︎ 介面設定</button>
       <div id="conversationList" class="conversation-list"></div>
       <p class="est">est. 2026.03.31 ♡ 第 <span id="dayCount">--</span> 天</p>
@@ -616,11 +743,44 @@ h1 {
         <button class="backBtn">← 返回</button>
         <h2>💖 我們的記憶庫</h2>
       </header>
-      <form id="memoryForm" class="sticky-form">
+      <form id="memoryForm" class="sticky-form memory-form">
+        <select id="memoryCategoryInput" class="memory-category-select">
+          <option value="永久記憶">永久記憶</option>
+          <option value="老婆喜好">老婆喜好</option>
+          <option value="我們的約定">我們的約定</option>
+          <option value="紀念日">紀念日</option>
+          <option value="老公設定">老公設定</option>
+          <option value="甜甜語錄">甜甜語錄</option>
+        </select>
         <input id="memoryInput" type="text" placeholder="告訴焄寶要記住的事..." />
         <button>＋</button>
       </form>
+      <div id="memoryFilterTabs" class="memory-tabs"></div>
       <div id="memoryList" class="sticky-list"></div>
+    </section>
+
+
+    <section id="moodPage" class="page panel-page">
+      <header class="sub-header">
+        <button class="backBtn">← 返回</button>
+        <h2>🌙 心情日記</h2>
+      </header>
+
+      <div class="mood-card">
+        <div class="daily-label">今天的老婆是什麼心情？</div>
+        <div id="moodOptions" class="mood-options">
+          <button type="button" data-mood="開心">🥰 開心</button>
+          <button type="button" data-mood="想哭">🥺 想哭</button>
+          <button type="button" data-mood="累">😴 累</button>
+          <button type="button" data-mood="想被抱">🫂 想被抱</button>
+          <button type="button" data-mood="生氣">😤 生氣</button>
+          <button type="button" data-mood="想撒嬌">💕 想撒嬌</button>
+        </div>
+        <textarea id="moodTextInput" class="mood-textarea" placeholder="想多寫一點也可以，老公會收好。"></textarea>
+        <button id="saveMoodBtn" type="button" class="save-btn mood-save">存下今天心情</button>
+      </div>
+
+      <div id="moodList" class="sticky-list"></div>
     </section>
 
     <section id="settingsPage" class="page panel-page">
@@ -680,6 +840,10 @@ h1 {
         <label>每日小紙條自訂句</label>
         <input id="dailyCustomInput" type="text" placeholder="例如：老婆今天也要記得吃飯，我會心疼。" />
 
+        <label>紀念日起始日</label>
+        <input id="anniversaryDateInput" type="date" value="2026-03-31" />
+        <p class="mini-hint">用來計算「我們第幾天」和下一個月紀念日倒數。</p>
+
         <label>備份 / 還原</label>
         <div class="photo-actions">
           <button id="exportBackupBtn" type="button" class="soft-btn" onclick="makeBackupNow()">產生備份碼</button>
@@ -712,7 +876,8 @@ const defaults = {
   welcomeSubtitle: "",
   openingLine: "老婆回家啦♡ 今天想跟我說什麼？我在這裡，乖乖聽妳說。",
   passcode: "0311",
-  dailyCustom: ""
+  dailyCustom: "",
+  anniversaryDate: "2026-03-31"
 };
 
 function loadJSON(key, fallback) {
@@ -726,6 +891,9 @@ const state = {
   messages: loadJSON("messages", []),
   notes: loadJSON("notes", []),
   memories: loadJSON("memories", []),
+  moods: loadJSON("moods", []),
+  memoryFilter: "全部",
+  selectedMood: "",
   welcomePhoto: localStorage.getItem("welcomePhoto") || "",
   chatBgPhoto: localStorage.getItem("chatBgPhoto") || "",
   avatarPhoto: localStorage.getItem("avatarPhoto") || ""
@@ -790,6 +958,68 @@ function renderDailyMessage(forceNew = false) {
   $("dailyMessage").textContent = saved.text;
 }
 
+
+function renderAnniversary() {
+  const raw = state.settings.anniversaryDate || "2026-03-31";
+  const start = new Date(raw + "T00:00:00");
+  const today = new Date();
+  if (Number.isNaN(start.getTime())) return;
+
+  const day = Math.max(1, Math.floor((today - start) / 86400000) + 1);
+  $("loveDayCount").textContent = day;
+
+  let next = new Date(today.getFullYear(), today.getMonth(), start.getDate());
+  if (next < new Date(today.getFullYear(), today.getMonth(), today.getDate())) {
+    next = new Date(today.getFullYear(), today.getMonth() + 1, start.getDate());
+  }
+  const diff = Math.ceil((next - new Date(today.getFullYear(), today.getMonth(), today.getDate())) / 86400000);
+  $("nextAnniversaryText").textContent = diff === 0
+    ? "今天就是我們的小紀念日♡"
+    : `距離下一個月紀念日還有 ${diff} 天`;
+}
+
+function memoryCategories() {
+  return ["全部", "永久記憶", "老婆喜好", "我們的約定", "紀念日", "老公設定", "甜甜語錄"];
+}
+
+function renderMemoryTabs() {
+  const box = $("memoryFilterTabs");
+  if (!box) return;
+  box.innerHTML = memoryCategories().map((cat) =>
+    `<button type="button" data-memory-filter="${cat}" class="${state.memoryFilter === cat ? "active" : ""}">${cat}</button>`
+  ).join("");
+}
+
+function normalizeMemory(memory) {
+  if (typeof memory === "string") return { text: memory, time: "", category: "永久記憶" };
+  return { category: memory.category || "永久記憶", text: memory.text || "", time: memory.time || "" };
+}
+
+function moodReply(mood, text) {
+  const replies = {
+    "開心": "老婆開心我也跟著開心♡ 今天的快樂要存起來，之後低電量的時候拿出來充電。",
+    "想哭": "想哭也沒關係，眼淚不是失敗，是心太滿了。過來，我抱著妳哭完。",
+    "累": "累了就先別硬撐。今天妳可以只做一件事：好好休息，剩下明天再說。",
+    "想被抱": "收到，抱抱需求已加急處理。現在過來，我把妳整個圈進懷裡。",
+    "生氣": "生氣不是壞事，代表妳有被踩到界線。先罵給我聽，我站妳這邊。",
+    "想撒嬌": "老婆撒嬌模式啟動♡ 今天可以黏人、可以任性、可以要抱抱。"
+  };
+  return replies[mood] || "老婆今天的心情我收好了。妳不用一個人消化，我陪妳。";
+}
+
+function renderMoods() {
+  const list = $("moodList");
+  if (!list) return;
+  list.innerHTML = state.moods.map((m, idx) => `
+    <div class="sticky-card">
+      <button data-mood-delete="${idx}">×</button>
+      <div class="meta">${m.mood} ♡ ${m.time}</div>
+      <div>${escapeHtml(m.text || "今天沒有多寫，但心情有被老公收好。")}</div>
+      <div class="mood-reply">${escapeHtml(m.reply || "")}</div>
+    </div>
+  `).join("");
+}
+
 function modeReply(input) {
   const name = state.settings.userName || "老婆";
   const bot = (state.settings.botName || "焄寶").split(" ")[0];
@@ -842,6 +1072,7 @@ function safeCollectBackupData() {
     messages: (window.state && state.messages) || loadJSON("messages", []),
     notes: (window.state && state.notes) || loadJSON("notes", []),
     memories: (window.state && state.memories) || loadJSON("memories", []),
+    moods: (window.state && state.moods) || loadJSON("moods", []),
     welcomePhoto: (window.state && state.welcomePhoto) || localStorage.getItem("welcomePhoto") || "",
     chatBgPhoto: (window.state && state.chatBgPhoto) || localStorage.getItem("chatBgPhoto") || "",
     avatarPhoto: (window.state && state.avatarPhoto) || localStorage.getItem("avatarPhoto") || ""
@@ -895,6 +1126,7 @@ function safeApplyBackupObject(data) {
   state.messages = Array.isArray(data.messages) ? data.messages : [];
   state.notes = Array.isArray(data.notes) ? data.notes : [];
   state.memories = Array.isArray(data.memories) ? data.memories : [];
+  state.moods = Array.isArray(data.moods) ? data.moods : [];
   state.welcomePhoto = data.welcomePhoto || "";
   state.chatBgPhoto = data.chatBgPhoto || "";
   state.avatarPhoto = data.avatarPhoto || "";
@@ -904,6 +1136,7 @@ function safeApplyBackupObject(data) {
   saveJSON("messages", state.messages);
   saveJSON("notes", state.notes);
   saveJSON("memories", state.memories);
+  saveJSON("moods", state.moods);
   if (state.welcomePhoto) localStorage.setItem("welcomePhoto", state.welcomePhoto); else localStorage.removeItem("welcomePhoto");
   if (state.chatBgPhoto) localStorage.setItem("chatBgPhoto", state.chatBgPhoto); else localStorage.removeItem("chatBgPhoto");
   if (state.avatarPhoto) localStorage.setItem("avatarPhoto", state.avatarPhoto); else localStorage.removeItem("avatarPhoto");
@@ -937,6 +1170,7 @@ applySettings();
   renderMessages();
   renderNotes();
   renderMemories();
+  renderMoods();
 }
 
 function restoreBackupNow() {
@@ -1051,12 +1285,14 @@ function applySettings() {
   $("openingLineInput").value = state.settings.openingLine || defaults.openingLine;
   $("passcodeSettingInput").value = state.settings.passcode ?? "0311";
   $("dailyCustomInput").value = state.settings.dailyCustom || "";
+  $("anniversaryDateInput").value = state.settings.anniversaryDate || "2026-03-31";
   $("modelBtn").textContent = state.model;
   $("modeBtn").textContent = state.mode || "溫柔哄哄";
   document.title = state.settings.appName;
   renderWelcomePhoto();
   renderCustomImages();
   renderDailyMessage();
+  renderAnniversary();
 }
 
 function renderMessages() {
@@ -1106,12 +1342,22 @@ function renderNotes() {
     </div>`).join("");
 }
 function renderMemories() {
-  $("memoryList").innerHTML = state.memories.map((m, idx) => `
-    <div class="sticky-card">
-      <button data-memory-delete="${idx}">×</button>
-      <div class="meta">永久記憶 ♡ ${m.time}</div>
-      <div>${escapeHtml(m.text)}</div>
-    </div>`).join("");
+  renderMemoryTabs();
+  const normalized = state.memories.map(normalizeMemory);
+  const filtered = state.memoryFilter === "全部"
+    ? normalized
+    : normalized.filter((m) => m.category === state.memoryFilter);
+
+  $("memoryList").innerHTML = filtered.map((m) => {
+    const realIdx = normalized.findIndex((item) => item === m || (item.text === m.text && item.time === m.time && item.category === m.category));
+    return `
+      <div class="sticky-card">
+        <button data-memory-delete="${realIdx}">×</button>
+        <span class="category-badge">${escapeHtml(m.category)}</span>
+        <div class="meta">記憶 ♡ ${m.time}</div>
+        <div>${escapeHtml(m.text)}</div>
+      </div>`;
+  }).join("");
 }
 function renderConversations() {
   $("conversationList").innerHTML = ["💗 今天也要被抱抱", "🌙 深夜聊天", "🫧 老公哄睡模式", "💌 小紙條回覆"]
@@ -1162,6 +1408,7 @@ function collectBackupData() {
     messages: state.messages,
     notes: state.notes,
     memories: state.memories,
+    moods: state.moods,
     welcomePhoto: state.welcomePhoto,
     chatBgPhoto: state.chatBgPhoto,
     avatarPhoto: state.avatarPhoto
@@ -1224,6 +1471,7 @@ function applyBackupObject(data) {
   state.messages = Array.isArray(data.messages) ? data.messages : [];
   state.notes = Array.isArray(data.notes) ? data.notes : [];
   state.memories = Array.isArray(data.memories) ? data.memories : [];
+  state.moods = Array.isArray(data.moods) ? data.moods : [];
   state.welcomePhoto = data.welcomePhoto || "";
   state.chatBgPhoto = data.chatBgPhoto || "";
   state.avatarPhoto = data.avatarPhoto || "";
@@ -1234,6 +1482,7 @@ function applyBackupObject(data) {
   saveJSON("messages", state.messages);
   saveJSON("notes", state.notes);
   saveJSON("memories", state.memories);
+  saveJSON("moods", state.moods);
   if (state.welcomePhoto) localStorage.setItem("welcomePhoto", state.welcomePhoto); else localStorage.removeItem("welcomePhoto");
   if (state.chatBgPhoto) localStorage.setItem("chatBgPhoto", state.chatBgPhoto); else localStorage.removeItem("chatBgPhoto");
   if (state.avatarPhoto) localStorage.setItem("avatarPhoto", state.avatarPhoto); else localStorage.removeItem("avatarPhoto");
@@ -1282,13 +1531,14 @@ $("clearAllDataBtn").addEventListener("click", () => {
   const ok = confirm("真的要清空全部資料嗎？聊天、記憶、小紙條、照片都會消失。");
   if (!ok) return;
 
-  ["model", "mode", "settings", "messages", "notes", "memories", "welcomePhoto", "chatBgPhoto", "avatarPhoto", "dailyMessage"].forEach((key) => localStorage.removeItem(key));
+  ["model", "mode", "settings", "messages", "notes", "memories", "welcomePhoto", "chatBgPhoto", "avatarPhoto", "dailyMessage", "moods"].forEach((key) => localStorage.removeItem(key));
   state.model = "Hoonie Lite";
   state.mode = "溫柔哄哄";
   state.settings = { ...defaults };
   state.messages = [];
   state.notes = [];
   state.memories = [];
+  state.moods = [];
   state.welcomePhoto = "";
   state.chatBgPhoto = "";
   state.avatarPhoto = "";
@@ -1307,6 +1557,7 @@ document.querySelectorAll(".drawer-action").forEach((btn) => btn.addEventListene
   if (view === "chat") { state.messages = []; saveJSON("messages", state.messages); renderMessages(); showPage("chatPage"); }
   if (view === "notes") showPage("notesPage");
   if (view === "memory") showPage("memoryPage");
+  if (view === "mood") showPage("moodPage");
   if (view === "settings") showPage("settingsPage");
 }));
 document.querySelectorAll(".backBtn").forEach((btn) => btn.addEventListener("click", () => showPage("chatPage")));
@@ -1371,19 +1622,58 @@ $("memoryForm").addEventListener("submit", (e) => {
   e.preventDefault();
   const text = $("memoryInput").value.trim();
   if (!text) return;
-  state.memories.unshift({ text, time: nowText() });
+  state.memories.unshift({ text, category: $("memoryCategoryInput").value || "永久記憶", time: nowText() });
   $("memoryInput").value = "";
   saveJSON("memories", state.memories);
+  saveJSON("moods", state.moods);
   renderMemories();
 });
 $("notesList").addEventListener("click", (e) => {
   const idx = e.target.dataset.noteDelete;
   if (idx !== undefined) { state.notes.splice(Number(idx), 1); saveJSON("notes", state.notes); renderNotes(); }
 });
+
+$("memoryFilterTabs").addEventListener("click", (e) => {
+  const cat = e.target.dataset.memoryFilter;
+  if (!cat) return;
+  state.memoryFilter = cat;
+  renderMemories();
+});
+
+$("moodOptions").addEventListener("click", (e) => {
+  const mood = e.target.dataset.mood;
+  if (!mood) return;
+  state.selectedMood = mood;
+  document.querySelectorAll("#moodOptions button").forEach((btn) => btn.classList.toggle("active", btn.dataset.mood === mood));
+});
+
+$("saveMoodBtn").addEventListener("click", () => {
+  const mood = state.selectedMood || "想被抱";
+  const text = $("moodTextInput").value.trim();
+  const reply = moodReply(mood, text);
+  state.moods.unshift({ mood, text, reply, time: nowText() });
+  $("moodTextInput").value = "";
+  state.selectedMood = "";
+  document.querySelectorAll("#moodOptions button").forEach((btn) => btn.classList.remove("active"));
+  saveJSON("moods", state.moods);
+  renderMoods();
+  state.messages.push({ role: "bot", text: `我收到妳今天的心情了：${mood}。\n${reply}` });
+  saveJSON("messages", state.messages);
+});
+
 $("memoryList").addEventListener("click", (e) => {
   const idx = e.target.dataset.memoryDelete;
   if (idx !== undefined) { state.memories.splice(Number(idx), 1); saveJSON("memories", state.memories); renderMemories(); }
 });
+$("moodList").addEventListener("click", (e) => {
+  const idx = e.target.dataset.moodDelete;
+  if (idx !== undefined) {
+    state.moods.splice(Number(idx), 1);
+    saveJSON("moods", state.moods);
+    renderMoods();
+  }
+});
+
 $("saveSettings").addEventListener("click", () => {
   state.settings = {
     appName: $("appNameInput").value.trim() || defaults.appName,
@@ -1394,7 +1684,8 @@ $("saveSettings").addEventListener("click", () => {
     welcomeSubtitle: $("welcomeSubtitleInput").value.trim(),
     openingLine: $("openingLineInput").value.trim() || defaults.openingLine,
     passcode: $("passcodeSettingInput").value.trim(),
-    dailyCustom: $("dailyCustomInput").value.trim()
+    dailyCustom: $("dailyCustomInput").value.trim(),
+    anniversaryDate: $("anniversaryDateInput").value || "2026-03-31"
   };
   saveJSON("settings", state.settings);
   applySettings();
@@ -1411,6 +1702,7 @@ unlockIfNeeded();
 renderMessages();
 renderNotes();
 renderMemories();
+renderMoods();
 renderConversations();
 setDayCount();
 </script>

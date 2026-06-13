@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Dear 銳銳 v32</title>
+  <title>Dear 銳銳 v33</title>
   <style>
 @import url('https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Ma+Shan+Zheng&family=Noto+Serif+TC:wght@400;700;900&family=Rampart+One&family=ZCOOL+KuaiLe&family=ZCOOL+QingKe+HuangYou&family=DotGothic16&family=Kaisei+Tokumin:wght@400;700&family=Kosugi+Maru&family=Yuji+Syuku&family=Zen+Kurenaido&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
 :root {
@@ -2584,6 +2584,62 @@ textarea::placeholder {
   --welcome-title-shadow: 0 0 18px var(--shadow);
 }
 
+
+/* v33 lock screen readable text fix */
+.app {
+  --lock-title-text: var(--text);
+  --lock-subtitle-text: var(--muted);
+  --lock-hint-text: var(--muted);
+  --lock-input-text: var(--text);
+  --lock-input-placeholder: rgba(255,243,247,.55);
+}
+
+/* Default lock screen readability variables */
+.lock-title {
+  color: var(--lock-title-text) !important;
+  text-shadow: var(--lock-title-shadow, 0 0 18px var(--shadow)) !important;
+}
+.lock-subtitle,
+.lock-hint {
+  color: var(--lock-subtitle-text) !important;
+}
+.passcode-input {
+  color: var(--lock-input-text) !important;
+}
+.passcode-input::placeholder {
+  color: var(--lock-input-placeholder) !important;
+}
+
+/* When the lock surface is bright, switch to deep readable text */
+.lock-light-bg {
+  --lock-title-text: #7d3b58;
+  --lock-subtitle-text: #6e5a67;
+  --lock-hint-text: #6e5a67;
+  --lock-input-text: #3d2330;
+  --lock-input-placeholder: rgba(61,35,48,.45);
+  --lock-title-shadow: 0 0 10px rgba(232,145,183,.16);
+}
+
+/* Keep the input visibly light on light theme */
+.lock-light-bg .passcode-input {
+  background: rgba(255,255,255,.55) !important;
+}
+
+/* When the lock surface is dark, use light text */
+.lock-dark-bg {
+  --lock-title-text: var(--text);
+  --lock-subtitle-text: var(--muted);
+  --lock-hint-text: var(--muted);
+  --lock-input-text: var(--text);
+  --lock-input-placeholder: rgba(255,243,247,.55);
+  --lock-title-shadow: 0 0 18px var(--shadow);
+}
+
+/* Sakura preset lock page is bright */
+.theme-sakura.lock-light-bg {
+  --lock-title-text: #7d3b58;
+}
+
 </style>
   <meta name="theme-color" content="#0e090c" />
   <link rel="manifest" href="./manifest.json" />
@@ -2890,6 +2946,62 @@ textarea::placeholder {
   --welcome-subtitle-text: var(--muted);
   --welcome-soft-text: var(--text);
   --welcome-title-shadow: 0 0 18px var(--shadow);
+}
+
+
+/* v33 lock screen readable text fix */
+.app {
+  --lock-title-text: var(--text);
+  --lock-subtitle-text: var(--muted);
+  --lock-hint-text: var(--muted);
+  --lock-input-text: var(--text);
+  --lock-input-placeholder: rgba(255,243,247,.55);
+}
+
+/* Default lock screen readability variables */
+.lock-title {
+  color: var(--lock-title-text) !important;
+  text-shadow: var(--lock-title-shadow, 0 0 18px var(--shadow)) !important;
+}
+.lock-subtitle,
+.lock-hint {
+  color: var(--lock-subtitle-text) !important;
+}
+.passcode-input {
+  color: var(--lock-input-text) !important;
+}
+.passcode-input::placeholder {
+  color: var(--lock-input-placeholder) !important;
+}
+
+/* When the lock surface is bright, switch to deep readable text */
+.lock-light-bg {
+  --lock-title-text: #7d3b58;
+  --lock-subtitle-text: #6e5a67;
+  --lock-hint-text: #6e5a67;
+  --lock-input-text: #3d2330;
+  --lock-input-placeholder: rgba(61,35,48,.45);
+  --lock-title-shadow: 0 0 10px rgba(232,145,183,.16);
+}
+
+/* Keep the input visibly light on light theme */
+.lock-light-bg .passcode-input {
+  background: rgba(255,255,255,.55) !important;
+}
+
+/* When the lock surface is dark, use light text */
+.lock-dark-bg {
+  --lock-title-text: var(--text);
+  --lock-subtitle-text: var(--muted);
+  --lock-hint-text: var(--muted);
+  --lock-input-text: var(--text);
+  --lock-input-placeholder: rgba(255,243,247,.55);
+  --lock-title-shadow: 0 0 18px var(--shadow);
+}
+
+/* Sakura preset lock page is bright */
+.theme-sakura.lock-light-bg {
+  --lock-title-text: #7d3b58;
 }
 
 </style>
@@ -4573,6 +4685,70 @@ function readableTextForColor(color, light = "#fff3f7", dark = "#3d2330") {
 }
 
 
+
+function parseCssColorToRgba(color) {
+  const c = String(color || "").trim();
+  if (!c) return null;
+  if (c.startsWith("#")) {
+    const rgb = hexToRgb(c);
+    return { ...rgb, a: 1 };
+  }
+  const rgb = c.match(/rgba?\(([^)]+)\)/);
+  if (rgb) {
+    const parts = rgb[1].split(",").map((x) => parseFloat(x.trim()));
+    return {
+      r: parts[0] || 0,
+      g: parts[1] || 0,
+      b: parts[2] || 0,
+      a: typeof parts[3] === "number" && !Number.isNaN(parts[3]) ? parts[3] : 1
+    };
+  }
+  return null;
+}
+
+function compositeRgbaOver(bg, fg) {
+  const B = parseCssColorToRgba(bg) || { r: 14, g: 9, b: 12, a: 1 };
+  const F = parseCssColorToRgba(fg) || { r: 255, g: 255, b: 255, a: 1 };
+  const a = F.a == null ? 1 : F.a;
+  return {
+    r: Math.round(F.r * a + B.r * (1 - a)),
+    g: Math.round(F.g * a + B.g * (1 - a)),
+    b: Math.round(F.b * a + B.b * (1 - a))
+  };
+}
+
+function setLockReadabilityClass() {
+  const app = $("app");
+  const lockPage = $("lockPage");
+  const lockCard = lockPage ? lockPage.querySelector(".lock-card") : null;
+  if (!app || !lockPage) return;
+
+  app.classList.remove("lock-light-bg", "lock-dark-bg");
+
+  // Start with theme-based fallback
+  if ((state.settings.theme || "") === "theme-sakura") {
+    app.classList.add("lock-light-bg");
+    return;
+  }
+  if ((state.settings.theme || "") === "theme-custom") {
+    const custom = state.settings.customTheme || defaults.customTheme;
+    const bgLum = luminance(custom.bg || "#0e090c");
+    app.classList.add(bgLum > 0.58 ? "lock-light-bg" : "lock-dark-bg");
+    return;
+  }
+
+  // Otherwise detect actual visible card surface by compositing its glass bg over page bg
+  if (lockCard) {
+    const pageBg = getComputedStyle(lockPage).backgroundColor;
+    const cardBg = getComputedStyle(lockCard).backgroundColor;
+    const composite = compositeRgbaOver(pageBg, cardBg);
+    const lum = rgbLuminance(composite);
+    app.classList.add(lum > 0.58 ? "lock-light-bg" : "lock-dark-bg");
+  } else {
+    app.classList.add("lock-dark-bg");
+  }
+}
+
 function setWelcomeReadabilityClass() {
   const app = $("app");
   const welcome = $("welcomePage") || document.querySelector(".welcome-page") || document.querySelector("#homePage");
@@ -4671,6 +4847,7 @@ function applyAutoReadableText() {
   setTimeout(() => {
     setSurfaceReadabilityClasses();
     setWelcomeReadabilityClass();
+    setLockReadabilityClass();
   }, 0);
 }
 
@@ -4742,6 +4919,7 @@ function applySettings() {
   setTimeout(() => {
     setSurfaceReadabilityClasses();
     setWelcomeReadabilityClass();
+    setLockReadabilityClass();
   }, 50);
 }
 

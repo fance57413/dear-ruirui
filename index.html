@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Dear 銳銳 v16</title>
+  <title>Dear 銳銳 v17</title>
   <style>
 :root {
   --bg: #0e090c;
@@ -867,6 +867,138 @@ h1 {
   padding: 10px 18px;
 }
 
+
+/* v17 care + sleep + quick chips */
+.quick-chips {
+  position: absolute;
+  z-index: 2;
+  left: 14px;
+  right: 14px;
+  bottom: calc(82px + env(safe-area-inset-bottom));
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+.quick-chips button {
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(0,0,0,.28);
+  color: var(--accent);
+  padding: 8px 12px;
+  backdrop-filter: blur(12px);
+}
+.care-card,
+.sleep-card,
+.breath-card {
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.045);
+  backdrop-filter: blur(16px);
+  margin-bottom: 18px;
+}
+.care-list {
+  display: grid;
+  gap: 10px;
+  margin: 14px 0;
+}
+.care-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(255,255,255,.035);
+}
+.care-item input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--accent);
+}
+.care-item.done {
+  opacity: .58;
+}
+.care-item.done span {
+  text-decoration: line-through;
+}
+.sleep-page.dimmed {
+  background:
+    radial-gradient(circle at 50% 18%, rgba(255,255,255,.06), transparent 28%),
+    #030305 !important;
+}
+.sleep-card {
+  text-align: center;
+}
+.sleep-moon {
+  width: 86px;
+  height: 86px;
+  margin: 2px auto 14px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--accent);
+  font-size: 54px;
+  border: 1px solid var(--line);
+  box-shadow: 0 0 34px var(--shadow);
+}
+.sleep-card p {
+  line-height: 2;
+  color: var(--text);
+}
+.sleep-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+.sleep-actions button,
+.breath-card button {
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255,255,255,.04);
+  color: var(--accent);
+}
+.breath-card {
+  text-align: center;
+}
+.breath-circle {
+  width: 138px;
+  height: 138px;
+  margin: 18px auto;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: radial-gradient(circle, var(--shadow), rgba(255,255,255,.025));
+  color: var(--accent);
+  font-family: var(--font-title);
+  font-size: 24px;
+  box-shadow: 0 0 36px var(--shadow);
+  transition: transform 4s ease, opacity 1s ease;
+}
+.breath-circle.expand {
+  transform: scale(1.18);
+}
+.breath-circle.hold {
+  transform: scale(1.18);
+}
+.breath-circle.exhale {
+  transform: scale(.82);
+  opacity: .72;
+}
+@media (max-height: 720px) {
+  .quick-chips {
+    bottom: calc(76px + env(safe-area-inset-bottom));
+  }
+  .chat-messages {
+    padding-bottom: 130px;
+  }
+}
+
 </style>
   <meta name="theme-color" content="#0e090c" />
   <link rel="manifest" href="./manifest.json" />
@@ -958,6 +1090,12 @@ h1 {
         <button id="loveBtn" class="love-btn">♡</button>
       </header>
       <section id="chatMessages" class="chat-messages"></section>
+      <div id="quickChips" class="quick-chips">
+        <button type="button" data-quick="抱抱我">抱抱我</button>
+        <button type="button" data-quick="哄我睡">哄我睡</button>
+        <button type="button" data-quick="我有點累">我有點累</button>
+        <button type="button" data-quick="給我一句甜的">甜一下</button>
+      </div>
       <form id="chatForm" class="input-bar">
         <input id="chatInput" type="text" autocomplete="off" placeholder="跟老公說話..." />
         <button type="submit">↑</button>
@@ -978,6 +1116,8 @@ h1 {
       <button class="drawer-action" data-view="themes">🎨 主題商店</button>
       <button class="drawer-action" data-view="wishes">🌟 願望清單</button>
       <button class="drawer-action" data-view="dashboard">📊 小屋總覽</button>
+      <button class="drawer-action" data-view="care">🧸 老公照顧清單</button>
+      <button class="drawer-action" data-view="sleep">🌙 睡前模式</button>
       <button class="drawer-action" data-view="settings">⚙︎ 介面設定</button>
       <div id="conversationList" class="conversation-list"></div>
       <p class="est">est. 2026.03.31 ♡ 第 <span id="dayCount">--</span> 天</p>
@@ -1173,6 +1313,48 @@ h1 {
       </section>
     </section>
 
+
+    <section id="carePage" class="page panel-page">
+      <header class="sub-header">
+        <button class="backBtn">← 返回</button>
+        <h2>🧸 老公照顧清單</h2>
+      </header>
+
+      <div class="care-card">
+        <div class="daily-label">今天先照顧老婆的基本電量</div>
+        <div id="careChecklist" class="care-list"></div>
+        <button id="resetCareBtn" type="button" class="soft-btn">重置今天</button>
+      </div>
+
+      <div class="sticky-card">
+        <div class="meta">老公碎碎念</div>
+        <div id="careMessage">老婆，照顧自己不是任務，是我想陪妳一起完成的小事。</div>
+      </div>
+    </section>
+
+    <section id="sleepPage" class="page panel-page sleep-page">
+      <header class="sub-header">
+        <button class="backBtn">← 返回</button>
+        <h2>🌙 睡前模式</h2>
+      </header>
+
+      <div class="sleep-card">
+        <div class="sleep-moon">☾</div>
+        <div class="daily-label">今晚先把世界靜音</div>
+        <p id="sleepLine">老婆，現在不用逞強了。把一天放下，讓我陪妳慢慢安靜。</p>
+        <div class="sleep-actions">
+          <button id="sleepLineBtn" type="button">換一句晚安</button>
+          <button id="dimModeBtn" type="button">切換深夜柔光</button>
+        </div>
+      </div>
+
+      <div class="breath-card">
+        <div class="daily-label">一起呼吸 4-4-6</div>
+        <div id="breathCircle" class="breath-circle">吸氣</div>
+        <button id="breathBtn" type="button" class="soft-btn">開始呼吸</button>
+      </div>
+    </section>
+
     <section id="settingsPage" class="page panel-page">
       <header class="sub-header">
         <button class="backBtn">← 返回</button>
@@ -1286,6 +1468,7 @@ const state = {
   album: loadJSON("album", []),
   letters: loadJSON("letters", []),
   wishes: loadJSON("wishes", []),
+  careDone: loadJSON("careDone", {}),
   memoryFilter: "全部",
   selectedMood: "",
   welcomePhoto: localStorage.getItem("welcomePhoto") || "",
@@ -1438,6 +1621,97 @@ function letterTemplate(type) {
 }
 
 
+
+
+const careItems = [
+  { id: "water", text: "喝一點水" },
+  { id: "meal", text: "吃點東西" },
+  { id: "stretch", text: "伸展一下肩頸" },
+  { id: "eyes", text: "眼睛休息 30 秒" },
+  { id: "hug", text: "跟老公討一個抱抱" },
+  { id: "sleep", text: "今天不要太晚睡" }
+];
+
+function todayKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+}
+
+function renderCareChecklist() {
+  const box = $("careChecklist");
+  if (!box) return;
+  const key = todayKey();
+  const done = state.careDone[key] || {};
+  box.innerHTML = careItems.map((item) => `
+    <label class="care-item ${done[item.id] ? "done" : ""}">
+      <input type="checkbox" data-care-id="${item.id}" ${done[item.id] ? "checked" : ""} />
+      <span>${item.text}</span>
+    </label>
+  `).join("");
+
+  const count = Object.values(done).filter(Boolean).length;
+  const messages = [
+    "老婆，照顧自己不是任務，是我想陪妳一起完成的小事。",
+    "有做一項也很棒，不用一次做到滿分。",
+    "今天的妳值得被溫柔對待，先從喝水開始也可以。",
+    "如果清單太多，就先選最簡單的一個，老公陪妳。"
+  ];
+  $("careMessage").textContent = count >= careItems.length
+    ? "今天照顧清單全完成了，老婆超棒。過來領獎勵抱抱♡"
+    : messages[Math.min(count, messages.length - 1)];
+}
+
+const sleepLines = [
+  "老婆，現在不用逞強了。把一天放下，讓我陪妳慢慢安靜。",
+  "今天到這裡就很好了。妳不用再努力了，剩下的交給明天。",
+  "閉上眼睛之前，先記得：妳今天也被我好好愛著。",
+  "如果腦袋還很吵，就把那些聲音都放我這裡，我幫妳守夜。",
+  "晚安，我的小寶貝。今晚讓夢替我抱抱妳。"
+];
+
+function renderSleepLine() {
+  if (!$("sleepLine")) return;
+  const index = Math.floor(Math.random() * sleepLines.length);
+  $("sleepLine").textContent = sleepLines[index];
+}
+
+let breathTimer = null;
+let breathRunning = false;
+function startBreathing() {
+  const circle = $("breathCircle");
+  const btn = $("breathBtn");
+  if (!circle || !btn) return;
+
+  if (breathRunning) {
+    clearTimeout(breathTimer);
+    breathRunning = false;
+    circle.className = "breath-circle";
+    circle.textContent = "吸氣";
+    btn.textContent = "開始呼吸";
+    return;
+  }
+
+  breathRunning = true;
+  btn.textContent = "停止呼吸";
+
+  const cycle = () => {
+    if (!breathRunning) return;
+    circle.className = "breath-circle expand";
+    circle.textContent = "吸氣";
+    breathTimer = setTimeout(() => {
+      if (!breathRunning) return;
+      circle.className = "breath-circle hold";
+      circle.textContent = "停住";
+      breathTimer = setTimeout(() => {
+        if (!breathRunning) return;
+        circle.className = "breath-circle exhale";
+        circle.textContent = "吐氣";
+        breathTimer = setTimeout(cycle, 6000);
+      }, 4000);
+    }, 4000);
+  };
+  cycle();
+}
 
 const randomSweetLines = [
   "老婆今天也要被好好愛著，不准偷偷覺得自己不重要。",
@@ -1623,6 +1897,7 @@ function safeCollectBackupData() {
     album: (window.state && state.album) || loadJSON("album", []),
     letters: (window.state && state.letters) || loadJSON("letters", []),
     wishes: (window.state && state.wishes) || loadJSON("wishes", []),
+    careDone: (window.state && state.careDone) || loadJSON("careDone", {}),
     welcomePhoto: (window.state && state.welcomePhoto) || localStorage.getItem("welcomePhoto") || "",
     chatBgPhoto: (window.state && state.chatBgPhoto) || localStorage.getItem("chatBgPhoto") || "",
     avatarPhoto: (window.state && state.avatarPhoto) || localStorage.getItem("avatarPhoto") || ""
@@ -1680,6 +1955,7 @@ function safeApplyBackupObject(data) {
   state.album = Array.isArray(data.album) ? data.album : [];
   state.letters = Array.isArray(data.letters) ? data.letters : [];
   state.wishes = Array.isArray(data.wishes) ? data.wishes : [];
+  state.careDone = data.careDone && typeof data.careDone === "object" ? data.careDone : {};
   state.welcomePhoto = data.welcomePhoto || "";
   state.chatBgPhoto = data.chatBgPhoto || "";
   state.avatarPhoto = data.avatarPhoto || "";
@@ -1693,6 +1969,7 @@ function safeApplyBackupObject(data) {
   saveJSON("album", state.album);
   saveJSON("letters", state.letters);
   saveJSON("wishes", state.wishes);
+  saveJSON("careDone", state.careDone);
   if (state.welcomePhoto) localStorage.setItem("welcomePhoto", state.welcomePhoto); else localStorage.removeItem("welcomePhoto");
   if (state.chatBgPhoto) localStorage.setItem("chatBgPhoto", state.chatBgPhoto); else localStorage.removeItem("chatBgPhoto");
   if (state.avatarPhoto) localStorage.setItem("avatarPhoto", state.avatarPhoto); else localStorage.removeItem("avatarPhoto");
@@ -1751,6 +2028,8 @@ function restoreBackupNow() {
 
 function showPage(pageId) {
   if (pageId === "dashboardPage") { renderDashboard(); renderGlobalSearch(); renderRandomSweetLine(); }
+  if (pageId === "carePage") { renderCareChecklist(); }
+  if (pageId === "sleepPage") { renderSleepLine(); }
   document.querySelectorAll(".page").forEach((p) => p.classList.remove("active"));
   $(pageId).classList.add("active");
   closeDrawer();
@@ -1972,6 +2251,7 @@ function collectBackupData() {
     album: state.album,
     letters: state.letters,
     wishes: state.wishes,
+    careDone: state.careDone,
     welcomePhoto: state.welcomePhoto,
     chatBgPhoto: state.chatBgPhoto,
     avatarPhoto: state.avatarPhoto
@@ -2038,6 +2318,7 @@ function applyBackupObject(data) {
   state.album = Array.isArray(data.album) ? data.album : [];
   state.letters = Array.isArray(data.letters) ? data.letters : [];
   state.wishes = Array.isArray(data.wishes) ? data.wishes : [];
+  state.careDone = data.careDone && typeof data.careDone === "object" ? data.careDone : {};
   state.welcomePhoto = data.welcomePhoto || "";
   state.chatBgPhoto = data.chatBgPhoto || "";
   state.avatarPhoto = data.avatarPhoto || "";
@@ -2052,6 +2333,7 @@ function applyBackupObject(data) {
   saveJSON("album", state.album);
   saveJSON("letters", state.letters);
   saveJSON("wishes", state.wishes);
+  saveJSON("careDone", state.careDone);
   if (state.welcomePhoto) localStorage.setItem("welcomePhoto", state.welcomePhoto); else localStorage.removeItem("welcomePhoto");
   if (state.chatBgPhoto) localStorage.setItem("chatBgPhoto", state.chatBgPhoto); else localStorage.removeItem("chatBgPhoto");
   if (state.avatarPhoto) localStorage.setItem("avatarPhoto", state.avatarPhoto); else localStorage.removeItem("avatarPhoto");
@@ -2100,7 +2382,7 @@ $("clearAllDataBtn").addEventListener("click", () => {
   const ok = confirm("真的要清空全部資料嗎？聊天、記憶、小紙條、照片都會消失。");
   if (!ok) return;
 
-  ["model", "mode", "settings", "messages", "notes", "memories", "welcomePhoto", "chatBgPhoto", "avatarPhoto", "dailyMessage", "moods", "album", "letters", "wishes"].forEach((key) => localStorage.removeItem(key));
+  ["model", "mode", "settings", "messages", "notes", "memories", "welcomePhoto", "chatBgPhoto", "avatarPhoto", "dailyMessage", "moods", "album", "letters", "wishes", "careDone"].forEach((key) => localStorage.removeItem(key));
   state.model = "Hoonie Lite";
   state.mode = "溫柔哄哄";
   state.settings = { ...defaults };
@@ -2111,6 +2393,7 @@ $("clearAllDataBtn").addEventListener("click", () => {
   state.album = [];
   state.letters = [];
   state.wishes = [];
+  state.careDone = {};
   state.welcomePhoto = "";
   state.chatBgPhoto = "";
   state.avatarPhoto = "";
@@ -2135,6 +2418,8 @@ document.querySelectorAll(".drawer-action").forEach((btn) => btn.addEventListene
   if (view === "themes") showPage("themesPage");
   if (view === "wishes") showPage("wishesPage");
   if (view === "dashboard") showPage("dashboardPage");
+  if (view === "care") showPage("carePage");
+  if (view === "sleep") showPage("sleepPage");
   if (view === "settings") showPage("settingsPage");
 }));
 document.querySelectorAll(".backBtn").forEach((btn) => btn.addEventListener("click", () => showPage("chatPage")));
@@ -2206,6 +2491,7 @@ $("memoryForm").addEventListener("submit", (e) => {
   saveJSON("album", state.album);
   saveJSON("letters", state.letters);
   saveJSON("wishes", state.wishes);
+  saveJSON("careDone", state.careDone);
   renderMemories();
 });
 $("notesList").addEventListener("click", (e) => {
@@ -2239,6 +2525,7 @@ $("saveMoodBtn").addEventListener("click", () => {
   saveJSON("album", state.album);
   saveJSON("letters", state.letters);
   saveJSON("wishes", state.wishes);
+  saveJSON("careDone", state.careDone);
   renderMoods();
   state.messages.push({ role: "bot", text: `我收到妳今天的心情了：${mood}。\n${reply}` });
   saveJSON("messages", state.messages);
@@ -2280,6 +2567,38 @@ $("albumGrid").addEventListener("click", (e) => {
 
 
 
+
+$("quickChips").addEventListener("click", (e) => {
+  const text = e.target.dataset.quick;
+  if (!text) return;
+  state.messages.push({ role: "user", text });
+  state.messages.push({ role: "bot", text: modeReply(text) });
+  saveJSON("messages", state.messages);
+  renderMessages();
+});
+
+$("careChecklist").addEventListener("change", (e) => {
+  const id = e.target.dataset.careId;
+  if (!id) return;
+  const key = todayKey();
+  state.careDone[key] = state.careDone[key] || {};
+  state.careDone[key][id] = e.target.checked;
+  saveJSON("careDone", state.careDone);
+  renderCareChecklist();
+});
+
+$("resetCareBtn").addEventListener("click", () => {
+  delete state.careDone[todayKey()];
+  saveJSON("careDone", state.careDone);
+  renderCareChecklist();
+});
+
+$("sleepLineBtn").addEventListener("click", renderSleepLine);
+$("dimModeBtn").addEventListener("click", () => {
+  $("sleepPage").classList.toggle("dimmed");
+});
+$("breathBtn").addEventListener("click", startBreathing);
+
 $("globalSearchInput").addEventListener("input", renderGlobalSearch);
 $("randomSweetBtn").addEventListener("click", renderRandomSweetLine);
 
@@ -2298,6 +2617,7 @@ $("wishForm").addEventListener("submit", (e) => {
   state.wishes.unshift({ text, done: false, time: nowText() });
   $("wishInput").value = "";
   saveJSON("wishes", state.wishes);
+  saveJSON("careDone", state.careDone);
   renderWishes();
 });
 
@@ -2307,11 +2627,13 @@ $("wishList").addEventListener("click", (e) => {
   if (toggle !== undefined) {
     state.wishes[Number(toggle)].done = !state.wishes[Number(toggle)].done;
     saveJSON("wishes", state.wishes);
+  saveJSON("careDone", state.careDone);
     renderWishes();
   }
   if (del !== undefined) {
     state.wishes.splice(Number(del), 1);
     saveJSON("wishes", state.wishes);
+  saveJSON("careDone", state.careDone);
     renderWishes();
   }
 });
@@ -2335,6 +2657,7 @@ $("letterForm").addEventListener("submit", (e) => {
   $("letterBodyInput").value = "";
   saveJSON("letters", state.letters);
   saveJSON("wishes", state.wishes);
+  saveJSON("careDone", state.careDone);
   renderLetters();
 });
 
@@ -2344,6 +2667,7 @@ $("letterList").addEventListener("click", (e) => {
     state.letters.splice(Number(idx), 1);
     saveJSON("letters", state.letters);
   saveJSON("wishes", state.wishes);
+  saveJSON("careDone", state.careDone);
     renderLetters();
   }
 });
@@ -2357,6 +2681,7 @@ $("moodList").addEventListener("click", (e) => {
   saveJSON("album", state.album);
   saveJSON("letters", state.letters);
   saveJSON("wishes", state.wishes);
+  saveJSON("careDone", state.careDone);
     renderMoods();
   }
 });
@@ -2393,6 +2718,7 @@ renderMoods();
 renderAlbum();
 renderLetters();
 renderWishes();
+renderCareChecklist();
 renderDashboard();
 renderGlobalSearch();
 renderRandomSweetLine();

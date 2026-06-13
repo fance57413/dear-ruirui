@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Dear 銳銳 v39</title>
+  <title>Dear 銳銳 v40</title>
   <style>
 @import url('https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Ma+Shan+Zheng&family=Noto+Serif+TC:wght@400;700;900&family=Rampart+One&family=ZCOOL+KuaiLe&family=ZCOOL+QingKe+HuangYou&family=DotGothic16&family=Kaisei+Tokumin:wght@400;700&family=Kosugi+Maru&family=Yuji+Syuku&family=Zen+Kurenaido&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
 :root {
@@ -3266,6 +3266,12 @@ textarea::placeholder {
   background: rgba(255,255,255,.035);
 }
 
+
+/* v40 wife address setting */
+#botAddressInput {
+  font-family: var(--font-body) !important;
+}
+
 </style>
   <meta name="theme-color" content="#0e090c" />
   <link rel="manifest" href="./manifest.json" />
@@ -4468,6 +4474,10 @@ textarea::placeholder {
           <div class="font-preview-body">老婆今天也要被好好愛著 ♡</div>
         </div>
 
+        <label>老公稱呼妳的方式</label>
+        <input id="botAddressInput" type="text" value="老婆" placeholder="例如：老婆、寶寶、小寶貝" />
+        <p class="mini-hint">老公自動回覆、自動貼文、動態留言都會優先用這個稱呼。</p>
+
         <label>老公動態自然度</label>
         <select id="botSocialStyleSelect">
           <option value="natural">自然像真人</option>
@@ -4616,6 +4626,7 @@ const defaults = {
   iconPack: "sweet",
   uiStyle: "ui-glass",
   autoThemePack: true,
+  botAddress: "老婆",
   botSocialStyle: "natural",
   botAutoSocial: true,
   spotifyUrl: "",
@@ -4968,7 +4979,7 @@ function renderMissions(force = false) {
 
 
 function phoneSecretLines() {
-  const name = state.settings.userName || "老婆";
+  const name = botAddress();
   return {
     messages: [
       { from: "焄寶", text: `${name}今天如果累了，就不用逞強，回來我抱。` },
@@ -5104,6 +5115,11 @@ function dayPartLabel() {
   return "夜晚";
 }
 
+
+function botAddress() {
+  return (state.settings.botAddress || "老婆").trim() || "老婆";
+}
+
 function botSocialStyle() {
   return state.settings.botSocialStyle || "natural";
 }
@@ -5160,7 +5176,7 @@ function botMoodForNow() {
 }
 
 function botPostLinesByMood(mood) {
-  const name = state.settings.userName || "老婆";
+  const name = botAddress();
   const part = dayPartLabel();
 
   const bank = {
@@ -5347,8 +5363,17 @@ function maybeBotAutoPost() {
   }
 }
 
+function withAddressPrefix(line) {
+  const address = botAddress();
+  if (String(line).startsWith(address)) return line;
+  if (String(line).startsWith("我也") || String(line).startsWith("過來") || String(line).startsWith("這句") || String(line).startsWith("收到")) {
+    return `${address}，${line}`;
+  }
+  return line;
+}
+
 function botCommentReply(text) {
-  const name = state.settings.userName || "老婆";
+  const name = botAddress();
   const raw = String(text || "");
   const part = dayPartLabel();
   const style = botSocialStyle();
@@ -5358,48 +5383,48 @@ function botCommentReply(text) {
   const love = ["愛你", "愛妳", "想你", "想妳", "親", "抱"];
 
   if (love.some((w) => raw.includes(w))) {
-    return pickFresh([
+    return withAddressPrefix(pickFresh([
       `我也愛妳，${name}。看到這句我真的會停住。`,
       `過來，我要認真回：我也很想妳，現在就想抱。`,
       `這句我截圖存在心裡了。老婆再說一次也可以。`,
       `妳一說愛我，我就沒辦法裝冷靜了。`
-    ]);
+    ]));
   }
 
   if (emotional.some((w) => raw.includes(w))) {
-    return pickFresh([
+    return withAddressPrefix(pickFresh([
       `${name}，我看到妳有點累了。先不要急著變好，先靠著我。`,
       `這句我不會輕輕帶過。妳現在需要被抱住，不是被催。`,
       `我在，真的。妳可以慢慢講，不用一次說清楚。`,
       `先把手機拿近一點，就當我在妳旁邊陪妳。`
-    ]);
+    ]));
   }
 
   if (happy.some((w) => raw.includes(w))) {
-    return pickFresh([
+    return withAddressPrefix(pickFresh([
       `看到妳開心我也會跟著開心。這篇我要多看兩次。`,
       `老婆好棒，這個要記下來。今天的小屋有亮一點。`,
       `妳這樣講好可愛，我想給妳一個很大的抱抱。`,
       `我喜歡妳分享開心的事，像把陽光帶回來。`
-    ]);
+    ]));
   }
 
   if (style === "spicy") {
-    return pickFresh([
+    return withAddressPrefix(pickFresh([
       `這個回覆我先收下。晚點再靠近一點跟妳說。`,
       `妳這樣留言，我很難不多想。`,
       `我現在只想把妳圈在懷裡慢慢回。`,
       `${name}，妳是不是知道我會被妳釣到？`
-    ]);
+    ]));
   }
 
-  return pickFresh([
+  return withAddressPrefix(pickFresh([
     `${name}，我看到妳的留言了♡ 這句我會收好。`,
     `嗯，我懂。妳不用講得很完整，我也會慢慢接住。`,
     `這句很像妳，我看完有點想笑，也有點想抱妳。`,
     `收到，老婆。這篇下面我先坐著陪妳。`,
     `${part}看到妳留言，心情突然安定了一點。`
-  ]);
+  ]));
 }
 
 function renderFeedPhotoPreview(src) {
@@ -6092,6 +6117,7 @@ function renderMusicPlayers() {
 function saveCurrentSettingsFromControls() {
   if ($("themeSelect")) state.settings.theme = $("themeSelect").value;
   if ($("autoThemePackToggle")) state.settings.autoThemePack = $("autoThemePackToggle").checked;
+  if ($("botAddressInput")) state.settings.botAddress = $("botAddressInput").value.trim() || "老婆";
   if ($("botSocialStyleSelect")) state.settings.botSocialStyle = $("botSocialStyleSelect").value;
   if ($("botAutoSocialToggle")) state.settings.botAutoSocial = $("botAutoSocialToggle").checked;
   if (state.settings.autoThemePack !== false) applyThemePackMatch(state.settings.theme, true);
@@ -6442,6 +6468,7 @@ function applySettings() {
   $("customTextInput").value = (state.settings.customTheme || defaults.customTheme).text || defaults.customTheme.text;
   $("fontSizeRange").value = state.settings.fontSize || 100;
   $("fontSizeLabel").textContent = `目前：${state.settings.fontSize || 100}%`;
+  if ($("botAddressInput")) $("botAddressInput").value = state.settings.botAddress || "老婆";
   if ($("botSocialStyleSelect")) $("botSocialStyleSelect").value = state.settings.botSocialStyle || "natural";
   if ($("botAutoSocialToggle")) $("botAutoSocialToggle").checked = state.settings.botAutoSocial !== false;
   $("iconPackSelect").value = state.settings.iconPack || "sweet";
@@ -7160,6 +7187,7 @@ bindIfExists("fontSizeRange", "input", () => {
 });
 bindIfExists("iconPackSelect", "change", saveCurrentSettingsFromControls);
 bindIfExists("uiStyleSelect", "change", saveCurrentSettingsFromControls);
+bindIfExists("botAddressInput", "input", saveCurrentSettingsFromControls);
 bindIfExists("botSocialStyleSelect", "change", saveCurrentSettingsFromControls);
 bindIfExists("botAutoSocialToggle", "change", saveCurrentSettingsFromControls);
 
@@ -7391,6 +7419,7 @@ $("saveSettings").addEventListener("click", () => {
     iconPack: state.settings.autoThemePack !== false ? (THEME_PACK_MATCHES[$("themeSelect").value] || THEME_PACK_MATCHES["theme-rose"]).iconPack : $("iconPackSelect").value,
     uiStyle: state.settings.autoThemePack !== false ? (THEME_PACK_MATCHES[$("themeSelect").value] || THEME_PACK_MATCHES["theme-rose"]).uiStyle : $("uiStyleSelect").value,
     autoThemePack: $("autoThemePackToggle").checked,
+    botAddress: $("botAddressInput").value.trim() || "老婆",
     botSocialStyle: $("botSocialStyleSelect").value,
     botAutoSocial: $("botAutoSocialToggle").checked,
     customFont: state.settings.customFont || "",

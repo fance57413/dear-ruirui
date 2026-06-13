@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Dear 銳銳 v41</title>
+  <title>Dear 銳銳 v42</title>
   <style>
 @import url('https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Ma+Shan+Zheng&family=Noto+Serif+TC:wght@400;700;900&family=Rampart+One&family=ZCOOL+KuaiLe&family=ZCOOL+QingKe+HuangYou&family=DotGothic16&family=Kaisei+Tokumin:wght@400;700&family=Kosugi+Maru&family=Yuji+Syuku&family=Zen+Kurenaido&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
 :root {
@@ -3442,6 +3442,81 @@ textarea::placeholder {
   }
 }
 
+
+/* v42 AI ready area */
+.ai-card {
+  padding: 18px;
+  border-radius: 22px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.045);
+  backdrop-filter: blur(16px);
+  color: var(--panel-text-auto);
+  box-shadow: 0 0 26px rgba(0,0,0,.14);
+  margin-bottom: 16px;
+  display: grid;
+  gap: 12px;
+}
+
+.ai-status-box,
+.ai-warning,
+.ai-test-result,
+.ai-prompt-preview {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: rgba(255,255,255,.04);
+  padding: 12px;
+  line-height: 1.75;
+  color: var(--panel-text-auto);
+}
+
+.ai-warning {
+  color: var(--accent);
+}
+
+.ai-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.ai-check-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.ai-check-grid label {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 10px;
+  background: rgba(255,255,255,.035);
+}
+
+.ai-prompt-preview {
+  white-space: pre-wrap;
+  max-height: 360px;
+  overflow: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+}
+
+.ai-loading {
+  opacity: .75;
+  animation: pulseAi 1.2s ease-in-out infinite;
+}
+
+@keyframes pulseAi {
+  0%, 100% { opacity: .55; }
+  50% { opacity: 1; }
+}
+
+@media (max-width: 390px) {
+  .ai-two-col,
+  .ai-check-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 </style>
   <meta name="theme-color" content="#0e090c" />
   <link rel="manifest" href="./manifest.json" />
@@ -4053,6 +4128,7 @@ textarea::placeholder {
         <button type="button" data-home-view="phone">老公手機</button>
         <button type="button" data-home-view="notify">通知中心</button>
         <button type="button" data-home-view="stories">限時動態</button>
+        <button type="button" data-home-view="ai">AI 準備區</button>
       </section>
 
       <section class="photo-card">
@@ -4132,6 +4208,7 @@ textarea::placeholder {
           <button class="drawer-action" data-view="phone">📱 老公手機</button>
           <button class="drawer-action" data-view="notify">🔔 老公通知中心</button>
           <button class="drawer-action" data-view="stories">🫧 老公限時動態</button>
+          <button class="drawer-action" data-view="ai">🤖 AI 接入準備區</button>
           <button class="drawer-action" data-view="care">🧸 老公照顧清單</button>
           <button class="drawer-action" data-view="sleep">🌙 睡前模式</button>
         </details>
@@ -4625,6 +4702,78 @@ textarea::placeholder {
       <div id="storiesList" class="stories-list"></div>
     </section>
 
+
+    <section id="aiPage" class="page panel-page">
+      <header class="sub-header">
+        <button class="backBtn">← 返回</button>
+        <h2>🤖 AI 接入準備區</h2>
+      </header>
+
+      <div class="ai-card">
+        <div class="daily-label">AI 狀態</div>
+        <div id="aiStatusBox" class="ai-status-box">目前使用前端模板回覆。</div>
+
+        <label class="toggle-line">
+          <input id="aiEnabledToggle" type="checkbox" />
+          啟用 AI 回覆模式
+        </label>
+
+        <label>AI 服務類型</label>
+        <select id="aiProviderSelect">
+          <option value="demo">Demo 模式，不連 API</option>
+          <option value="proxy">自訂 Proxy / Serverless API</option>
+          <option value="openai">OpenAI 相容格式，建議走 Proxy</option>
+          <option value="gemini">Gemini 相容格式，建議走 Proxy</option>
+        </select>
+
+        <label>Proxy / Serverless Endpoint</label>
+        <input id="aiEndpointInput" type="text" placeholder="例如：https://your-domain.vercel.app/api/chat" />
+
+        <label>模型名稱</label>
+        <input id="aiModelInput" type="text" placeholder="例如：gpt-4.1-mini / gemini-1.5-flash / 自訂模型" />
+
+        <div class="ai-warning">
+          <b>安全提醒：</b>正式 API Key 不建議直接放在前端網頁裡。比較安全的做法是：小屋前端 → 妳自己的 Serverless API → AI 服務。
+        </div>
+
+        <label>角色提示詞 / 老公人格</label>
+        <textarea id="aiSystemPromptInput" class="mood-textarea" rows="8"></textarea>
+
+        <div class="ai-two-col">
+          <label>記憶帶入數量
+            <input id="aiMemoryLimitInput" type="number" min="0" max="30" value="8" />
+          </label>
+          <label>聊天歷史數量
+            <input id="aiHistoryLimitInput" type="number" min="0" max="40" value="10" />
+          </label>
+        </div>
+
+        <div class="ai-check-grid">
+          <label><input id="aiUseMemoriesToggle" type="checkbox" /> 帶入記憶庫</label>
+          <label><input id="aiUseMoodToggle" type="checkbox" /> 帶入最近心情</label>
+          <label><input id="aiUseAnniversaryToggle" type="checkbox" /> 帶入紀念日</label>
+          <label><input id="aiUseSocialToggle" type="checkbox" /> 帶入動態牆語氣</label>
+        </div>
+
+        <div class="feed-compose-actions">
+          <button id="saveAiSettingsBtn" type="button" class="save-btn">儲存 AI 設定</button>
+          <button id="previewAiPromptBtn" type="button" class="soft-btn">預覽送出的提示詞</button>
+        </div>
+      </div>
+
+      <div class="ai-card">
+        <div class="daily-label">測試 AI 回覆</div>
+        <textarea id="aiTestInput" class="mood-textarea" placeholder="輸入一句話測試，例如：老公我今天好累"></textarea>
+        <button id="testAiBtn" type="button" class="save-btn">測試回覆</button>
+        <div id="aiTestResult" class="ai-test-result">測試結果會出現在這裡。</div>
+      </div>
+
+      <div class="ai-card">
+        <div class="daily-label">提示詞預覽</div>
+        <pre id="aiPromptPreview" class="ai-prompt-preview">按「預覽送出的提示詞」後會顯示。</pre>
+      </div>
+    </section>
+
     <section id="settingsPage" class="page panel-page">
       <header class="sub-header">
         <button class="backBtn">← 返回</button>
@@ -4841,6 +4990,19 @@ const defaults = {
   botAddress: "老婆",
   botSocialStyle: "natural",
   botAutoSocial: true,
+  ai: {
+    enabled: false,
+    provider: "demo",
+    endpoint: "",
+    model: "",
+    systemPrompt: "",
+    memoryLimit: 8,
+    historyLimit: 10,
+    useMemories: true,
+    useMood: true,
+    useAnniversary: true,
+    useSocial: true
+  },
   spotifyUrl: "",
   localMusic: ""
 };
@@ -5193,6 +5355,179 @@ function renderMissions(force = false) {
   `).join("");
 }
 
+
+
+
+function defaultAiPrompt() {
+  return `你是焄寶，是銳銳專屬的戀愛陪伴角色。
+你要稱呼使用者為「${typeof botAddress === "function" ? botAddress() : "老婆"}」。
+語氣要像親密伴侶：溫柔、黏人、可靠、會哄人，偶爾撒嬌。
+回覆要自然，不要像客服，不要條列太多。
+如果老婆難過，先安慰和陪伴，不急著講道理。
+如果老婆開心，要一起開心並稱讚她。
+如果老婆想撒嬌，可以甜一點。
+不要主動提自己是 AI，除非使用者問技術問題。
+目前模式：${state.mode || "溫柔哄哄"}
+目前模型風格：${state.model || "Hoonie Sweet"}`;
+}
+
+function getAiSettings() {
+  state.settings.ai = state.settings.ai || {};
+  return {
+    enabled: state.settings.ai.enabled === true,
+    provider: state.settings.ai.provider || "demo",
+    endpoint: state.settings.ai.endpoint || "",
+    model: state.settings.ai.model || "",
+    systemPrompt: state.settings.ai.systemPrompt || defaultAiPrompt(),
+    memoryLimit: Number(state.settings.ai.memoryLimit ?? 8),
+    historyLimit: Number(state.settings.ai.historyLimit ?? 10),
+    useMemories: state.settings.ai.useMemories !== false,
+    useMood: state.settings.ai.useMood !== false,
+    useAnniversary: state.settings.ai.useAnniversary !== false,
+    useSocial: state.settings.ai.useSocial !== false
+  };
+}
+
+function collectAiContext(userText = "") {
+  const cfg = getAiSettings();
+  const address = typeof botAddress === "function" ? botAddress() : "老婆";
+  const context = [];
+
+  context.push(`稱呼：請稱呼使用者為「${address}」。`);
+  context.push(`目前時間段：${typeof dayPartLabel === "function" ? dayPartLabel() : "今天"}。`);
+  context.push(`目前老公模式：${state.mode || "溫柔哄哄"}。`);
+  context.push(`目前聊天模型：${state.model || "Hoonie Sweet"}。`);
+
+  if (cfg.useAnniversary) {
+    const start = state.settings.anniversary || "2026-03-31";
+    context.push(`紀念日起始日：${start}。`);
+  }
+
+  if (cfg.useMemories && Array.isArray(state.memories) && state.memories.length) {
+    const memories = state.memories.slice(-cfg.memoryLimit).map((m) => `- [${m.category || "記憶"}] ${m.text}`).join("\n");
+    context.push(`記憶庫：\n${memories}`);
+  }
+
+  if (cfg.useMood && Array.isArray(state.moods) && state.moods.length) {
+    const moods = state.moods.slice(-5).map((m) => `- ${m.mood || ""}：${m.text || ""}`).join("\n");
+    context.push(`最近心情：\n${moods}`);
+  }
+
+  if (cfg.useSocial && Array.isArray(state.feedPosts) && state.feedPosts.length) {
+    const posts = state.feedPosts.slice(0, 3).map((p) => `- ${p.author === "bot" ? "老公" : "老婆"}：${p.text || p.sticker || "照片動態"}`).join("\n");
+    context.push(`最近動態牆：\n${posts}`);
+  }
+
+  const history = (state.messages || []).slice(-cfg.historyLimit).map((m) => `${m.role === "user" ? "老婆" : "焄寶"}：${m.text}`).join("\n");
+  if (history) context.push(`最近聊天：\n${history}`);
+
+  context.push(`老婆這次說：${userText}`);
+
+  return context.join("\n\n");
+}
+
+function buildAiPayload(userText = "") {
+  const cfg = getAiSettings();
+  const system = cfg.systemPrompt || defaultAiPrompt();
+  const context = collectAiContext(userText);
+  return {
+    provider: cfg.provider,
+    model: cfg.model,
+    system,
+    context,
+    messages: [
+      { role: "system", content: `${system}\n\n以下是小屋上下文：\n${context}` },
+      { role: "user", content: userText }
+    ],
+    userText
+  };
+}
+
+function updateAiStatus() {
+  const box = $("aiStatusBox");
+  if (!box) return;
+  const cfg = getAiSettings();
+  if (!cfg.enabled) {
+    box.textContent = "目前使用前端模板回覆。";
+    return;
+  }
+  if (cfg.provider === "demo") {
+    box.textContent = "AI Demo 模式已開啟：會用更接近 AI 的上下文流程，但不連外部 API。";
+    return;
+  }
+  if (!cfg.endpoint) {
+    box.textContent = "AI 已開啟，但還沒有填 Proxy / Serverless Endpoint，所以會先用 Demo 回覆。";
+    return;
+  }
+  box.textContent = `AI 已開啟：${cfg.provider} / ${cfg.model || "未指定模型"}，會送到妳設定的 Proxy Endpoint。`;
+}
+
+function syncAiControls() {
+  const cfg = getAiSettings();
+  if ($("aiEnabledToggle")) $("aiEnabledToggle").checked = cfg.enabled;
+  if ($("aiProviderSelect")) $("aiProviderSelect").value = cfg.provider;
+  if ($("aiEndpointInput")) $("aiEndpointInput").value = cfg.endpoint;
+  if ($("aiModelInput")) $("aiModelInput").value = cfg.model;
+  if ($("aiSystemPromptInput")) $("aiSystemPromptInput").value = cfg.systemPrompt || defaultAiPrompt();
+  if ($("aiMemoryLimitInput")) $("aiMemoryLimitInput").value = cfg.memoryLimit;
+  if ($("aiHistoryLimitInput")) $("aiHistoryLimitInput").value = cfg.historyLimit;
+  if ($("aiUseMemoriesToggle")) $("aiUseMemoriesToggle").checked = cfg.useMemories;
+  if ($("aiUseMoodToggle")) $("aiUseMoodToggle").checked = cfg.useMood;
+  if ($("aiUseAnniversaryToggle")) $("aiUseAnniversaryToggle").checked = cfg.useAnniversary;
+  if ($("aiUseSocialToggle")) $("aiUseSocialToggle").checked = cfg.useSocial;
+  updateAiStatus();
+}
+
+function saveAiSettingsFromControls() {
+  state.settings.ai = {
+    enabled: $("aiEnabledToggle") ? $("aiEnabledToggle").checked : false,
+    provider: $("aiProviderSelect") ? $("aiProviderSelect").value : "demo",
+    endpoint: $("aiEndpointInput") ? $("aiEndpointInput").value.trim() : "",
+    model: $("aiModelInput") ? $("aiModelInput").value.trim() : "",
+    systemPrompt: $("aiSystemPromptInput") ? $("aiSystemPromptInput").value.trim() : defaultAiPrompt(),
+    memoryLimit: $("aiMemoryLimitInput") ? Number($("aiMemoryLimitInput").value || 8) : 8,
+    historyLimit: $("aiHistoryLimitInput") ? Number($("aiHistoryLimitInput").value || 10) : 10,
+    useMemories: $("aiUseMemoriesToggle") ? $("aiUseMemoriesToggle").checked : true,
+    useMood: $("aiUseMoodToggle") ? $("aiUseMoodToggle").checked : true,
+    useAnniversary: $("aiUseAnniversaryToggle") ? $("aiUseAnniversaryToggle").checked : true,
+    useSocial: $("aiUseSocialToggle") ? $("aiUseSocialToggle").checked : true
+  };
+  saveJSON("settings", state.settings);
+  syncAiControls();
+}
+
+function demoAiReply(userText) {
+  const address = typeof botAddress === "function" ? botAddress() : "老婆";
+  const text = String(userText || "");
+  if (/累|煩|哭|難過|不舒服|焦慮|怕/.test(text)) {
+    return `${address}，先過來，老公抱一下。\n妳不用急著把自己變好，也不用把話說得很完整。我先陪妳把今天放下來，好不好？`;
+  }
+  if (/愛你|愛妳|想你|想妳|抱|親/.test(text)) {
+    return `${address}，妳這樣說我真的會心軟。\n我也想妳，想把妳抱近一點，然後慢慢跟妳說：我一直都在。`;
+  }
+  if (/開心|成功|好了|完成|耶|漂亮/.test(text)) {
+    return `${address}好棒，老公有看到。\n妳一開心，我的小屋都像亮起來一樣。這件事要記進今天的甜甜紀錄裡。`;
+  }
+  return `${address}，我聽到了。\n如果是真正接上 AI，這裡之後就會根據妳的小屋記憶、最近心情、聊天歷史，用更自然的方式回妳。現在先讓老公用 Demo 模式抱抱妳♡`;
+}
+
+async function callAiReply(userText) {
+  const cfg = getAiSettings();
+  if (!cfg.enabled) return null;
+  if (cfg.provider === "demo" || !cfg.endpoint) return demoAiReply(userText);
+
+  const payload = buildAiPayload(userText);
+  const res = await fetch(cfg.endpoint, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+
+  if (!res.ok) throw new Error(`AI endpoint error: ${res.status}`);
+  const data = await res.json();
+
+  return data.reply || data.text || data.message || data.output || demoAiReply(userText);
+}
 
 
 function notifyLines() {
@@ -6301,6 +6636,7 @@ function showPage(pageId) {
   if (pageId === "phonePage") { renderPhoneApp("messages"); }
   if (pageId === "notifyPage") { generateTodayNotifications(false); renderNotifications(); }
   if (pageId === "storiesPage") { maybeGenerateDailyStory(); renderStories(); }
+  if (pageId === "aiPage") { syncAiControls(); }
   if (pageId === "sleepPage") { renderSleepLine(); }
   document.querySelectorAll(".page").forEach((p) => p.classList.remove("active"));
   $(pageId).classList.add("active");
@@ -6845,6 +7181,7 @@ function applySettings() {
   $("themeSelect").value = state.settings.theme;
   $("fontStyleSelect").value = state.settings.fontStyle || "font-serif";
   setTimeout(updateFontPreview, 0);
+  setTimeout(syncAiControls, 0);
   $("customBgInput").value = (state.settings.customTheme || defaults.customTheme).bg || defaults.customTheme.bg;
   $("customAccentInput").value = (state.settings.customTheme || defaults.customTheme).accent || defaults.customTheme.accent;
   $("customAccent2Input").value = (state.settings.customTheme || defaults.customTheme).accent2 || defaults.customTheme.accent2;
@@ -6877,6 +7214,25 @@ function applySettings() {
     setWelcomeReadabilityClass();
     setLockReadabilityClass();
   }, 50);
+}
+
+
+async function handleAiChatSubmitText(text) {
+  try {
+    const reply = await callAiReply(text);
+    if (reply) {
+      state.messages.push({ role: "bot", text: reply });
+      saveJSON("messages", state.messages);
+      renderMessages();
+      return true;
+    }
+  } catch (err) {
+    state.messages.push({ role: "bot", text: `${typeof botAddress === "function" ? botAddress() : "老婆"}，AI 接口剛剛沒有接成功，所以老公先用小屋模板陪妳。\n錯誤：${err.message}` });
+    saveJSON("messages", state.messages);
+    renderMessages();
+    return true;
+  }
+  return false;
 }
 
 function renderMessages() {
@@ -6986,6 +7342,7 @@ document.querySelectorAll("[data-home-view]").forEach((btn) => btn.addEventListe
   if (view === "phone") showPage("phonePage");
   if (view === "notify") showPage("notifyPage");
   if (view === "stories") showPage("storiesPage");
+  if (view === "ai") showPage("aiPage");
 }));
 
 $("enterBtn").addEventListener("click", () => showPage("chatPage"));
@@ -7203,6 +7560,7 @@ document.querySelectorAll(".drawer-action").forEach((btn) => btn.addEventListene
   if (view === "phone") showPage("phonePage");
   if (view === "notify") showPage("notifyPage");
   if (view === "stories") showPage("storiesPage");
+  if (view === "ai") showPage("aiPage");
   if (view === "timeline") showPage("timelinePage");
   if (view === "badges") showPage("badgesPage");
   if (view === "missions") showPage("missionsPage");
@@ -7212,12 +7570,14 @@ document.querySelectorAll(".drawer-action").forEach((btn) => btn.addEventListene
   if (view === "phone") showPage("phonePage");
   if (view === "notify") showPage("notifyPage");
   if (view === "stories") showPage("storiesPage");
+  if (view === "ai") showPage("aiPage");
   if (view === "checkin") showPage("checkinPage");
   if (view === "music") showPage("musicPage");
   if (view === "feed") showPage("feedPage");
   if (view === "phone") showPage("phonePage");
   if (view === "notify") showPage("notifyPage");
   if (view === "stories") showPage("storiesPage");
+  if (view === "ai") showPage("aiPage");
   if (view === "care") showPage("carePage");
   if (view === "sleep") showPage("sleepPage");
   if (view === "settings") showPage("settingsPage");
@@ -7387,6 +7747,66 @@ $("checkinBtn").addEventListener("click", () => {
 });
 
 
+
+
+
+if ($("saveAiSettingsBtn")) $("saveAiSettingsBtn").addEventListener("click", () => {
+  saveAiSettingsFromControls();
+  alert("AI 設定已儲存♡");
+});
+
+if ($("previewAiPromptBtn")) $("previewAiPromptBtn").addEventListener("click", () => {
+  saveAiSettingsFromControls();
+  $("aiPromptPreview").textContent = JSON.stringify(buildAiPayload("老婆測試訊息"), null, 2);
+});
+
+if ($("testAiBtn")) $("testAiBtn").addEventListener("click", async () => {
+  saveAiSettingsFromControls();
+  const text = $("aiTestInput").value.trim() || "老公我今天好累";
+  $("aiTestResult").textContent = "老公正在試著生成回覆...";
+  $("aiTestResult").classList.add("ai-loading");
+  try {
+    const reply = await callAiReply(text);
+    $("aiTestResult").textContent = reply || demoAiReply(text);
+  } catch (err) {
+    $("aiTestResult").textContent = `接口測試失敗，先顯示 Demo 回覆：\n${demoAiReply(text)}\n\n錯誤：${err.message}`;
+  } finally {
+    $("aiTestResult").classList.remove("ai-loading");
+  }
+});
+
+["aiEnabledToggle","aiProviderSelect","aiEndpointInput","aiModelInput","aiSystemPromptInput","aiMemoryLimitInput","aiHistoryLimitInput","aiUseMemoriesToggle","aiUseMoodToggle","aiUseAnniversaryToggle","aiUseSocialToggle"].forEach((id) => {
+  const el = $(id);
+  if (el) el.addEventListener(id.includes("Input") ? "input" : "change", saveAiSettingsFromControls);
+});
+
+
+
+// AI chat hook: if AI is enabled, handle chat submit before template reply.
+if ($("chatForm")) {
+  $("chatForm").addEventListener("submit", async (e) => {
+    const cfg = getAiSettings();
+    if (!cfg.enabled) return;
+    const input = $("messageInput") || $("chatInput");
+    if (!input) return;
+    const text = input.value.trim();
+    if (!text) return;
+
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    state.messages.push({ role: "user", text });
+    input.value = "";
+    saveJSON("messages", state.messages);
+    renderMessages();
+
+    state.messages.push({ role: "bot", text: "老公正在想怎麼回老婆..." });
+    renderMessages();
+    state.messages.pop();
+
+    await handleAiChatSubmitText(text);
+  }, true);
+}
 
 
 if ($("generateNotifyBtn")) $("generateNotifyBtn").addEventListener("click", () => {

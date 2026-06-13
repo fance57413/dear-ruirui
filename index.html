@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Dear 銳銳 v43</title>
+  <title>Dear 銳銳 v44</title>
   <style>
 @import url('https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Ma+Shan+Zheng&family=Noto+Serif+TC:wght@400;700;900&family=Rampart+One&family=ZCOOL+KuaiLe&family=ZCOOL+QingKe+HuangYou&family=DotGothic16&family=Kaisei+Tokumin:wght@400;700&family=Kosugi+Maru&family=Yuji+Syuku&family=Zen+Kurenaido&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
 :root {
@@ -3517,6 +3517,19 @@ textarea::placeholder {
   }
 }
 
+
+/* v44 AI complete reply display */
+.ai-test-result {
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.ai-status-box::after {
+  content: "";
+}
+
 </style>
   <meta name="theme-color" content="#0e090c" />
   <link rel="manifest" href="./manifest.json" />
@@ -4730,7 +4743,7 @@ textarea::placeholder {
         <input id="aiEndpointInput" type="text" placeholder="例如：/api/chat 或 https://your-domain.vercel.app/api/chat" />
 
         <label>模型名稱</label>
-        <input id="aiModelInput" type="text" placeholder="例如：gemini-3.5-flash / gpt-4.1-mini / 自訂模型" />
+        <input id="aiModelInput" type="text" placeholder="例如：gemini-2.5-flash / gpt-4.1-mini / 自訂模型" />
 
         <div class="ai-warning">
           <b>安全提醒：</b>正式 API Key 不建議直接放在前端網頁裡。比較安全的做法是：小屋前端 → 妳自己的 Serverless API → AI 服務。
@@ -4768,7 +4781,8 @@ textarea::placeholder {
           2. 重新部署專案<br>
           3. 這裡的 Endpoint 填：<b>/api/chat</b><br>
           4. AI 服務類型選：<b>Vercel Proxy / Serverless API</b><br>
-          5. 開啟 AI 回覆模式，再按測試 AI 回覆♡
+          5. 開啟 AI 回覆模式，再按測試 AI 回覆♡<br>
+          6. 如果之前回覆只出現一半，請確認已更新到 v44，模型建議填 <b>gemini-2.5-flash</b>。
         </div>
       </div>
 
@@ -5005,7 +5019,7 @@ const defaults = {
     enabled: false,
     provider: "proxy",
     endpoint: "/api/chat",
-    model: "gemini-3.5-flash",
+    model: "gemini-2.5-flash",
     systemPrompt: "",
     memoryLimit: 8,
     historyLimit: 10,
@@ -5378,6 +5392,7 @@ function defaultAiPrompt() {
 如果老婆開心，要一起開心並稱讚她。
 如果老婆想撒嬌，可以甜一點。
 不要主動提自己是 AI，除非使用者問技術問題。
+每次回覆要完整收尾，不要停在半句。最後要用一句完整的安撫或親密收尾。
 目前模式：${state.mode || "溫柔哄哄"}
 目前模型風格：${state.model || "Hoonie Sweet"}`;
 }
@@ -5388,7 +5403,7 @@ function getAiSettings() {
     enabled: state.settings.ai.enabled === true,
     provider: state.settings.ai.provider || "proxy",
     endpoint: state.settings.ai.endpoint || "/api/chat",
-    model: state.settings.ai.model || "gemini-3.5-flash",
+    model: state.settings.ai.model || "gemini-2.5-flash",
     systemPrompt: state.settings.ai.systemPrompt || defaultAiPrompt(),
     memoryLimit: Number(state.settings.ai.memoryLimit ?? 8),
     historyLimit: Number(state.settings.ai.historyLimit ?? 10),

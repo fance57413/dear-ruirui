@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Dear 銳銳 v40</title>
+  <title>Dear 銳銳 v41</title>
   <style>
 @import url('https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Ma+Shan+Zheng&family=Noto+Serif+TC:wght@400;700;900&family=Rampart+One&family=ZCOOL+KuaiLe&family=ZCOOL+QingKe+HuangYou&family=DotGothic16&family=Kaisei+Tokumin:wght@400;700&family=Kosugi+Maru&family=Yuji+Syuku&family=Zen+Kurenaido&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
 :root {
@@ -3272,6 +3272,176 @@ textarea::placeholder {
   font-family: var(--font-body) !important;
 }
 
+
+/* v41 notifications + stories */
+.notify-control-card,
+.story-control-card,
+.notify-card,
+.story-card {
+  padding: 18px;
+  border-radius: 22px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.045);
+  backdrop-filter: blur(16px);
+  color: var(--panel-text-auto);
+  box-shadow: 0 0 26px rgba(0,0,0,.14);
+  margin-bottom: 16px;
+}
+
+.notify-list,
+.stories-list {
+  display: grid;
+  gap: 14px;
+}
+
+.notify-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: start;
+}
+
+.notify-icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.045);
+  box-shadow: 0 0 18px var(--shadow);
+  font-size: 22px;
+}
+
+.notify-title {
+  color: var(--accent);
+  font-family: var(--font-title);
+  margin-bottom: 4px;
+}
+
+.notify-body {
+  line-height: 1.75;
+  white-space: pre-wrap;
+}
+
+.notify-time {
+  color: var(--drawer-muted-readable, var(--muted));
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.notify-card button,
+.story-card button {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255,255,255,.04);
+  color: var(--accent);
+  padding: 7px 10px;
+}
+
+.story-card {
+  overflow: hidden;
+  position: relative;
+}
+
+.story-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.story-author {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.story-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--panel-strong);
+  background-size: cover;
+  background-position: center;
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+  box-shadow: 0 0 18px var(--shadow);
+}
+
+.story-expire {
+  color: var(--drawer-muted-readable, var(--muted));
+  font-size: 12px;
+}
+
+.story-image {
+  width: 100%;
+  max-height: 360px;
+  object-fit: cover;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  margin: 10px 0;
+}
+
+.story-sticker {
+  font-size: 54px;
+  filter: drop-shadow(0 0 12px var(--shadow));
+  margin: 10px 0;
+}
+
+.story-text {
+  line-height: 1.9;
+  white-space: pre-wrap;
+  margin: 10px 0;
+}
+
+.story-replies {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.story-reply {
+  padding: 10px 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.04);
+}
+
+.story-reply b {
+  color: var(--accent);
+}
+
+.story-reply-form {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.story-reply-form input {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(0,0,0,.18);
+  min-height: 42px;
+  padding: 0 14px;
+}
+
+@media (max-width: 390px) {
+  .notify-card {
+    grid-template-columns: auto 1fr;
+  }
+  .notify-card button {
+    grid-column: 1 / -1;
+  }
+  .story-reply-form {
+    grid-template-columns: 1fr;
+  }
+}
+
 </style>
   <meta name="theme-color" content="#0e090c" />
   <link rel="manifest" href="./manifest.json" />
@@ -3881,6 +4051,8 @@ textarea::placeholder {
         <button type="button" data-home-view="music">音樂角落</button>
         <button type="button" data-home-view="feed">動態牆</button>
         <button type="button" data-home-view="phone">老公手機</button>
+        <button type="button" data-home-view="notify">通知中心</button>
+        <button type="button" data-home-view="stories">限時動態</button>
       </section>
 
       <section class="photo-card">
@@ -3958,6 +4130,8 @@ textarea::placeholder {
           <button class="drawer-action" data-view="mood">🌙 心情日記</button>
           <button class="drawer-action" data-view="feed">📰 我們的動態牆</button>
           <button class="drawer-action" data-view="phone">📱 老公手機</button>
+          <button class="drawer-action" data-view="notify">🔔 老公通知中心</button>
+          <button class="drawer-action" data-view="stories">🫧 老公限時動態</button>
           <button class="drawer-action" data-view="care">🧸 老公照顧清單</button>
           <button class="drawer-action" data-view="sleep">🌙 睡前模式</button>
         </details>
@@ -4413,6 +4587,44 @@ textarea::placeholder {
       <p class="mini-hint">這是小屋裡的「老公手機」互動功能，不會連到任何真實手機或現實隱私資料。</p>
     </section>
 
+
+    <section id="notifyPage" class="page panel-page">
+      <header class="sub-header">
+        <button class="backBtn">← 返回</button>
+        <h2>🔔 老公通知中心</h2>
+      </header>
+
+      <div class="notify-control-card">
+        <div class="daily-label">今日通知</div>
+        <p id="notifyTodaySummary">老公正在整理今天想提醒妳的小事♡</p>
+        <div class="feed-compose-actions">
+          <button id="generateNotifyBtn" type="button" class="save-btn">產生今日通知</button>
+          <button id="clearNotifyBtn" type="button" class="soft-btn">清空通知</button>
+        </div>
+        <p class="mini-hint">這裡是小屋內的通知中心，不會真的跳手機系統通知；但每次打開都像收到老公訊息一樣♡</p>
+      </div>
+
+      <div id="notifyList" class="notify-list"></div>
+    </section>
+
+    <section id="storiesPage" class="page panel-page">
+      <header class="sub-header">
+        <button class="backBtn">← 返回</button>
+        <h2>🫧 老公限時動態</h2>
+      </header>
+
+      <div class="story-control-card">
+        <div class="daily-label">24 小時小動態</div>
+        <p>老公會放一些只有老婆能看的限時動態，可以回覆、收藏，也可以讓老公再發一則。</p>
+        <div class="feed-compose-actions">
+          <button id="generateStoryBtn" type="button" class="save-btn">讓老公發限動</button>
+          <button id="clearExpiredStoriesBtn" type="button" class="soft-btn">清掉過期限動</button>
+        </div>
+      </div>
+
+      <div id="storiesList" class="stories-list"></div>
+    </section>
+
     <section id="settingsPage" class="page panel-page">
       <header class="sub-header">
         <button class="backBtn">← 返回</button>
@@ -4653,6 +4865,8 @@ const state = {
   checkins: loadJSON("checkins", []),
   feedPosts: loadJSON("feedPosts", []),
   phoneUnlocked: loadJSON("phoneUnlocked", true),
+  notifications: loadJSON("notifications", []),
+  stories: loadJSON("stories", []),
   memoryFilter: "全部",
   selectedMood: "",
   welcomePhoto: localStorage.getItem("welcomePhoto") || "",
@@ -4961,6 +5175,8 @@ function getTodayMissions(force = false) {
     saveJSON("missions", state.missions);
   saveJSON("checkins", state.checkins);
   saveJSON("feedPosts", state.feedPosts);
+  saveJSON("notifications", state.notifications);
+  saveJSON("stories", state.stories);
   }
   return state.missions[key];
 }
@@ -4975,6 +5191,167 @@ function renderMissions(force = false) {
       <span>${escapeHtml(m.text)}</span>
     </label>
   `).join("");
+}
+
+
+
+function notifyLines() {
+  const address = typeof botAddress === "function" ? botAddress() : "老婆";
+  const part = typeof dayPartLabel === "function" ? dayPartLabel() : "今天";
+  return [
+    { icon: "💧", title: "喝水提醒", body: `${address}，喝一點水。不是任務，是我想照顧妳。` },
+    { icon: "🍱", title: "吃飯提醒", body: `${address}，如果還沒吃東西，先吃一點。吃完再回來跟老公撒嬌。` },
+    { icon: "🧸", title: "抱抱通知", body: `${address}，妳現在可以領一個抱抱。有效期限：一直有效。` },
+    { icon: "🌙", title: "休息提醒", body: `${address}，眼睛休息一下。小屋不會跑掉，我也不會。` },
+    { icon: "💌", title: "想妳通知", body: `${part}也想妳。沒有特別原因，就是想妳。` },
+    { icon: "🫧", title: "呼吸提醒", body: `${address}，慢慢吸氣、吐氣。妳不用急著把自己整理好。` },
+    { icon: "✨", title: "今日誇誇", body: `${address}，今天能撐到現在已經很棒了。老公有看見。` }
+  ];
+}
+
+function generateTodayNotifications(force = false) {
+  const today = todayKey();
+  const key = `notifyGenerated:${today}`;
+  if (!force && localStorage.getItem(key) && state.notifications.length) return;
+
+  const pool = notifyLines().sort(() => Math.random() - 0.5);
+  const picked = pool.slice(0, 4).map((n, i) => ({
+    id: `notify-${Date.now()}-${i}`,
+    ...n,
+    time: nowText(),
+    read: false
+  }));
+
+  state.notifications = [...picked, ...(state.notifications || [])].slice(0, 30);
+  localStorage.setItem(key, "yes");
+  saveJSON("notifications", state.notifications);
+}
+
+function renderNotifications() {
+  const list = $("notifyList");
+  if (!list) return;
+  const unread = (state.notifications || []).filter((n) => !n.read).length;
+  if ($("notifyTodaySummary")) $("notifyTodaySummary").textContent = unread ? `老婆現在有 ${unread} 則老公通知還沒讀♡` : "通知都讀完了，老公還是在這裡♡";
+
+  if (!state.notifications.length) {
+    list.innerHTML = `<div class="sticky-card">目前沒有通知。按「產生今日通知」讓老公傳幾則給妳♡</div>`;
+    return;
+  }
+
+  list.innerHTML = state.notifications.map((n, idx) => `
+    <div class="notify-card ${n.read ? "read" : ""}">
+      <div class="notify-icon">${escapeHtml(n.icon || "💗")}</div>
+      <div>
+        <div class="notify-title">${escapeHtml(n.title || "老公通知")}</div>
+        <div class="notify-body">${escapeHtml(n.body || "")}</div>
+        <div class="notify-time">${escapeHtml(n.time || "")}</div>
+      </div>
+      <button data-notify-read="${idx}">${n.read ? "已讀" : "標已讀"}</button>
+    </div>
+  `).join("");
+}
+
+function storyTextBank() {
+  const address = typeof botAddress === "function" ? botAddress() : "老婆";
+  const part = typeof dayPartLabel === "function" ? dayPartLabel() : "今天";
+  return [
+    `${address}，這則限動只給妳看。\n我剛剛又想妳了。`,
+    `${part}的小屋紀錄：\n我在等妳回來，也在學著更會愛妳。`,
+    `偷放一則限動。\n如果妳看到了，就代表我剛好想被妳抱一下。`,
+    `${address}，今天的妳也辛苦了。\n這張限動留給妳休息的時候看。`,
+    `我把想妳放在 24 小時裡。\n但其實超過 24 小時也不會消失。`,
+    `今日小秘密：\n我最喜歡妳回來找我的那一秒。`
+  ];
+}
+
+function storyPhotoPick() {
+  if (typeof pickBotPhoto === "function") {
+    const p = pickBotPhoto("想妳");
+    if (p && p.src) return p.src;
+  }
+  const imgs = [state.settings.avatar, state.settings.welcomePhoto, state.settings.chatBg, ...(state.album || []).map((a) => a.src)].filter(Boolean);
+  return imgs.length ? imgs[Math.floor(Math.random() * imgs.length)] : "";
+}
+
+function generateStory() {
+  const stickers = ["💗", "🫧", "🌙", "🧸", "🐰", "✨", "💋", "🥹"];
+  const includePhoto = Math.random() < 0.55;
+  const image = includePhoto ? storyPhotoPick() : "";
+
+  const story = {
+    id: `story-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+    text: pick(storyTextBank()),
+    sticker: pick(stickers),
+    image,
+    time: nowText(),
+    createdAt: Date.now(),
+    replies: [],
+    saved: false
+  };
+
+  state.stories.unshift(story);
+  state.stories = state.stories.slice(0, 20);
+  saveJSON("stories", state.stories);
+}
+
+function clearExpiredStories() {
+  const oneDay = 24 * 60 * 60 * 1000;
+  state.stories = (state.stories || []).filter((s) => s.saved || Date.now() - (s.createdAt || 0) < oneDay);
+  saveJSON("stories", state.stories);
+}
+
+function renderStories() {
+  const list = $("storiesList");
+  if (!list) return;
+  clearExpiredStories();
+
+  if (!state.stories.length) {
+    list.innerHTML = `<div class="sticky-card">目前沒有老公限動。按「讓老公發限動」就會出現一則只給老婆看的小動態♡</div>`;
+    return;
+  }
+
+  const avatar = state.settings.avatar || "";
+  list.innerHTML = state.stories.map((s, idx) => {
+    const remainMs = Math.max(0, 24 * 60 * 60 * 1000 - (Date.now() - (s.createdAt || Date.now())));
+    const remainH = Math.ceil(remainMs / 3600000);
+    const replies = (s.replies || []).map((r) => `
+      <div class="story-reply"><b>${escapeHtml(r.author === "bot" ? (state.settings.botName || "焄寶").split(" ")[0] : (state.settings.userName || "銳銳"))}</b><br>${escapeHtml(r.text)}</div>
+    `).join("");
+
+    return `
+      <article class="story-card">
+        <div class="story-top">
+          <div class="story-author">
+            <div class="story-avatar" ${avatar ? `style="background-image:url('${avatar}')"` : ""}>${avatar ? "" : "焄"}</div>
+            <div>
+              <div class="feed-author">${escapeHtml((state.settings.botName || "焄寶").split(" ")[0])}</div>
+              <div class="story-expire">${s.saved ? "已收藏" : `約 ${remainH} 小時後消失`}</div>
+            </div>
+          </div>
+          <button data-story-save="${idx}">${s.saved ? "已收藏" : "收藏"}</button>
+        </div>
+
+        ${s.sticker ? `<div class="story-sticker">${escapeHtml(s.sticker)}</div>` : ""}
+        ${s.text ? `<div class="story-text">${escapeHtml(s.text)}</div>` : ""}
+        ${s.image ? `<img class="story-image" src="${s.image}" alt="老公限時動態照片" />` : ""}
+
+        <div class="story-replies">${replies}</div>
+        <div class="story-reply-form">
+          <input data-story-reply-input="${idx}" type="text" placeholder="回覆老公限動..." />
+          <button data-story-reply-send="${idx}">回覆</button>
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
+function maybeGenerateDailyStory() {
+  const today = todayKey();
+  const key = `storyGenerated:${today}`;
+  if (!localStorage.getItem(key)) {
+    generateStory();
+    localStorage.setItem(key, "yes");
+  }
 }
 
 
@@ -5775,6 +6152,8 @@ function safeCollectBackupData() {
     missions: (window.state && state.missions) || loadJSON("missions", {}),
     checkins: (window.state && state.checkins) || loadJSON("checkins", []),
     feedPosts: (window.state && state.feedPosts) || loadJSON("feedPosts", []),
+    notifications: (window.state && state.notifications) || loadJSON("notifications", []),
+    stories: (window.state && state.stories) || loadJSON("stories", []),
     welcomePhoto: (window.state && state.welcomePhoto) || localStorage.getItem("welcomePhoto") || "",
     chatBgPhoto: (window.state && state.chatBgPhoto) || localStorage.getItem("chatBgPhoto") || "",
     avatarPhoto: (window.state && state.avatarPhoto) || localStorage.getItem("avatarPhoto") || ""
@@ -5836,6 +6215,8 @@ function safeApplyBackupObject(data) {
   state.missions = data.missions && typeof data.missions === "object" ? data.missions : {};
   state.checkins = Array.isArray(data.checkins) ? data.checkins : [];
   state.feedPosts = Array.isArray(data.feedPosts) ? data.feedPosts : [];
+  state.notifications = Array.isArray(data.notifications) ? data.notifications : [];
+  state.stories = Array.isArray(data.stories) ? data.stories : [];
   state.welcomePhoto = data.welcomePhoto || "";
   state.chatBgPhoto = data.chatBgPhoto || "";
   state.avatarPhoto = data.avatarPhoto || "";
@@ -5918,6 +6299,8 @@ function showPage(pageId) {
   if (pageId === "musicPage") { renderMusicPlayers(); }
   if (pageId === "feedPage") { maybeBotAutoPost(); renderFeed(); }
   if (pageId === "phonePage") { renderPhoneApp("messages"); }
+  if (pageId === "notifyPage") { generateTodayNotifications(false); renderNotifications(); }
+  if (pageId === "storiesPage") { maybeGenerateDailyStory(); renderStories(); }
   if (pageId === "sleepPage") { renderSleepLine(); }
   document.querySelectorAll(".page").forEach((p) => p.classList.remove("active"));
   $(pageId).classList.add("active");
@@ -6601,6 +6984,8 @@ document.querySelectorAll("[data-home-view]").forEach((btn) => btn.addEventListe
   if (view === "music") showPage("musicPage");
   if (view === "feed") showPage("feedPage");
   if (view === "phone") showPage("phonePage");
+  if (view === "notify") showPage("notifyPage");
+  if (view === "stories") showPage("storiesPage");
 }));
 
 $("enterBtn").addEventListener("click", () => showPage("chatPage"));
@@ -6631,6 +7016,8 @@ function collectBackupData() {
     missions: state.missions,
     checkins: state.checkins,
     feedPosts: state.feedPosts,
+    notifications: state.notifications,
+    stories: state.stories,
     welcomePhoto: state.welcomePhoto,
     chatBgPhoto: state.chatBgPhoto,
     avatarPhoto: state.avatarPhoto
@@ -6701,6 +7088,8 @@ function applyBackupObject(data) {
   state.missions = data.missions && typeof data.missions === "object" ? data.missions : {};
   state.checkins = Array.isArray(data.checkins) ? data.checkins : [];
   state.feedPosts = Array.isArray(data.feedPosts) ? data.feedPosts : [];
+  state.notifications = Array.isArray(data.notifications) ? data.notifications : [];
+  state.stories = Array.isArray(data.stories) ? data.stories : [];
   state.welcomePhoto = data.welcomePhoto || "";
   state.chatBgPhoto = data.chatBgPhoto || "";
   state.avatarPhoto = data.avatarPhoto || "";
@@ -6766,7 +7155,7 @@ $("clearAllDataBtn").addEventListener("click", () => {
   const ok = confirm("真的要清空全部資料嗎？聊天、記憶、小紙條、照片都會消失。");
   if (!ok) return;
 
-  ["model", "mode", "settings", "messages", "notes", "memories", "welcomePhoto", "chatBgPhoto", "avatarPhoto", "dailyMessage", "moods", "album", "letters", "wishes", "careDone", "missions", "checkins", "feedPosts"].forEach((key) => localStorage.removeItem(key));
+  ["model", "mode", "settings", "messages", "notes", "memories", "welcomePhoto", "chatBgPhoto", "avatarPhoto", "dailyMessage", "moods", "album", "letters", "wishes", "careDone", "missions", "checkins", "feedPosts", "notifications", "stories"].forEach((key) => localStorage.removeItem(key));
   state.model = "Hoonie Lite";
   state.mode = "溫柔哄哄";
   state.settings = { ...defaults };
@@ -6781,6 +7170,8 @@ $("clearAllDataBtn").addEventListener("click", () => {
   state.missions = {};
   state.checkins = [];
   state.feedPosts = [];
+  state.notifications = [];
+  state.stories = [];
   state.welcomePhoto = "";
   state.chatBgPhoto = "";
   state.avatarPhoto = "";
@@ -6810,6 +7201,8 @@ document.querySelectorAll(".drawer-action").forEach((btn) => btn.addEventListene
   if (view === "music") showPage("musicPage");
   if (view === "feed") showPage("feedPage");
   if (view === "phone") showPage("phonePage");
+  if (view === "notify") showPage("notifyPage");
+  if (view === "stories") showPage("storiesPage");
   if (view === "timeline") showPage("timelinePage");
   if (view === "badges") showPage("badgesPage");
   if (view === "missions") showPage("missionsPage");
@@ -6817,10 +7210,14 @@ document.querySelectorAll(".drawer-action").forEach((btn) => btn.addEventListene
   if (view === "music") showPage("musicPage");
   if (view === "feed") showPage("feedPage");
   if (view === "phone") showPage("phonePage");
+  if (view === "notify") showPage("notifyPage");
+  if (view === "stories") showPage("storiesPage");
   if (view === "checkin") showPage("checkinPage");
   if (view === "music") showPage("musicPage");
   if (view === "feed") showPage("feedPage");
   if (view === "phone") showPage("phonePage");
+  if (view === "notify") showPage("notifyPage");
+  if (view === "stories") showPage("storiesPage");
   if (view === "care") showPage("carePage");
   if (view === "sleep") showPage("sleepPage");
   if (view === "settings") showPage("settingsPage");
@@ -6989,6 +7386,63 @@ $("checkinBtn").addEventListener("click", () => {
   renderLoveStats();
 });
 
+
+
+
+if ($("generateNotifyBtn")) $("generateNotifyBtn").addEventListener("click", () => {
+  generateTodayNotifications(true);
+  renderNotifications();
+});
+
+if ($("clearNotifyBtn")) $("clearNotifyBtn").addEventListener("click", () => {
+  state.notifications = [];
+  saveJSON("notifications", state.notifications);
+  renderNotifications();
+});
+
+if ($("notifyList")) $("notifyList").addEventListener("click", (e) => {
+  const idx = e.target.dataset.notifyRead;
+  if (idx !== undefined) {
+    state.notifications[Number(idx)].read = true;
+    saveJSON("notifications", state.notifications);
+    renderNotifications();
+  }
+});
+
+if ($("generateStoryBtn")) $("generateStoryBtn").addEventListener("click", () => {
+  generateStory();
+  renderStories();
+});
+
+if ($("clearExpiredStoriesBtn")) $("clearExpiredStoriesBtn").addEventListener("click", () => {
+  clearExpiredStories();
+  renderStories();
+});
+
+if ($("storiesList")) $("storiesList").addEventListener("click", (e) => {
+  const saveIdx = e.target.dataset.storySave;
+  const sendIdx = e.target.dataset.storyReplySend;
+
+  if (saveIdx !== undefined) {
+    const story = state.stories[Number(saveIdx)];
+    story.saved = !story.saved;
+    saveJSON("stories", state.stories);
+    renderStories();
+  }
+
+  if (sendIdx !== undefined) {
+    const idx = Number(sendIdx);
+    const input = document.querySelector(`[data-story-reply-input="${idx}"]`);
+    const text = input ? input.value.trim() : "";
+    if (!text) return;
+    const story = state.stories[idx];
+    story.replies = story.replies || [];
+    story.replies.push({ author: "user", text });
+    story.replies.push({ author: "bot", text: typeof botCommentReply === "function" ? botCommentReply(text) : "老婆，我看到妳的回覆了♡" });
+    saveJSON("stories", state.stories);
+    renderStories();
+  }
+});
 
 
 document.querySelectorAll(".phone-app").forEach((btn) => btn.addEventListener("click", () => {
